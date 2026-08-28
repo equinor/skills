@@ -6,14 +6,14 @@ This repository is just getting started. The first skills will land here after b
  
 ## What's here
  
-Skills are built to the open [Agent Skills](https://agentskills.io) standard, so they work across Claude Code, Copilot, Cursor, Codex, and other compatible agents — not just one tool.
+Skills are built to the open [Agent Skills](https://agentskills.io) standard, so they work across Claude Code, Copilot, Cursor, Codex, and other compatible agents – not just one tool.
  
 Planned areas:
  
-- **Typography** — algorithmic type scales for font sizes and line heights, font-pairing via x-height alignment
-- **Colour** — OKLCH palettes, contrast (APCA)
-- **Spacing** — ratio-based spacing scales
-- **Design systems** — broader EDS-informed practices
+- **Typography** – algorithmic type scales for font sizes and line heights, font-pairing via x-height alignment
+- **Colour** – OKLCH palettes, contrast (APCA)
+- **Spacing** – ratio-based spacing scales
+- **Design systems** – broader EDS-informed practices
 ## Installing a skill
  
 Once skills are published, install a single one with:
