@@ -1,6 +1,6 @@
 ---
 name: css-authoring
-description: Use when writing or reviewing hand-authored CSS — component styles, demos, prototypes. Channel variables (pseudo-private custom properties) for state and variant changes, modern selectors, and verified (never recalled) browser support.
+description: 'Guides hand-authored CSS toward channel variables, modern selectors and verified browser support. USE FOR: writing or reviewing component CSS, styling states and variants, choosing between modern selectors, checking whether a CSS feature is safe to ship, keeping specificity flat. DO NOT USE FOR: generated or compiled CSS output, authoring design tokens, framework styling systems such as Tailwind or CSS-in-JS, choosing the values themselves.'
 ---
 
 # CSS authoring
