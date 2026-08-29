@@ -1,6 +1,6 @@
 ---
 name: typography-scale
-description: Use when defining, porting or reviewing a typographic scale — font sizes, line-heights, or a density ramp. Derive every step from one base and one formula, snap sizes and line-heights to different grids on purpose, and index line-height as a curve rather than a fixed ratio.
+description: 'Defines, ports and reviews algorithmic typographic scales. USE FOR: building a size ramp from one base and ratio, choosing or indexing line-height curves, adding a density axis, porting the Equinor Design System scale, emitting scale tokens or CSS. DO NOT USE FOR: measuring a font or deriving an x-height correction (use typography-x-height-alignment), optical padding and control heights, choosing which typefaces to pair.'
 ---
 
 # Typographic scale

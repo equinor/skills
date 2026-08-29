@@ -1,6 +1,6 @@
 ---
 name: typography-x-height-alignment
-description: Use when two or more font families are paired and look mismatched at the same nominal size — "align the x-height of font-a and font-b", "these two fonts don't look the same size", font pairing, size-adjust. Extracts metrics from the actual font files, derives the correction factor, and emits it as a design token with the derivation recorded in $extensions.
+description: 'Aligns paired font families by measured x-height so they look the same size at the same step. USE FOR: two fonts that look mismatched at one nominal size, extracting metrics from font files, deriving the correction factor, choosing between size-adjust and baked font-size tokens, emitting the correction as a design token. DO NOT USE FOR: building the size ramp itself (use typography-scale), choosing which typefaces to pair, font licensing or hosting.'
 ---
 
 # x-height alignment
