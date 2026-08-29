@@ -70,3 +70,15 @@ npx skills add equinor/skills --skill <skill-name>   # agentskills.io standard
 /plugin marketplace add equinor/skills               # Claude Code plugin marketplace
 /plugin install <skill-name>@equinor-skills
 ```
+
+## Reviewing pull requests
+
+Skills are derived from Equinor Design System conventions at the time of
+writing — this repo doesn't promise to track every later EDS change, and a
+skill isn't wrong just because EDS's colour or typography conventions have
+since moved on. When eds.equinor.com and a skill diverge, note it as an
+informational aside at the end of a review, clearly separated from
+actionable findings — never as a blocking issue.
+
+Otherwise, flag: secrets or internal, non-public Equinor URLs in examples;
+missing or broken links; a skill with no worked example.
