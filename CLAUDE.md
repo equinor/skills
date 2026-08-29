@@ -45,6 +45,43 @@ The `description` is the only thing an agent sees before deciding to load the sk
 
 Work on a new skill happens on a `skill/<skill-name>` branch (see `origin/skill/css-authoring` for the reference draft, which establishes the house style: a named core pattern first, then supporting practice, then discipline/anti-patterns).
 
+## Authoring gates
+
+Three checks before a skill is ready, adopted from the `fusion-skill-authoring`
+skill in [`equinor/fusion-skills`](https://github.com/equinor/fusion-skills)
+(`@equinor/fusion-core`). That repo is further along than this one on catalog
+tooling — per-skill versioning, lifecycle metadata, and validation CI — and is
+worth reading in full before writing a new skill.
+
+**1. Write three representative requests before drafting.** For each: the
+trigger phrase a user would actually type, the behaviour the skill should
+produce, and the mistake it must prevent. These are the acceptance criteria —
+check the finished skill against them, not against your intent while writing it.
+If you cannot write three, the scope is underspecified or too narrow to be
+reusable. This is also the cheapest way to catch two skills that should be one,
+or one that should be two.
+
+**2. Keep `SKILL.md` under 300 lines.** Long files degrade on smaller runtimes,
+and 500 is a hard failure in Fusion's CI. Move overflow into `references/` one
+level deep — never a chain of links that forces partial reads. The typography
+skills sit at ~260 lines, so there is less headroom than it looks.
+
+**3. Check `skills-lock.json` before editing an existing `SKILL.md`.** If the
+file is an *installed copy* — its `skillPath` matches and `source` names another
+repository — editing it locally is pointless: `npx skills update` overwrites the
+change and no other consumer ever sees it. Make the change at the source, or
+open an issue there. `ids-meetup-oslo-26` has such a lockfile with four
+installed skills, so this is a live hazard rather than a hypothetical one.
+
+**What we deliberately do not adopt from that repo.** Its section structure
+(`When to use` / `When not to use` / `Required inputs` / …), its
+`USE FOR:` / `DO NOT USE FOR:` description format, and its richer frontmatter
+(`license`, `compatibility`, `metadata.version`/`status`/`owner`) belong to a
+catalog governance model with releases and ownership that this repo has not
+taken on. Ours stay at two frontmatter keys and the section shape described
+above. Do not reformat existing skills to match Fusion's conventions without
+that being an explicit, repo-wide decision.
+
 ## Spelling: Oxford English in prose, US English in code
 
 Equinor writes Oxford English, so documentation, headings, descriptions and
