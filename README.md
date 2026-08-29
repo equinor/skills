@@ -2,7 +2,7 @@
  
 A growing collection of Agent Skills covering design systems, colour, spacing and typography.
  
-This repository is just getting started. The first skills will land here after being introduced at the [Into Design Systems](https://luma.com/ids-oslo) meetup, Oslo, on 9 September 2026, with more added over time.
+This repository is just getting started. Skills land here as they are written, ahead of being introduced at the [Into Design Systems](https://luma.com/ids-oslo) meetup, Oslo, on 9 September 2026, with more added over time.
  
 ## What's here
  
@@ -37,4 +37,4 @@ Or, from inside Claude Code, add the marketplace and install what you need:
  
 ## Status
  
-🚧 Pre-release. Skills will appear here shortly.
+🚧 Pre-release. Nothing here has been announced, and anything may change without warning until the meetup.
