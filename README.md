@@ -28,13 +28,6 @@ Once skills are published, install a single one with:
 npx skills add equinor/skills --skill <skill-name>
 ```
  
-Or, from inside Claude Code, add the marketplace and install what you need:
- 
-```bash
-/plugin marketplace add equinor/skills
-/plugin install <skill-name>@equinor-skills
-```
- 
 ## Status
  
 🚧 Pre-release. Nothing here has been announced, and anything may change without warning until the meetup.
