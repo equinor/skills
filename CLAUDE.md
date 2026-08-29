@@ -61,6 +61,28 @@ Two positions run through the published content and should be preserved in new s
 - **Verify, don't recall.** Skills instruct the agent to check browser support live against caniuse's `features-json` endpoint or webstatus.dev rather than answer from training data, on the explicit grounds that the model has a cutoff and the web does not. Any factual claim with a shelf life should get the same treatment.
 - **Modern CSS, deliberately.** Prefer the newer feature when it states intent better (`:has()`, `:where()`, `@layer`, logical properties, nesting) — but pair it with support verification and a fallback, never a blanket recommendation.
 
+## Browser target: evergreen, and say so
+
+Skills here recommend modern CSS on the basis that a feature is **Baseline
+available**, not that it is universally supported. The products this material
+comes from run on centrally managed browsers that update within weeks of an
+upstream Chromium release, with iOS Safari as the mobile target and Firefox
+supported on a best-effort basis rather than as strategy.
+
+Two consequences when authoring:
+
+- **Baseline *newly* is not an automatic veto.** Treat it as a question for the
+  consuming project's matrix (`browserslist`, `.browserslistrc`, build
+  targets), not as a rule that every modern feature must ship a fallback. A
+  skill that hedges everything is no more useful than one that hedges nothing.
+- **Global usage percentages are context, not a gate.** They are market-share
+  weighted and lag interop, so a feature can be Baseline widely and still sit
+  below 95% — `:has()` and CSS nesting both do. Where the two measures
+  disagree, Baseline governs.
+
+Backward compatibility is the consuming project's responsibility, and the
+README says so. Do not silently assume a long-tail matrix on a reader's behalf.
+
 ## Installation surfaces to keep working
 
 The README advertises two install paths, and changes to repository layout can break either:
