@@ -83,6 +83,14 @@ Two consequences when authoring:
 Backward compatibility is the consuming project's responsibility, and the
 README says so. Do not silently assume a long-tail matrix on a reader's behalf.
 
+**Keep the published description generic; put the concrete matrix in a
+`browserslist` config.** This repo is public, so prose here reaches anyone. It
+also cannot be checked by a tool, cannot be versioned against a product, and
+goes stale silently. A `.browserslistrc` in the product repo is the opposite on
+every count — machine-readable, already read by the build, and specific to the
+product it governs. So skills describe the *shape* of the target and tell a
+reader how to find or declare their own; they do not enumerate a fleet.
+
 ## Installation surfaces to keep working
 
 The README advertises two install paths, and changes to repository layout can break either:
