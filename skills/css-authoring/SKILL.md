@@ -19,6 +19,7 @@ property**.
 ```css
 .btn {
   --_bg: var(--color-fill-default);
+  --_bg-hover: var(--color-fill-hover);
   --_fg: var(--color-text-strong);
 
   color: var(--_fg);
@@ -27,12 +28,21 @@ property**.
 
 .btn--danger {
   --_bg: var(--color-fill-danger);
+  --_bg-hover: var(--color-fill-danger-hover);
 }
 
 .btn:not(:disabled):hover {
-  --_bg: var(--color-fill-hover); /* hover is a one-variable diff */
+  --_bg: var(--_bg-hover); /* hover is a one-variable diff */
 }
 ```
+
+**A state rule assigns *from* a channel; it never assigns a literal token.**
+The state selector always out-specifies the variant — `.btn:not(:disabled):hover`
+is `(0,3,0)` against `.btn--danger`'s `(0,1,0)`, because `:not()` takes the
+specificity of its argument — so a hover rule that assigned
+`var(--color-fill-hover)` directly would flatten every variant it touched. By
+assigning `var(--_bg-hover)`, the rule still wins the cascade, but what it
+resolves to is a channel each variant owns.
 
 Why this wins:
 
@@ -48,7 +58,7 @@ Conventions:
 - `--_` prefix marks the variable as private to the component — set it inside
   the component's rules only, never from outside.
 - Optional channels get a fallback at the use site, so absence is a valid
-  state, not an error: `outline-color: var(--_border, transparent);`
+  state, not an error: `outline-color: var(--_outline, transparent);`
   `box-shadow: var(--_elevation, none);`
 - Size parameters are channels too (`--_font-size`, `--_inset`, `--_gap`):
   a size modifier overrides the parameters; the geometry properties that
@@ -72,7 +82,8 @@ first (section 3).
   a later layer wins without specificity games.
 - **`:focus-visible`**, never bare `:focus`, for focus rings.
 - **Math functions** (`calc()`, `round()`, `clamp()`) to keep derivations in
-  the stylesheet instead of baking their results. Note: `calc()` rejects
+  the stylesheet instead of baking their results. `round()` is Baseline *newly*
+  — it needs a fallback under section 3, unlike the rest of this list. Note: `calc()` rejects
   unitless `0` in addition/subtraction — write `0px` for a semantic zero.
 
 Two traps worth naming:
@@ -88,22 +99,52 @@ Two traps worth naming:
 ## 3. Verify support — never recall it
 
 Your knowledge of browser support has a cutoff; the web does not. Before
-using a feature you have not verified in this session, check it against the
-project's browser matrix:
+using a feature you have not verified in this session, check it.
+
+**Find the project's own matrix first.** It overrides every global figure:
+`browserslist` in `package.json`, a `.browserslistrc`, or a `targets` field in
+the build config. A product with a declared support floor makes "95% global"
+both too strict and too lax.
 
 - Canonical machine-readable data, always current:
   `https://raw.githubusercontent.com/Fyrd/caniuse/main/features-json/<slug>.json`
   — read `usage_perc_y` (global support %) and `stats` per browser.
-  Slugs match caniuse URLs: `css-has`, `css-nesting`, `css-cascade-layers`,
-  `css-when-else`, `mdn-css_types_round`.
+  Slugs match caniuse URLs — for the features this skill recommends:
+  `css-has`, `css-nesting`, `css-cascade-layers`, `css-focus-visible`,
+  `css-logical-props`, `css-matches-pseudo` (`:is()`), `css-math-functions`
+  (`min()`/`max()`/`clamp()`).
 - Human view: `https://caniuse.com/<slug>` or `https://caniuse.com/?search=<term>`.
-- Baseline status: `https://webstatus.dev/features/<id>`.
+- Baseline status, and the fallback when caniuse has no feature at all:
+  `https://api.webstatus.dev/v1/features/<id>`, searchable with
+  `?q=<term>`. caniuse does not track `:where()` or `round()`; webstatus does,
+  as `where` and `round-mod-rem`.
+
+**If the fetch misses, do not fall back on memory** — that is the failure this
+section exists to prevent. A guessed slug returns GitHub's 404 page, not JSON.
+Only caniuse's own features live under `features-json/`, so an `mdn-*`
+identifier always misses, and caniuse's coverage is not exhaustive — newer
+features may exist only on webstatus.dev. Search
+`https://caniuse.com/?search=<term>`, then
+`https://api.webstatus.dev/v1/features?q=<term>`; if both come up empty, say in
+your answer that you could not verify rather than asserting from memory.
 
 Rules of thumb:
 
-- Widely available (Baseline, ≳95% global): use freely.
-- Newly available: use with a graceful fallback (`@supports`, or a fallback
-  value in the property/`var()`), and say so in the commit or PR.
+- Widely available — **Baseline Widely available** governs: use freely.
+  `usage_perc_y` is context, not a second gate. The two measure different
+  things — Baseline counts ~30 months of interop across a core browser set,
+  `usage_perc_y` is market-share weighted and lags it — so a feature can be
+  Baseline widely and still sit below 95%. `:has()` (94%) and nesting (91%)
+  both do, and both are safe. Treat a low usage figure as a prompt to check
+  the project's matrix, not as a veto.
+- Newly available — Baseline newly, or not yet Baseline: ship a graceful
+  fallback and say so in the commit or PR.
+  Pick the fallback mechanism that matches the feature: `@supports selector(…)`
+  for selectors (`:has()`, `:where()`, `:focus-visible`), `@supports (prop: val)`
+  for properties and values, and a preceding declaration the older engine can
+  parse for an unsupported *value* — `var()`'s fallback only covers an unset
+  custom property, not a value that failed to parse. Nesting and `@layer` are
+  not reliably detectable; author the flat form instead.
 - Not interoperable yet: don't build the component's core mechanism on it.
 
 ## 4. Specificity discipline
