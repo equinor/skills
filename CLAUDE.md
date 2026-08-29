@@ -37,11 +37,29 @@ defining a scale". Cross-link with a `## Related` section instead of merging.
 ```yaml
 ---
 name: css-authoring          # must match the directory name
-description: Use when …      # trigger conditions first, then what the skill covers
+description: '…'            # see the routing-cue format below
 ---
 ```
 
-The `description` is the only thing an agent sees before deciding to load the skill, so it must lead with *when to use this* — not a topic label. Body is prose + fenced examples, hard-wrapped around 78 columns, `##`-numbered top-level sections.
+The `description` is the only thing an agent sees before deciding to load the skill,
+so it carries explicit routing cues, in the format used by `equinor/fusion-skills`:
+
+```
+description: '<what it does>. USE FOR: <trigger phrases and situations>.
+DO NOT USE FOR: <anti-triggers, naming the neighbouring skill>.'
+```
+
+**Anti-triggers stop being optional as soon as two skills are adjacent.** Siblings
+share vocabulary — `typography-scale` and `typography-x-height-alignment` both talk
+about fonts, sizes, steps and tokens — and no amount of positive phrasing tells an
+agent which one a question belongs to. Naming the neighbour does.
+
+This applies to the description only. It is a routing signal, matched against rather
+than followed; the skill *body* keeps positive framing, because an instruction written
+as a negation still puts the thing it forbids in play.
+
+Body is prose + fenced examples, hard-wrapped around 78 columns, `##`-numbered
+top-level sections.
 
 Work on a new skill happens on a `skill/<skill-name>` branch (see `origin/skill/css-authoring` for the reference draft, which establishes the house style: a named core pattern first, then supporting practice, then discipline/anti-patterns).
 
@@ -74,8 +92,8 @@ open an issue there. `ids-meetup-oslo-26` has such a lockfile with four
 installed skills, so this is a live hazard rather than a hypothetical one.
 
 **What we deliberately do not adopt from that repo.** Its section structure
-(`When to use` / `When not to use` / `Required inputs` / …), its
-`USE FOR:` / `DO NOT USE FOR:` description format, and its richer frontmatter
+(`When to use` / `When not to use` / `Required inputs` / …) and its richer
+frontmatter
 (`license`, `compatibility`, `metadata.version`/`status`/`owner`) belong to a
 catalog governance model with releases and ownership that this repo has not
 taken on. Ours stay at two frontmatter keys and the section shape described
