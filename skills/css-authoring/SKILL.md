@@ -9,6 +9,12 @@ How to write CSS that stays legible as it grows: every colour, size, and
 state change flows through a small set of named channels, selectors say what
 they mean, and browser support is checked, not remembered.
 
+**This skill targets modern, evergreen browsers.** It recommends features on
+the basis that they are Baseline available, not that they are universally
+supported. Backward compatibility with older browsers is the consuming
+project's responsibility — section 3 is how you find out what your own target
+actually allows before you write the rule.
+
 ## 1. Channel variables — the core pattern
 
 Declare each *channel* a component paints with as a pseudo-private custom
@@ -83,7 +89,8 @@ first (section 3).
 - **`:focus-visible`**, never bare `:focus`, for focus rings.
 - **Math functions** (`calc()`, `round()`, `clamp()`) to keep derivations in
   the stylesheet instead of baking their results. `round()` is Baseline *newly*
-  — it needs a fallback under section 3, unlike the rest of this list. Note: `calc()` rejects
+  rather than widely — fine on an evergreen target, worth a check against the
+  project's matrix (section 3) if there is a long tail to support. Note: `calc()` rejects
   unitless `0` in addition/subtraction — write `0px` for a semantic zero.
 
 Two traps worth naming:
@@ -137,7 +144,9 @@ Rules of thumb:
   Baseline widely and still sit below 95%. `:has()` (94%) and nesting (91%)
   both do, and both are safe. Treat a low usage figure as a prompt to check
   the project's matrix, not as a veto.
-- Newly available — Baseline newly, or not yet Baseline: ship a graceful
+- Newly available — Baseline newly, or not yet Baseline: the project's matrix
+  decides. On a managed, auto-updating fleet a Baseline-newly feature is
+  usually fine; where there is a long tail of older browsers, ship a graceful
   fallback and say so in the commit or PR.
   Pick the fallback mechanism that matches the feature: `@supports selector(…)`
   for selectors (`:has()`, `:where()`, `:focus-visible`), `@supports (prop: val)`
