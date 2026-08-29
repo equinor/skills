@@ -20,6 +20,17 @@ Planned areas:
 - **Spacing** – ratio-based spacing scales, inset proportions
 - **Design systems** – broader EDS-informed practices
 
+## Browser support
+
+The CSS in these skills targets modern, evergreen browsers. Features are
+recommended on the basis that they are Baseline available — not that they are
+universally supported — because the products these skills came from run on
+centrally managed browsers that update continuously.
+
+If you need to support older browsers, that is your project's call to make.
+Every skill that recommends a CSS feature also tells you how to check it against
+your own browser matrix first.
+
 ## Installing a skill
  
 Once skills are published, install a single one with:
