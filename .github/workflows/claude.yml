@@ -9,12 +9,16 @@ on:
     types: [opened, assigned]
   pull_request_review:
     types: [submitted]
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
 
 jobs:
   claude:
-    # Only run when someone actually writes "@claude"
+    # Only run when someone actually writes "@claude" — but hand off PR
+    # review requests (comments mentioning "@claude" + "review" on a PR)
+    # to the review job instead, so we don't double-respond.
     if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude') && !(github.event.issue.pull_request != null && contains(github.event.comment.body, 'review'))) ||
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
@@ -64,3 +68,7 @@ jobs:
           claude_args: >-
             --allowed-tools
             "WebSearch,WebFetch,Bash(git:*),Bash(gh pr:*),Bash(gh issue:*),Bash(ls:*),Bash(cd:*),Bash(cat:*),Bash(find:*),Bash(grep:*),Bash(head:*),Bash(tail:*),Bash(wc:*),Bash(sort:*),Bash(uniq:*),Bash(diff:*),Bash(echo:*),Bash(mkdir:*),Bash(cp:*),Bash(mv:*)"
+
+  review:
+    # Automatic review on every PR open/update, or on request via a PR
+    # comment
