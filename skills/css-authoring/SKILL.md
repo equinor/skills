@@ -113,6 +113,19 @@ using a feature you have not verified in this session, check it.
 the build config. A product with a declared support floor makes "95% global"
 both too strict and too lax.
 
+**If the project declares no matrix, that is the finding.** Say so, and propose
+one rather than quietly substituting global usage figures — those answer a
+question about the whole web, not about the people who use this product.
+`browserslist` is the form to propose: every build tool already reads it, so it
+turns a support policy from prose somebody remembers into a value a tool can
+check.
+
+```
+# .browserslistrc — the browsers this product actually ships to
+last 2 versions
+not dead
+```
+
 - Canonical machine-readable data, always current:
   `https://raw.githubusercontent.com/Fyrd/caniuse/main/features-json/<slug>.json`
   — read `usage_perc_y` (global support %) and `stats` per browser.
