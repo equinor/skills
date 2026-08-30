@@ -39,6 +39,17 @@ Once skills are published, install a single one with:
 npx skills add equinor/skills --skill <skill-name>
 ```
  
+## Third-party assets
+
+Some skills bundle files they need in order to run — currently the Inter and
+EB Garamond typefaces used by `typography-x-height-alignment` to demonstrate
+itself without arguments.
+
+**Bundled assets keep their own licences and are not covered by this
+repository's MIT licence.** Both fonts are SIL OFL 1.1; their licence texts and
+authorship sit alongside them in
+[`skills/typography-x-height-alignment/assets/fonts/`](skills/typography-x-height-alignment/assets/fonts/).
+
 ## Status
  
 🚧 Pre-release. Nothing here has been announced, and anything may change without warning until the meetup.

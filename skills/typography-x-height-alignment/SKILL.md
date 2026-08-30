@@ -52,7 +52,9 @@ these two and you get "EB Garamond has a low x-height, so boost your headings â€
 
 Bundling these binaries does not contradict the rule below about not vendoring
 fonts. That rule is about **licence-restricted** faces â€” Equinor's cannot be
-redistributed. OFL fonts can, with their licence files, which are alongside them.
+redistributed. OFL fonts can, provided the licence travels with them; see
+[`assets/fonts/README.md`](assets/fonts/README.md) for authorship, provenance
+and the terms, which are **not** this repository's MIT licence.
 
 ## 1. Extract the metrics
 
