@@ -1,6 +1,6 @@
 # Positions
 
-Three places where this skill takes a stance that costs something, with the
+Four places where this skill takes a stance that costs something, with the
 evidence for it. Systems under delivery pressure often simplify in the opposite
 direction, and these are the arguments for not doing that.
 
@@ -95,13 +95,43 @@ optical adjustment in the scale instead of hoping each consumer applies it.
 
 ---
 
+## 4. Ten close steps, not six wide ones
+
+**The simplification:** widen the ratio — 1.25 or 1.333 — so the ramp has fewer,
+more obviously distinct steps, and drop from ten labels to six.
+
+**Why it costs more than it looks.** The target is an **application interface**:
+UI chrome, form labels, table cells, captions and dense data, where several
+sizes must coexist within a few pixels of each other and still read as
+deliberate. `2^(1/5)` ≈ 1.1487 gives that. A page-oriented scale wants the
+opposite — fewer, wider steps and a much larger display end — and judged as one,
+this ramp looks indecisive. It is not a compromise between the two; it is fitted
+to one of them, and the skill should be read that way.
+
+The tightness also costs nothing at the point of use, because **a hierarchy
+sub-selects steps rather than walking them.** Taking every second step from
+`2xl` gives a heading ramp at comfortable density:
+
+```
+2xl 21px   4xl 28px   6xl 37px        (skipping 3xl 24.5 and 5xl 32)
+```
+
+Every second step is `2^(2/5)` ≈ 1.3195 — a conventional heading ratio, obtained
+free from the same constants, with the skipped steps still available for the
+cases that need them. Widening the ratio to get that spacing throws away the
+intermediate sizes the interface needs; sub-selecting keeps both.
+
+Ten steps is a palette, not a sequence.
+
+---
+
 # Limits of the snap grid
 
 Neither of these is a reason to change the grid. Both are reasons to state the
 limit, because in each case the formula promises something the rounded output
 does not always deliver — and the gap is small enough to read as a bug.
 
-## 4. The octave doubling is exact in the formula, not always in the output
+## 5. The octave doubling is exact in the formula, not always in the output
 
 Section 1 leans on the octave landmark: five steps up doubles the size. That is
 what makes it safe to sub-select steps for a hierarchy, because any step you
@@ -128,7 +158,7 @@ discrepancy and file it.
 Treat the list as a fixture. A sixth deviation means the constants or the snap
 moved, and should fail a build rather than pass quietly.
 
-## 5. A correction smaller than the snap grid does not survive it
+## 6. A correction smaller than the snap grid does not survive it
 
 Section 4's two-ramp path applies `round(step × correction, 0.5px)`. When the
 correction is small, the grid is coarser than the correction itself, and the

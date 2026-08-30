@@ -9,10 +9,6 @@ A scale is an *algorithm*, not a table of numbers. Ship the formula, derive the
 values, and let one constant — the base size — carry density. Every value below
 is reproducible from two lines of arithmetic; nothing is authored twice.
 
-**This is a scale for an application interface** — ten close steps, a density
-axis, a 4px grid — for UI chrome and dense data, not a page. Tightness is free
-at the point of use: hierarchies sub-select, e.g. `2xl / 4xl / 6xl` = `21 / 28 / 37`.
-
 ## 1. Sizes: one base, one ratio, one snap
 
 ```
