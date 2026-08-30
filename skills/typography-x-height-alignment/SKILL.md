@@ -62,78 +62,16 @@ and the terms, which are **not** this repository's MIT licence.
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install fonttools brotli
+.venv/bin/python scripts/xheight.py REFERENCE.otf SECONDARY.woff2
 ```
 
-```python
-# xheight.py — usage: python xheight.py REFERENCE.otf SECONDARY.woff2 ...
-import sys, json
-from pathlib import Path
-from fontTools.ttLib import TTFont
-from fontTools.pens.boundsPen import BoundsPen
+`scripts/xheight.py` reads `OS/2` and `head` from each file and prints the
+metrics, ratios and derived correction as JSON. Run it with **no arguments** to
+measure the bundled demo pair — the fastest check that your environment works.
 
-def glyph_top(font, ch):
-    """Fallback: the top of a glyph's bounding box, in font units."""
-    glyphs, cmap = font.getGlyphSet(), font.getBestCmap()
-    name = cmap.get(ord(ch))
-    if not name:
-        return None
-    pen = BoundsPen(glyphs)
-    glyphs[name].draw(pen)
-    return pen.bounds[3] if pen.bounds else None
-
-def metrics(path):
-    font = TTFont(path, fontNumber=0, lazy=True)   # fontNumber: .ttc collections
-    upm = font["head"].unitsPerEm
-    os2 = font["OS/2"]
-
-    x = getattr(os2, "sxHeight", None)
-    cap = getattr(os2, "sCapHeight", None)
-    # OS/2 < v2 omits these, and some fonts ship 0 or -1 as a sentinel.
-    if not x or x <= 0:
-        x = glyph_top(font, "x")
-    if not cap or cap <= 0:
-        cap = glyph_top(font, "H")
-    if not x:
-        raise SystemExit(f"{path}: no usable x-height — is this a text font?")
-
-    return {
-        "family": font["name"].getDebugName(16) or font["name"].getDebugName(1),
-        "unitsPerEm": upm,
-        "xHeight": x,
-        "capHeight": cap,
-        "xRatio": round(x / upm, 6),
-        "capRatio": round(cap / upm, 6),
-        "extent": round((os2.sTypoAscender - os2.sTypoDescender) / upm, 6),
-        "source": path,
-    }
-
-def demo_pair():
-    """The bundled fonts, looked up next to this script and then in cwd."""
-    names = ["Inter.woff2", "EBGaramond.woff2"]
-    for base in (Path(__file__).resolve().parent, Path.cwd()):
-        pair = [base / "assets/fonts" / n for n in names]
-        if all(p.exists() for p in pair):
-            return [str(p) for p in pair]
-    raise SystemExit(
-        "No fonts given, and the bundled demo pair was not found.\n"
-        "Either run this from the skill directory, or pass fonts explicitly:\n"
-        "  python xheight.py REFERENCE.otf SECONDARY.woff2"
-    )
-
-paths = sys.argv[1:]
-if not paths:
-    paths = demo_pair()
-    print("No fonts given — measuring the bundled demo pair.", file=sys.stderr)
-
-fonts = [metrics(p) for p in paths]
-ref = fonts[0]
-# Derive from the raw font units, not from the rounded xRatio above — rounding
-# an intermediate and then dividing moves the last digit.
-ref_ratio = ref["xHeight"] / ref["unitsPerEm"]
-for f in fonts[1:]:
-    f["correction"] = round(ref_ratio / (f["xHeight"] / f["unitsPerEm"]), 6)
-print(json.dumps({"reference": ref["family"], "fonts": fonts}, indent=2))
-```
+It is a file rather than a snippet on purpose: the numbers it produces are
+load-bearing, and a script that is retyped from a code block can drift from the
+one that was verified.
 
 Three things to check in the output before going further:
 
@@ -179,57 +117,29 @@ its inputs* in `$extensions` so a build can recompute and assert rather than
 trust a committed number:
 
 ```json
-{
-  "typography": {
-    "font-family": {
-      "text": { "$type": "fontFamily", "$value": ["Inter", "sans-serif"] },
-      "display": { "$type": "fontFamily", "$value": ["Equinor", "sans-serif"] }
-    },
-    "x-height-correction": {
-      "text": {
-        "$type": "number",
-        "$value": 1,
-        "$description": "Reference family — corrected against itself."
-      },
-      "display": {
-        "$type": "number",
-        "$value": 1.137288,
-        "$description": "Scale Equinor by this to match Inter's x-height.",
-        "$extensions": {
-          "com.equinor.typography": {
-            "derived": {
-              "expression": "referenceXRatio / selfXRatio",
-              "inputs": {
-                "reference": "{typography.font-family.text}",
-                "referenceXRatio": 0.545898,
-                "selfXRatio": 0.48
-              }
-            },
-            "metrics": {
-              "unitsPerEm": 1000,
-              "xHeight": 480,
-              "capHeight": 700,
-              "extent": 1.0,
-              "source": "https://cdn.example.com/font/EquinorVariable-VF.woff2",
-              "extractedAt": "2026-08-29",
-              "method": "OS/2.sxHeight"
-            }
-          }
-        }
+"x-height-correction": {
+  "display": {
+    "$type": "number",
+    "$value": 1.137288,
+    "$extensions": {
+      "com.equinor.typography": {
+        "derived": {
+          "expression": "referenceXRatio / selfXRatio",
+          "inputs": { "referenceXRatio": 0.545898, "selfXRatio": 0.48 }
+        },
+        "metrics": { "unitsPerEm": 1000, "xHeight": 480, "source": "…",
+                     "extractedAt": "2026-08-29", "method": "OS/2.sxHeight" }
       }
     }
   }
 }
 ```
 
-**Namespace:** DTCG requires `$extensions` keys to be reverse-DNS. Use the
-project's existing namespace if it has one — grep for `"$extensions"` in the
-token files — otherwise ask for the organisation's domain rather than inventing
-one. `com.equinor.typography` above is the reference implementation's.
+The committed `$value` is then *checkable*: a build reads `derived.expression`
+and its `inputs`, recomputes, and fails if they disagree.
 
-**Record `method`.** `OS/2.sxHeight` and `measured:x-glyph-bounds` are not the
-same quality of evidence, and the difference matters when someone re-derives
-the number against a newer release of the font.
+Full example, the reverse-DNS namespace rule, and why `method` is recorded:
+[`references/token-shape.md`](references/token-shape.md).
 
 ## 4. Delivering the correction
 
@@ -329,6 +239,35 @@ the older font.
   `(typoAscender − typoDescender) / unitsPerEm` — a face can carry a larger
   nominal size and still occupy less vertical space (Equinor 1.000em against
   Inter's 1.210em), so the corrected face is usually not the one overflowing.
+
+## Representative requests
+
+The acceptance criteria for this skill. A change that breaks any of these is a
+regression, whatever else it improves.
+
+**1. "Show me how x-height alignment works."** — no fonts named.
+→ Run `scripts/xheight.py` with no arguments and walk through the result:
+Inter `0.545898`, EB Garamond `0.400000`, correction `1.364746`.
+*Prevents:* explaining the technique in the abstract when a runnable
+demonstration is sitting in `assets/fonts`.
+
+**2. "Align the x-height of font-a and font-b; font-a is the master."** — files
+given. → Measure both, derive the correction, emit the DTCG token with
+`derived: {expression, inputs}` and the metrics recorded, then ask whether the
+target is CSS-only before emitting `size-adjust` or corrected sizes.
+*Prevents:* a bare number in chat with no provenance, and picking a delivery
+mechanism before knowing where the type renders.
+
+**3. "Align Helvetica Neue with Inter."** — a font is named but no file is
+available. → Ask for the file, or a URL to fetch.
+*Prevents:* the failure this skill exists to stop — answering from remembered
+or documented metrics. Also prevents measuring the bundled demo pair and
+presenting the result as though it described the named fonts.
+
+A fourth, for routing rather than behaviour: **"Build me a type scale based on
+the EDS scale"** must load `typography-scale`, not this skill. The two share
+almost all their vocabulary, which is what the `DO NOT USE FOR:` cues in both
+descriptions exist to separate.
 
 ## Related
 
