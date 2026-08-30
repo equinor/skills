@@ -184,12 +184,27 @@ browser recomputes. Platforms that cannot evaluate expressions — Figma
 variables, React Native — get **baked values from the same source**, never
 hand-transcribed ones.
 
-`round()` and `pow()` are CSS Values 4 math functions with real support
-constraints. Verify them against the project's browser matrix before shipping —
-`https://raw.githubusercontent.com/Fyrd/caniuse/main/features-json/<slug>.json`,
-or `https://webstatus.dev` — rather than recalling what you think is safe. If
-the matrix does not clear them, emit baked values everywhere and keep the
-expression in a comment. See the `css-authoring` skill.
+`round()` and `pow()` are CSS Values 4 math functions. `round()` is Baseline
+*newly*, which is a question about the target, not a verdict — **so ask it
+rather than deciding for the reader:**
+
+> Does this need to support older browsers, or only evergreen ones?
+
+- **Evergreen only** — a centrally managed or auto-updating fleet, or a
+  `browserslist` that says so. Emit the expressions. This is the whole point:
+  the scale stays legible and density recomputes in the browser.
+- **Older browsers in scope** — emit baked values everywhere and keep the
+  expression in a comment, so the derivation survives even though the browser
+  never sees it.
+
+Defaulting to baked values "to be safe" is not neutral. It discards the
+readable artefact for a constraint the project may not have, and it does so
+silently. If no matrix is declared and nobody answers, say which way you went
+and why. Verify current status against
+`https://raw.githubusercontent.com/Fyrd/caniuse/main/features-json/<slug>.json`
+or `https://api.webstatus.dev/v1/features/<id>` rather than recalling it — and
+note that caniuse has no feature for `round()`; webstatus calls it
+`round-mod-rem`. See the `css-authoring` skill.
 
 ## 6. Verification discipline
 

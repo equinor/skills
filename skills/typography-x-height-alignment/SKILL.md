@@ -228,25 +228,38 @@ this token file is its input.
 
 ## 5. Why this must be derived, not transcribed
 
-EDS shipped `size-adjust: 105.9%` for its display face, labelled
-`/* Match Inter x-height */`. The metrics require 113.73%.
+A correction is a *quotient of two measurements*. Written into a stylesheet as a
+literal, it stops being that and becomes a number that happens to be right
+today.
 
-The value was almost certainly right when written — 105.9% implies an x-height
-around 0.5155, against today's 0.480 — and was never recalculated when the font
-was updated. So the face rendered at roughly 93% of Inter's x-height, visibly
-mismatched, under a comment asserting the opposite. The mono face had the same
-defect: 95.2% shipped where 101.09% is required.
+The bundled pair shows how fast it stops being right. Measure EB Garamond
+against Inter and you get `1.364746` — at `wght 400`. The same pairing at
+`wght 700` needs `1.302860`, because EB Garamond's x-height moves along the
+weight axis and Inter's does not. Nothing about the literal `1.364746` says
+which weight it belongs to, so a stylesheet carrying it is silently wrong for
+every heading not set at Regular.
 
-Nothing there is an arithmetic mistake. A number derived from font metrics was
-stored as a literal, far from the metrics, with no test relating the two — so a
-font update invalidates it *silently*. There is no build step that can fail.
+Font revisions do the same thing more slowly. A foundry adjusts an x-height
+between releases; the transcribed percentage does not move, because nothing
+relates it to the metrics any more. The typical symptom is a `size-adjust`
+value with a comment asserting the faces match, in a stylesheet where they
+visibly do not — the comment is the last trace of a derivation nobody can rerun.
 
-So: extract in the build, from the fonts actually being served; derive the
-factor; and assert the relationship in a test, so a font update either moves the
-value or breaks the build. Where you find a discrepancy you cannot resolve,
-record it — hypothesis, impact, status — rather than quietly correcting it. The
-105.9% finding is only legible because someone wrote down what it implied about
-the older font.
+There is no arithmetic mistake in any of this. The defect is structural: a
+derived value stored far from its inputs, with no test relating the two, so an
+upstream change invalidates it *silently*. No build step can fail.
+
+So:
+
+- **Extract in the build**, from the fonts actually being served.
+- **Derive the factor**; never write the percentage by hand.
+- **Record the inputs alongside it** — both metrics, the instance, the method —
+  so the claim is checkable rather than merely stated.
+- **Assert the relationship in a test**, so a font update either moves the value
+  or breaks the build.
+- **Record a discrepancy you cannot resolve** — hypothesis, impact, status —
+  rather than quietly correcting it. A wrong number whose reasoning is written
+  down can be diagnosed later; one silently fixed teaches nobody why.
 
 ## 6. Check the result
 
@@ -274,14 +287,14 @@ each with the mistake it prevents:
 
 ## Provenance
 
-The metric conventions, the `$extensions` shape and the 105.9% finding come
-from the EDS token rework in **`equinor/ids-meetup-oslo-26`**
+The metric conventions and the `$extensions` shape come from the EDS token
+rework in **`equinor/ids-meetup-oslo-26`**
 (Equinor-internal), prepared for the Into Design Systems Oslo meetup,
 9 September 2026:
 
 | Path | What it establishes |
 | --- | --- |
-| `eds-tokens-reworked/src/font-metrics.json` | Committed metrics with source URLs, and the recorded discrepancy |
+| `eds-tokens-reworked/src/font-metrics.json` | Committed metrics with their sources, and the extraction discipline |
 | `eds-tokens-reworked/src/formulas.ts` | `xHeightCorrection()` |
 | `eds-tokens-reworked/src/build/tokens.ts` | The `derived: { expression, inputs }` extension shape |
 | `eds-tokens-reworked/DECISIONS.md` | Decision 5 — bake the correction; font size only |
