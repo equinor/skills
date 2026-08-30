@@ -272,6 +272,8 @@ each with the mistake it prevents:
 
 - **`typography-scale`** — applies the correction across a size ramp, and emits
   the two-scale output for non-CSS targets.
+- **`typography-weight-matching`** — once sizes match, the faces may still
+  differ in weight and spacing; its correction takes this one's factor as input.
 
 ## Provenance
 

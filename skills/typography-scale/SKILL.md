@@ -272,6 +272,8 @@ If you simplify any of them, do it knowing the cost and write down why.
   section 4 consumes.
 - **`css-authoring`** — verifying browser support before shipping `round()`
   and `pow()`, and the channel-variable pattern for `--_base`.
+- **`typography-weight-matching`** — matching weight and letter-spacing across
+  a pair, indexed against these steps.
 
 ## Provenance
 

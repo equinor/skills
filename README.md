@@ -12,10 +12,11 @@ Available now:
 
 - **[typography-scale](skills/typography-scale)** – algorithmic type scales: sizes from one base and one ratio, line-height as a curve rather than a fixed multiple, density as a single number
 - **[typography-x-height-alignment](skills/typography-x-height-alignment)** – align two paired fonts by measured x-height, and deliver the correction as a design token
+- **[typography-weight-matching](skills/typography-weight-matching)** – match weight and letter-spacing across a font pair, and compensate for a face with no optical-size axis
 
 Planned areas:
 
-- **Typography** – font-weight and letter-spacing derived per scale step, optical padding
+- **Typography** – optical padding, algorithmic tracking for prose
 - **Colour** – OKLCH palettes, contrast (APCA)
 - **Spacing** – ratio-based spacing scales, inset proportions
 - **Design systems** – broader EDS-informed practices
