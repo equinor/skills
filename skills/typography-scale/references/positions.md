@@ -4,6 +4,9 @@ Three places where this skill takes a stance that costs something, with the
 evidence for it. Systems under delivery pressure often simplify in the opposite
 direction, and these are the arguments for not doing that.
 
+Then two limits of the snap grid, recorded where someone hitting them can find
+them.
+
 None of this is a matter of taste. Each has a measurement behind it.
 
 ## 1. Snap sizes to half a pixel, not whole pixels
@@ -89,3 +92,74 @@ A derived per-step weight and tracking ramp is how you get that refinement on
 faces the foundry did not build it into, and above the range where the ones that
 did stop helping. It is the same move as the line-height curve: encode the
 optical adjustment in the scale instead of hoping each consumer applies it.
+
+---
+
+# Limits of the snap grid
+
+Neither of these is a reason to change the grid. Both are reasons to state the
+limit, because in each case the formula promises something the rounded output
+does not always deliver — and the gap is small enough to read as a bug.
+
+## 4. The octave doubling is exact in the formula, not always in the output
+
+Section 1 leans on the octave landmark: five steps up doubles the size. That is
+what makes it safe to sub-select steps for a hierarchy, because any step you
+land on keeps a nameable relation to body text.
+
+The formula doubles exactly. The **snapped output** does not, because 0.5px is
+coarse relative to the gap between steps at the small end. Across the three EDS
+densities, 5 of the 15 pairs miss by half a pixel:
+
+```
+compact      xs   9    -> 2xl 18.5     2x =  18
+compact      md   12   -> 4xl 24.5     2x =  24
+comfortable  sm   12   -> 3xl 24.5     2x =  24
+relaxed      xs   12   -> 2xl 24.5     2x =  24
+relaxed      xl   21.5 -> 6xl 42.5     2x =  43
+```
+
+The `lg → 5xl` pair — the one the scale is anchored on, where body text sits —
+holds at **every** density, which is why the claim survives in the form section
+1 states it. The rest is worth enumerating rather than discovering: a reader who
+takes "doubles every n steps" literally will eventually find a 0.5px
+discrepancy and file it.
+
+Treat the list as a fixture. A sixth deviation means the constants or the snap
+moved, and should fail a build rather than pass quietly.
+
+## 5. A correction smaller than the snap grid does not survive it
+
+Section 4's two-ramp path applies `round(step × correction, 0.5px)`. When the
+correction is small, the grid is coarser than the correction itself, and the
+*effective* per-step correction stops being constant.
+
+Open Sans paired with Montserrat gives `× 1.019345` — an intended **+1.93%**.
+After snapping, at comfortable density:
+
+```
+step    text  display   effective
+xs      10.5     10.5      0.00%   <- erased
+sm      12       12        0.00%   <- erased
+md      14       14.5     +3.57%   <- nearly double the intent
+lg      16       16.5     +3.13%
+xl      18.5     19       +2.70%
+3xl     24.5     25       +2.04%
+6xl     37       37.5     +1.35%
+```
+
+At 12px one snap unit is **4.2%**, so a 1.93% correction cannot be represented
+on that grid at all: it rounds to nothing or to twice its intended size. The
+error is largest exactly where most interface text lives.
+
+This is specific to the baked two-ramp mechanism. `size-adjust` corrects
+continuously and has no such floor, so the CSS-only path is unaffected — which
+is easy to miss, because the worked example in section 4 uses `× 1.137288`
+(+13.7%), comfortably above the grid at every step.
+
+**What to do.** Compute the effective ratio per step before shipping, and if the
+correction is below roughly one snap unit at the smallest step, choose
+deliberately between: accepting the unevenness; dropping the correction, since a
+well-matched pair may be better served by none than by an uneven one; or giving
+the display ramp a finer grid, at the cost of leaving the shared half-pixel one.
+Do not let rounding make that choice silently.

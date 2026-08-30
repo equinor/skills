@@ -9,6 +9,10 @@ A scale is an *algorithm*, not a table of numbers. Ship the formula, derive the
 values, and let one constant — the base size — carry density. Every value below
 is reproducible from two lines of arithmetic; nothing is authored twice.
 
+**This is a scale for an application interface** — ten close steps, a density
+axis, a 4px grid — for UI chrome and dense data, not a page. Tightness is free
+at the point of use: hierarchies sub-select, e.g. `2xl / 4xl / 6xl` = `21 / 28 / 37`.
+
 ## 1. Sizes: one base, one ratio, one snap
 
 ```
@@ -17,8 +21,9 @@ size(i) = round(base × r^(i / n), snap)
 
 - `r = 2`, `n` steps per octave. The scale **doubles every n steps** — that is
   the whole point of an octave-based ratio: `lg` → five steps up is exactly
-  `2 × lg`, at every density, forever. Arbitrary ratios (1.25, 1.333) have no
-  such landmark, so the ends of the scale drift out of relation with the middle.
+  `2 × lg`, at every density. Exact in the formula; the snap costs 0.5px on a
+  few pairs, enumerated in [`references/positions.md`](references/positions.md).
+  Arbitrary ratios (1.25, 1.333) have no such landmark, so the ends drift.
 - `i` is the step index, offset so that one named step *is* the base. EDS uses
   ten steps `xs … 6xl` with `lg` at the base, so `i = labelIndex − 3`.
 - `snap` is a rounding grid, not a formatting choice — see below.
@@ -168,6 +173,9 @@ Three rules make this work:
   the 4px rhythm holds across families. Deriving a second line-height ramp from
   the corrected sizes would undo it.
 - **Take `size-adjust` out.** Keep both mechanisms and you double-correct.
+- **Check the correction survives the snap.** Below roughly one snap unit at the
+  smallest step it is erased there: `× 1.019345` lands as 0.00% at `xs`/`sm` but
+  +3.57% at `md`/`lg`. Figures in [`references/positions.md`](references/positions.md).
 
 Two numbers under one step label is the correct outcome: `display-md = 16`
 beside `text-md = 14` means *the same perceived size*, reached from different
