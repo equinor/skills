@@ -25,7 +25,34 @@ it.
 
 **Never supply metrics from memory or from a specification page.** Font vendors
 revise metrics between releases — that is the exact failure documented in
-section 5. If you cannot get a file, stop and ask for one.
+section 5. If a font is named but you cannot obtain the file, **stop and ask for
+it** — do not demonstrate on the bundled pair and present the result as if it
+described the named fonts.
+
+### The bundled demo pair
+
+`assets/fonts/` ships Inter and EB Garamond, both SIL OFL, so the procedure runs
+with nothing supplied. Run the script with no arguments to check your
+environment works and to see the output shape:
+
+```
+Inter        upm 2048   xHeight 1118   xRatio 0.545898   (reference)
+EB Garamond  upm 1000   xHeight  400   xRatio 0.400000   correction 1.364746
+```
+
+This pair is chosen to teach, not to flatter. A 36% correction is impossible to
+mistake for rounding, and because the two fonts have different `unitsPerEm`, the
+raw x-heights (1118 against 400) suggest Inter's is nearly *three* times larger
+when it is 1.36×. Normalise or be wrong by a factor of two.
+
+It is also a fair test of the alternative: ask a language model how to pair
+these two and you get "EB Garamond has a low x-height, so boost your headings —
+32px or more." Correct diagnosis, guessed number. The measured answer is
+`0.545898 / 0.400 = 1.364746`, which at a 32px step sets EB Garamond at 43.5px.
+
+Bundling these binaries does not contradict the rule below about not vendoring
+fonts. That rule is about **licence-restricted** faces — Equinor's cannot be
+redistributed. OFL fonts can, with their licence files, which are alongside them.
 
 ## 1. Extract the metrics
 
@@ -77,10 +104,18 @@ def metrics(path):
         "source": path,
     }
 
-fonts = [metrics(p) for p in sys.argv[1:]]
+DEMO = ["assets/fonts/Inter.woff2", "assets/fonts/EBGaramond.woff2"]
+paths = sys.argv[1:] or DEMO          # no arguments → the bundled demo pair
+if not sys.argv[1:]:
+    print("No fonts given — measuring the bundled demo pair.", file=sys.stderr)
+
+fonts = [metrics(p) for p in paths]
 ref = fonts[0]
+# Derive from the raw font units, not from the rounded xRatio above — rounding
+# an intermediate and then dividing moves the last digit.
+ref_ratio = ref["xHeight"] / ref["unitsPerEm"]
 for f in fonts[1:]:
-    f["correction"] = round(ref["xRatio"] / f["xRatio"], 6)
+    f["correction"] = round(ref_ratio / (f["xHeight"] / f["unitsPerEm"]), 6)
 print(json.dumps({"reference": ref["family"], "fonts": fonts}, indent=2))
 ```
 
