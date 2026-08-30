@@ -61,7 +61,17 @@ one. `com.equinor.typography` above is the reference implementation's.
 
 **`method`.** `OS/2.sxHeight` and `measured:x-glyph-bounds` are not the same
 quality of evidence, and the difference matters when someone re-derives the
-number against a newer release of the font.
+number against a newer release of the font. `scripts/xheight.py` emits it — copy
+it through rather than deciding it yourself.
+
+**`instance`.** For a variable font, record the axis location the metrics were
+read at (`{"wght": 400}`). A correction derived from a font with an `MVAR` table
+is only valid at that point; without it, the token cannot be rechecked and a
+reader cannot tell whether it applies to the weight they are setting.
+
+**`source` without a URL.** When the font was measured from a local file, record
+the path plus the `sha256` the script emits. The checksum pins the exact bytes
+measured, which is the property the URL was standing in for.
 
 **The reference family carries `$value: 1`.** Emitting it is deliberate — a
 consumer that special-cases "the family without a factor" breaks the first time

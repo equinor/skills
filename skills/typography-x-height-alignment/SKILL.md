@@ -21,7 +21,10 @@ it.
    fetch. Metrics come out of the binary; nothing else is trustworthy.
 2. **Which family is the reference** (the "master"). Normally the text face,
    because body copy is what everything else is judged against. Everything else
-   is corrected *towards* it.
+   is corrected *towards* it. "Align X with Y" means Y is the reference — if the
+   request is ambiguous, say which way you read it rather than guessing silently.
+3. **Which instance**, if the fonts are variable — normally the weight the
+   pairing is actually set at. See below; this changes the answer.
 
 **Never supply metrics from memory or from a specification page.** Font vendors
 revise metrics between releases — that is the exact failure documented in
@@ -32,29 +35,20 @@ described the named fonts.
 ### The bundled demo pair
 
 `assets/fonts/` ships Inter and EB Garamond, both SIL OFL, so the procedure runs
-with nothing supplied. Run the script with no arguments to check your
-environment works and to see the output shape:
+with nothing supplied — the fastest check that your environment works:
 
 ```
-Inter        upm 2048   xHeight 1118   xRatio 0.545898   (reference)
-EB Garamond  upm 1000   xHeight  400   xRatio 0.400000   correction 1.364746
+Inter        xRatio 0.545898  @ wght 400   (reference)
+EB Garamond  xRatio 0.400000  @ wght 400   correction 1.364746
 ```
 
-This pair is chosen to teach, not to flatter. A 36% correction is impossible to
-mistake for rounding, and because the two fonts have different `unitsPerEm`, the
-raw x-heights (1118 against 400) suggest Inter's is nearly *three* times larger
-when it is 1.36×. Normalise or be wrong by a factor of two.
+The pair is chosen to teach: a 36% correction cannot be mistaken for rounding,
+the two `unitsPerEm` differ so raw x-heights mislead by a factor of two, and
+EB Garamond's x-height moves along the weight axis while Inter's does not — so
+`1.364746` is the **wght 400** answer, not *the* answer.
 
-It is also a fair test of the alternative: ask a language model how to pair
-these two and you get "EB Garamond has a low x-height, so boost your headings —
-32px or more." Correct diagnosis, guessed number. The measured answer is
-`0.545898 / 0.400 = 1.364746`, which at a 32px step sets EB Garamond at 43.5px.
-
-Bundling these binaries does not contradict the rule below about not vendoring
-fonts. That rule is about **licence-restricted** faces — Equinor's cannot be
-redistributed. OFL fonts can, provided the licence travels with them; see
-[`assets/fonts/README.md`](assets/fonts/README.md) for authorship, provenance
-and the terms, which are **not** this repository's MIT licence.
+What it demonstrates, and why bundling OFL fonts does not contradict the
+no-vendoring rule below: [`references/demo-pair.md`](references/demo-pair.md).
 
 ## 1. Extract the metrics
 
@@ -73,7 +67,29 @@ It is a file rather than a snippet on purpose: the numbers it produces are
 load-bearing, and a script that is retyped from a code block can drift from the
 one that was verified.
 
-Three things to check in the output before going further:
+### Variable fonts: pin the instance
+
+Most fonts shipped today are variable, and a variable file is measured at one
+point on its axes. Two traps follow:
+
+- **The default instance is often not Regular.** Montserrat's variable file
+  defaults to `wght 100`, and `nameID1` gives it away — `"Montserrat Thin"`.
+  Measured straight, it yields a correction that is plausible, in range, and
+  wrong for any normal pairing.
+- **x-height moves along the axis** whenever the font has an `MVAR` table, so a
+  single scalar per family only holds at one location. For Montserrat against
+  Open Sans the correction crosses 1.0 near `wght 600` — pair at Bold and the
+  "smaller" face needs setting *smaller still*, inverting the correction.
+
+```bash
+.venv/bin/python scripts/xheight.py --location wght=400 REFERENCE.ttf SECONDARY.ttf
+```
+
+The script warns on both traps and always reports the `instance` it measured.
+Pin the weight the pairing is actually set at; if a font's axis does not reach
+it, the value is clamped and a warning says so.
+
+Four things to check in the output before going further:
 
 - **`unitsPerEm` differs between families** — 1000 and 2048 are both common.
   That is why everything is normalised to a ratio before comparing. Never
@@ -81,15 +97,20 @@ Three things to check in the output before going further:
 - **`xRatio` is plausible** — roughly 0.45–0.55 for most text faces. A value
   outside that range usually means an icon or display font, or a bad `OS/2`
   table.
-- **Whether the fallback fired.** Measured glyph bounds include *overshoot* on
-  rounded letters, so a measured `x` can run a few units above the true
-  x-height (Amatic SC: `OS/2` says 659, the glyph measures 662). Prefer `OS/2`
-  when it is valid; note it in the output when you had to measure.
+- **Which `method` fired.** `OS/2.sxHeight` and `measured:x-glyph-bounds` are
+  not the same quality of evidence — measured glyph bounds include *overshoot*
+  on rounded letters, so a measured `x` can run a few units above the true
+  x-height (Amatic SC: `OS/2` says 659, the glyph measures 662). The script
+  records which one it used; carry that into the token.
+- **The `instance`, and any warnings.** A correction with no instance recorded
+  is only meaningful for a static font.
 
 **Do not vendor the font binaries to get reproducibility.** Many licences
-forbid redistribution. Commit the extracted metrics plus the source URL and
+forbid redistribution. Commit the extracted metrics plus the source and
 extraction date — measurements are not the font, and they are what the build
-actually needs.
+actually needs. When the font came from a local file rather than a URL, record
+the path and the `sha256` the script emits: a checksum pins the exact bytes
+measured, which is what the URL was standing in for.
 
 ## 2. Derive the correction
 
@@ -148,7 +169,7 @@ depends on where the type will render. **Ask before emitting anything beyond
 the token file:**
 
 > Will this be used in a CSS-only environment, or also in Figma / React Native /
-> other non-CSS targets?
+> other non-CSS targets? And which weight is the pairing set at?
 
 **CSS only** → **one** size ramp for both families, with `size-adjust` in the
 `@font-face` doing the correction. It corrects continuously, so it fixes the
@@ -229,45 +250,22 @@ the older font.
 
 ## 6. Check the result
 
-- **Render both families at the same corrected step and compare lowercase.**
-  The arithmetic can be right and the pairing still wrong — correction aligns
+- **Render both at the same corrected step and compare lowercase.** The
+  arithmetic can be right and the pairing still wrong — correction aligns
   x-heights, not stroke weight, width or colour.
-- **Do not correct the line-height.** The point of alignment is that both faces
-  look the same size at the same step, so they should share the line box. See
-  `typography-scale`.
+- **Do not correct the line-height.** Both faces look the same size at the same
+  step, so they share the line box. See `typography-scale`.
 - **Check vertical extent before believing an overflow report.**
   `(typoAscender − typoDescender) / unitsPerEm` — a face can carry a larger
-  nominal size and still occupy less vertical space (Equinor 1.000em against
-  Inter's 1.210em), so the corrected face is usually not the one overflowing.
+  nominal size and still occupy less vertical space, so the corrected face is
+  usually not the one overflowing.
 
 ## Representative requests
 
-The acceptance criteria for this skill. A change that breaks any of these is a
-regression, whatever else it improves.
-
-**1. "Show me how x-height alignment works."** — no fonts named.
-→ Run `scripts/xheight.py` with no arguments and walk through the result:
-Inter `0.545898`, EB Garamond `0.400000`, correction `1.364746`.
-*Prevents:* explaining the technique in the abstract when a runnable
-demonstration is sitting in `assets/fonts`.
-
-**2. "Align the x-height of font-a and font-b; font-a is the master."** — files
-given. → Measure both, derive the correction, emit the DTCG token with
-`derived: {expression, inputs}` and the metrics recorded, then ask whether the
-target is CSS-only before emitting `size-adjust` or corrected sizes.
-*Prevents:* a bare number in chat with no provenance, and picking a delivery
-mechanism before knowing where the type renders.
-
-**3. "Align Helvetica Neue with Inter."** — a font is named but no file is
-available. → Ask for the file, or a URL to fetch.
-*Prevents:* the failure this skill exists to stop — answering from remembered
-or documented metrics. Also prevents measuring the bundled demo pair and
-presenting the result as though it described the named fonts.
-
-A fourth, for routing rather than behaviour: **"Build me a type scale based on
-the EDS scale"** must load `typography-scale`, not this skill. The two share
-almost all their vocabulary, which is what the `DO NOT USE FOR:` cues in both
-descriptions exist to separate.
+Three acceptance criteria — the no-fonts demo path, the files-given path, and
+the refusal path when a font is named but unavailable — plus a routing check,
+each with the mistake it prevents:
+[`references/representative-requests.md`](references/representative-requests.md).
 
 ## Related
 
