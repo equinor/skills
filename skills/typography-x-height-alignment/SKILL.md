@@ -67,6 +67,7 @@ python3 -m venv .venv && .venv/bin/pip install fonttools brotli
 ```python
 # xheight.py — usage: python xheight.py REFERENCE.otf SECONDARY.woff2 ...
 import sys, json
+from pathlib import Path
 from fontTools.ttLib import TTFont
 from fontTools.pens.boundsPen import BoundsPen
 
@@ -106,9 +107,22 @@ def metrics(path):
         "source": path,
     }
 
-DEMO = ["assets/fonts/Inter.woff2", "assets/fonts/EBGaramond.woff2"]
-paths = sys.argv[1:] or DEMO          # no arguments → the bundled demo pair
-if not sys.argv[1:]:
+def demo_pair():
+    """The bundled fonts, looked up next to this script and then in cwd."""
+    names = ["Inter.woff2", "EBGaramond.woff2"]
+    for base in (Path(__file__).resolve().parent, Path.cwd()):
+        pair = [base / "assets/fonts" / n for n in names]
+        if all(p.exists() for p in pair):
+            return [str(p) for p in pair]
+    raise SystemExit(
+        "No fonts given, and the bundled demo pair was not found.\n"
+        "Either run this from the skill directory, or pass fonts explicitly:\n"
+        "  python xheight.py REFERENCE.otf SECONDARY.woff2"
+    )
+
+paths = sys.argv[1:]
+if not paths:
+    paths = demo_pair()
     print("No fonts given — measuring the bundled demo pair.", file=sys.stderr)
 
 fonts = [metrics(p) for p in paths]
