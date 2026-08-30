@@ -31,8 +31,10 @@ size(i) = round(base × r^(i / n), snap)
 ```
 
 **Snap to half a pixel (`0.03125rem`), not to whole pixels.** Whole-pixel
-rounding is too coarse at the small end: the three smallest steps collapse to
-`10 → 12 → 14`, a 20% jump where the formula asks for 8%. Half-pixel keeps the
+rounding is too coarse at the small end, where steps are closest together: it
+misses the intended ratio by up to 38.9% against half-pixel's 12.1%, and puts a
++9.09% step next to a +16.67% one in the range that carries body text. Full
+figures in [`references/positions.md`](references/positions.md). Half-pixel keeps the
 small end proportional while still landing on values a human can say out loud.
 Sub-pixel type renders fine; sub-pixel *layout* is what causes trouble, which
 is why line-heights snap differently (section 2).
@@ -57,6 +59,9 @@ Two curves, because reading and scanning want different things:
 | ------------ | ---- | ---- | ------------------------------------------ |
 | `default`    | 1.39 | 0.29 | Read text — prose, meant to be consumed     |
 | `compressed` | 1.13 | 0.13 | Scanned text — UI labels; a wrapped label must read as one block |
+
+Keep both. Collapsing to one curve plus a literal ratio at the composition layer
+looks equivalent and is not — see [`references/positions.md`](references/positions.md).
 
 **The 4px grid is the invariant; the ratio is the derived value.** Snapping the
 *result* means the rendered percentages come out non-monotonic —
@@ -248,6 +253,17 @@ xs 10.5/16   sm 12/16   md 14/20   lg 16/24   xl 18.5/24
 Reproduce these exactly before shipping a port. If a value is off by 0.5px the
 snap is wrong; if it is off by 4px the curve is being indexed differently
 (section 3).
+
+## Positions this skill takes
+
+Three choices here cost something, and a system under delivery pressure will be
+tempted to simplify each of them: half-pixel snapping, the second line-height
+curve, and deriving weight and tracking per step. Each is a measurement rather
+than a preference — the deviation table, the wrapped-label failure, and what
+Inter's `opsz` axis does and stops doing above 32px:
+[`references/positions.md`](references/positions.md).
+
+If you simplify any of them, do it knowing the cost and write down why.
 
 ## Related
 

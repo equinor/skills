@@ -105,12 +105,11 @@ Four things to check in the output before going further:
 - **The `instance`, and any warnings.** A correction with no instance recorded
   is only meaningful for a static font.
 
-**Do not vendor the font binaries to get reproducibility.** Many licences
-forbid redistribution. Commit the extracted metrics plus the source and
-extraction date — measurements are not the font, and they are what the build
-actually needs. When the font came from a local file rather than a URL, record
-the path and the `sha256` the script emits: a checksum pins the exact bytes
-measured, which is what the URL was standing in for.
+**Do not vendor the font binaries to get reproducibility.** Many licences forbid
+redistribution. Commit the extracted metrics, the source and the extraction date
+— measurements are not the font, and they are what the build needs. For a local
+file with no URL, record the path and the `sha256` the script emits: a checksum
+pins the exact bytes measured, which is what the URL stood in for.
 
 ## 2. Derive the correction
 
@@ -226,18 +225,23 @@ this token file is its input.
 
 **Never both.** `size-adjust` *and* baked sizes double-corrects.
 
+**This is not a rule that the least capable platform decides everything.** Bake
+the correction because it is a *value* the platforms would otherwise disagree
+about — not because Figma and React Native set the ceiling. Capabilities one
+platform has and another lacks, such as text-box trimming, are a different case
+and should not be levelled down:
+[`references/positions.md`](references/positions.md).
+
 ## 5. Why this must be derived, not transcribed
 
 A correction is a *quotient of two measurements*. Written into a stylesheet as a
-literal, it stops being that and becomes a number that happens to be right
-today.
+literal it stops being that, and becomes a number that happens to be right today.
 
-The bundled pair shows how fast it stops being right. Measure EB Garamond
-against Inter and you get `1.364746` — at `wght 400`. The same pairing at
-`wght 700` needs `1.302860`, because EB Garamond's x-height moves along the
-weight axis and Inter's does not. Nothing about the literal `1.364746` says
-which weight it belongs to, so a stylesheet carrying it is silently wrong for
-every heading not set at Regular.
+The bundled pair shows how fast that expires: EB Garamond against Inter needs
+`1.364746` at `wght 400` and `1.302860` at `wght 700`, because EB Garamond's
+x-height moves along the weight axis and Inter's does not. Nothing about the
+literal says which weight it belongs to, so a stylesheet carrying it is silently
+wrong for every heading not set at Regular.
 
 Font revisions do the same thing more slowly. A foundry adjusts an x-height
 between releases; the transcribed percentage does not move, because nothing
