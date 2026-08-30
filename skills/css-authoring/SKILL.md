@@ -32,7 +32,7 @@ property**.
   background-color: var(--_bg); /* the only background-color in the file */
 }
 
-.btn--danger {
+.btn[data-variant='danger'] {
   --_bg: var(--color-fill-danger);
   --_bg-hover: var(--color-fill-danger-hover);
 }
@@ -44,8 +44,9 @@ property**.
 
 **A state rule assigns *from* a channel; it never assigns a literal token.**
 The state selector always out-specifies the variant — `.btn:not(:disabled):hover`
-is `(0,3,0)` against `.btn--danger`'s `(0,1,0)`, because `:not()` takes the
-specificity of its argument — so a hover rule that assigned
+is `(0,3,0)` against `.btn[data-variant='danger']`'s `(0,2,0)` (class and
+attribute selectors weigh the same, and `:not()` takes the specificity of its
+argument) — so a hover rule that assigned
 `var(--color-fill-hover)` directly would flatten every variant it touched. By
 assigning `var(--_bg-hover)`, the rule still wins the cascade, but what it
 resolves to is a channel each variant owns.
@@ -169,12 +170,38 @@ Rules of thumb:
   not reliably detectable; author the flat form instead.
 - Not interoperable yet: don't build the component's core mechanism on it.
 
-## 4. Specificity discipline
+## 4. Selector discipline
 
-- One class on the component root (`.btn`), element-free selectors inside.
-- Variants are modifier classes (`.btn--danger`), not data-attributes —
-  reserve attribute selectors for genuine attribute state (ARIA, form state)
-  and for ancestor mode scopes (`[data-theme]`-style subtree switches).
+- **One class on the component root** (`.btn`); nothing else about the
+  component needs a class of its own unless the element is ambiguous.
+- **Variants, sizes, and boolean options are `data-*` attributes, never
+  modifier classes** — [ADR-0006 rule 3](https://github.com/equinor/design-system/blob/main/documentation/adr/0006-flat-class-names-for-eds-2-components.md)
+  (Accepted 2026-06-29): `.btn[data-variant='danger'][data-size='small']`.
+  Name the attribute after the axis, so the markup says *which* axis each
+  value belongs to. Let the default value also match the attribute's
+  absence (`:is([data-size='md'], :not([data-size]))`), so resting markup
+  stays bare. Booleans are valueless presence attributes (`data-readonly`),
+  exactly like the platform's own `disabled`.
+- **Attributes carry design-time configuration; pseudo-classes and ARIA
+  carry runtime state.** Style `:hover`, `:disabled`, `[aria-selected='true']`,
+  `[aria-pressed='true']` directly — never mirror them into `data-*`. (The
+  same split the headless libraries expose: Radix documents "when components
+  are stateful, their state will be exposed in a `data-state` attribute" —
+  state the *element* computes; the variants an *author* chooses are a
+  different kind of information.)
+- **Semantic descendants are targeted by element, scoped with `>`**
+  (`& > details > summary`, `& > :is(input, select, textarea)`, `& th, & td`)
+  so consumer content inside the component can never collide. Inner classes
+  only where the element alone is ambiguous (two icon slots).
+- Ancestor mode scopes (`[data-theme]`/`[data-density]`-style subtree
+  switches) belong to the token layer, not to components — a component
+  selector should never mention them.
 - No `#id` selectors, no `!important` — if you need either, the layer order
   or the channel design is wrong; fix that instead.
-- Keep specificity flat and let `@layer` decide precedence between concerns.
+- Keep specificity flat (class and attribute both weigh `(0,1,0)`) and let
+  `@layer` decide precedence between concerns.
+
+A note on lint configs: `stylelint-config-standard` accepts all of the above
+as-is. A `selector-class-pattern` that demands BEM (`block__element--modifier`)
+contradicts ADR-0006 — do not copy one from an older repo without checking
+what it enforces.
