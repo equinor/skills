@@ -175,31 +175,15 @@ the token file:**
 face at *any* size, including off-scale ones. This is the simpler output: no
 second scale, no per-family font-size tokens.
 
-The percentage must be **written by the generator**, not by a person:
-
-```js
-// emit-font-faces.js — reads the token file, writes the stylesheet
-const t = JSON.parse(readFileSync('tokens/typography.tokens.json', 'utf8'))
-const corrections = t.typography['x-height-correction']
-
-for (const [family, token] of Object.entries(corrections)) {
-  const ext = token.$extensions?.['com.equinor.typography']
-  const pct = +(token.$value * 100).toFixed(4)
-  out.push(`@font-face {
-  font-family: '${ext.metrics.family}';
-  src: url('${ext.metrics.source}') format('woff2-variations');${
-    token.$value === 1 ? '' : `
-  /* generated from ${ext.metrics.method}, extracted ${ext.metrics.extractedAt} */
-  size-adjust: ${pct}%;`}
-}`)
-}
-```
+The percentage must be **written by the generator**, not by a person — a worked
+emitter and the resulting stylesheet are in
+[`references/emit-font-faces.md`](references/emit-font-faces.md):
 
 ```css
 /* Generated — do not edit. Source: tokens/typography.tokens.json */
 @font-face {
   font-family: 'Equinor';
-  src: url('https://cdn.example.com/font/EquinorVariable-VF.woff2') format('woff2-variations');
+  src: url('https://cdn.example.com/font/EquinorVariable-VF.woff2') format('woff2');
   /* generated from OS/2.sxHeight, extracted 2026-08-29 */
   size-adjust: 113.7288%;
 }
