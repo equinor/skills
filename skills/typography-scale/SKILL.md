@@ -158,7 +158,7 @@ xl             18.5px                          21px                       24px
 5xl              32px                        36.5px                       36px
 ```
 
-Three rules make this work:
+Four rules make this work:
 
 - **Correct the font size only.** Apply the factor to each step and re-snap to
   the same grid (`round(step × correction, 0.5px)`), so the corrected ramp lands
@@ -169,9 +169,9 @@ Three rules make this work:
   the 4px rhythm holds across families. Deriving a second line-height ramp from
   the corrected sizes would undo it.
 - **Take `size-adjust` out.** Keep both mechanisms and you double-correct.
-- **Check the correction survives the snap.** Below roughly one snap unit at the
+- **Check the correction survives the snap.** Below half a snap unit at the
   smallest step it is erased there: `× 1.019345` lands as 0.00% at `xs`/`sm` but
-  +3.57% at `md`/`lg`. Figures in [`references/positions.md`](references/positions.md).
+  +3.57% at `md`. Figures in [`references/positions.md`](references/positions.md).
 
 Two numbers under one step label is the correct outcome: `display-md = 16`
 beside `text-md = 14` means *the same perceived size*, reached from different
@@ -260,12 +260,15 @@ snap is wrong; if it is off by 4px the curve is being indexed differently
 
 ## Positions this skill takes
 
-Three choices here cost something, and a system under delivery pressure will be
+Four choices here cost something, and a system under delivery pressure will be
 tempted to simplify each of them: half-pixel snapping, the second line-height
-curve, and deriving weight and tracking per step. Each is a measurement rather
-than a preference — the deviation table, the wrapped-label failure, and what
-Inter's `opsz` axis does and stops doing above 32px:
-[`references/positions.md`](references/positions.md).
+curve, deriving weight and tracking per step, and keeping ten close steps rather
+than six wide ones — this is a scale for an application interface, not a page.
+Each is a measurement rather than a preference: the deviation table, the
+wrapped-label failure, what Inter's `opsz` axis does and stops doing above 32px,
+and the heading ramp you get by sub-selecting rather than widening the ratio.
+That file also records two limits where the snapped output does not deliver what
+the formula promises: [`references/positions.md`](references/positions.md).
 
 If you simplify any of them, do it knowing the cost and write down why.
 
