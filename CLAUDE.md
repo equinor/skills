@@ -148,13 +148,16 @@ reader how to find or declare their own; they do not enumerate a fleet.
 
 ## Installation surfaces to keep working
 
-The README advertises two install paths, and changes to repository layout can break either:
+One path is advertised, and changes to repository layout can break it:
 
 ```bash
 npx skills add equinor/skills --skill <skill-name>   # agentskills.io standard
-/plugin marketplace add equinor/skills               # Claude Code plugin marketplace
-/plugin install <skill-name>@equinor-skills
 ```
+
+The Claude Code plugin marketplace path (`/plugin marketplace add equinor/skills`)
+was removed from the README because it needs a `.claude-plugin/marketplace.json`
+that does not exist. Do not re-add it to the README without adding that file —
+an advertised path that fails costs a review remark every time someone checks.
 
 ## Reviewing pull requests
 
