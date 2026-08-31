@@ -27,10 +27,9 @@ it.
    pairing is actually set at. See below; this changes the answer.
 
 **Never supply metrics from memory or from a specification page.** Font vendors
-revise metrics between releases — that is the exact failure documented in
-section 5. If a font is named but you cannot obtain the file, **stop and ask for
-it** — do not demonstrate on the bundled pair and present the result as if it
-described the named fonts.
+revise metrics between releases — the exact failure documented in section 5. If
+a font is named but you cannot obtain the file, **stop and ask for it**; do not
+demonstrate on the bundled pair and present the result as the named fonts.
 
 ### The bundled demo pair
 
@@ -59,6 +58,11 @@ python3 -m venv .venv && .venv/bin/pip install fonttools brotli
 .venv/bin/python scripts/xheight.py REFERENCE.otf SECONDARY.woff2
 ```
 
+**Paths here are relative to this skill's own directory.** Once installed it
+sits under `.claude/skills/typography-x-height-alignment/` while your cwd is the
+project root — so `cd` there first, or give the script its absolute path. It
+resolves the bundled fonts from its own location either way.
+
 `scripts/xheight.py` reads `OS/2` and `head` from each file and prints the
 metrics, ratios and derived correction as JSON, with warnings on stderr. Run it
 with **no arguments** to measure the bundled demo pair — the fastest check that
@@ -81,6 +85,8 @@ point on its axes. Two traps follow:
   single scalar per family only holds at one location. For Montserrat against
   Open Sans the correction crosses 1.0 near `wght 600` — pair at Bold and the
   "smaller" face needs setting *smaller still*, inverting the correction.
+  (Measured 2026-08-30 against `google/fonts`; re-run rather than trusting it,
+  since a foundry release moves these silently.)
 
 ```bash
 .venv/bin/python scripts/xheight.py --location wght=400 REFERENCE.ttf SECONDARY.ttf

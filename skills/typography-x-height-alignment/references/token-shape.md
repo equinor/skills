@@ -28,6 +28,7 @@ happens to be right today.
               "xHeight": 1118,
               "capHeight": 1490,
               "extent": 1.209961,
+              "instance": { "opsz": 14, "wght": 400 },
               "source": "https://cdn.example.com/font/InterVariable.woff2",
               "extractedAt": "2026-08-29",
               "method": "OS/2.sxHeight"
@@ -55,6 +56,7 @@ happens to be right today.
               "xHeight": 480,
               "capHeight": 700,
               "extent": 1.0,
+              "instance": { "wght": 400 },
               "source": "https://cdn.example.com/font/EquinorVariable-VF.woff2",
               "extractedAt": "2026-08-29",
               "method": "OS/2.sxHeight"
