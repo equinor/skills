@@ -35,10 +35,12 @@ size(i) = round(base × r^(i / n), snap)
 rounding is too coarse at the small end, where steps are closest together: it
 misses the intended ratio by up to 38.9% against half-pixel's 12.1%, and puts a
 +9.09% step next to a +16.67% one in the range that carries body text. Full
-figures in [`references/positions.md`](references/positions.md). Half-pixel keeps the
-small end proportional while still landing on values a human can say out loud.
-Sub-pixel type renders fine; sub-pixel *layout* is what causes trouble, which
-is why line-heights snap differently (section 2).
+figures in [`references/positions.md`](references/positions.md). Half-pixel keeps the small
+end proportional while still landing on values a human can say out loud, and
+sub-pixel *type* renders fine — it is sub-pixel *layout* that causes trouble,
+which is why line-heights snap differently (section 2). Note that `0.03125rem`
+is half a pixel only while the root is 16px: `round()` snaps in the unit it is
+given, so changing the root changes the grid.
 
 **State the constants somewhere durable.** `base`, `n`, the step offset, and
 the snap are the entire scale. Anyone who has those four numbers can regenerate
@@ -47,7 +49,9 @@ every token; anyone who has only the tokens has to reverse-engineer them.
 ## 2. Line-height: a curve indexed by step, snapped to the grid
 
 Large text needs proportionally *less* leading than small text, so a single
-ratio is wrong at one end or the other. Use an ease-out cubic across the scale:
+ratio is wrong at one end or the other. Use a cubic across the scale — the
+multiplier barely moves for the first half and falls away sharply at the top,
+which is an ease-*in* on the leading, not an ease-out:
 
 ```
 multiplier(n) = max − (n / (N−1))³ × drop
@@ -90,9 +94,13 @@ on the root:
 [data-density='compact'] { --_base: 0.875rem; }
 ```
 
-Derive companion measures from the step rather than tabulating them: an icon
-gap of `round(fontSize × 0.618, 2px)` stays in proportion at every density,
-where a flat `8px` only looks right at one.
+The attribute has to sit on the element that declares `--_base` — usually the
+root. An attribute selector matches that element, not its descendants, so
+`[data-density]` on a wrapper will not reach a `--_base` declared on `:root`.
+
+Derive companions from the step rather than tabulating them: an icon gap of
+`round(fontSize × 0.618, 2px)` stays in proportion at every density, where a
+flat `8px` only looks right at one.
 
 **Known trade-off, worth deciding explicitly:** if the line-height curve is
 indexed by *step label* (`xs` is always `n=0`), then density shifts the size
@@ -111,10 +119,11 @@ discover it by accident later.
 
 ## 4. Building a scale for a paired family
 
-When a display or mono face sits beside the text face, the two need one scale
-each — they cannot share a size ramp, because equal nominal sizes do not look
-equal (see `typography-x-height-alignment`, which produces the correction factor
-this section consumes).
+When a display or mono face sits beside the text face, equal nominal sizes do
+not look equal, so the correction has to live *somewhere* — either in the ramp
+or in the `@font-face`. Which one depends on the target, and the two options
+are genuinely different outputs, not two packagings of one.
+`typography-x-height-alignment` produces the factor this section consumes.
 
 **Ask before emitting anything:**
 
@@ -213,7 +222,7 @@ and why. Verify current status against
 `https://raw.githubusercontent.com/Fyrd/caniuse/main/features-json/<slug>.json`
 or `https://api.webstatus.dev/v1/features/<id>` rather than recalling it — and
 note that caniuse has no feature for `round()`; webstatus calls it
-`round-mod-rem`. See the `css-authoring` skill.
+`round-mod-rem`.
 
 ## 6. Verification discipline
 
@@ -223,8 +232,8 @@ A scale is a claim that N numbers all follow from four constants. Test it:
   Read back computed styles from a real browser, not from the generator that
   produced them — otherwise the test only proves the generator agrees with
   itself.
-- **Every deviation from a previous build is enumerated and named.** Anything
-  not on the list fails the harness. Silence is never a pass.
+- **Every deviation from a previous build is enumerated.** Anything not on the
+  list fails the harness. Silence is never a pass.
 - **Extrapolated values are flagged where they live** — in the token, in the
   CSS, in the harness output. A scale that has been extended past its evidence
   should say so at the point of use.
@@ -234,29 +243,10 @@ A scale is a claim that N numbers all follow from four constants. Test it:
 
 ## The EDS preset
 
-When asked for a scale "based on the Equinor Design System", these are the
-constants. They are the whole specification — everything else derives.
-
-| Constant | Value |
-| --- | --- |
-| Ratio | `2` (octave) over `5` steps — `2^(1/5)` ≈ 1.1487 |
-| Steps | `xs sm md lg xl 2xl 3xl 4xl 5xl 6xl` (ten), `lg` at the base → `i = labelIndex − 3` |
-| Size snap | `0.03125rem` (0.5px) |
-| Line-height curve, read | `max 1.39`, `drop 0.29` |
-| Line-height curve, scanned | `max 1.13`, `drop 0.13` |
-| Line-height snap | `4px` |
-| Density (base) | `compact 0.875rem`, `comfortable 1rem`, `relaxed 1.15625rem` |
-
-Comfortable, for checking an implementation — `size / line-height (read)`:
-
-```
-xs 10.5/16   sm 12/16   md 14/20   lg 16/24   xl 18.5/24
-2xl 21/28   3xl 24.5/32   4xl 28/36   5xl 32/36   6xl 37/40
-```
-
-Reproduce these exactly before shipping a port. If a value is off by 0.5px the
-snap is wrong; if it is off by 4px the curve is being indexed differently
-(section 3).
+Asked for a scale "based on the Equinor Design System"? The constants — ratio,
+steps, both snaps, both line-height curves, the three densities — and the
+comfortable ramp as a fixture to check a port against:
+[`references/eds-preset.md`](references/eds-preset.md).
 
 ## Positions this skill takes
 
@@ -277,16 +267,17 @@ If you simplify any of them, do it knowing the cost and write down why.
 - **`typography-x-height-alignment`** — run it *first* when two families are
   involved: it measures the fonts and produces the correction factor that
   section 4 consumes.
-- **`css-authoring`** — verifying browser support before shipping `round()`
-  and `pow()`, and the channel-variable pattern for `--_base`.
+- **`css-authoring`** — the channel-variable pattern for `--_base`, and the
+  general rule for verifying browser support. Not yet published in this
+  repository; it is the draft on `origin/skill/css-authoring`.
 - **`typography-weight-matching`** — matching weight and letter-spacing across
   a pair, indexed against these steps.
 
 ## Provenance
 
-The formulas and constants above come from the EDS token rework in
-**`equinor/ids-meetup-oslo-26`** (Equinor-internal), prepared for the Into
-Design Systems Oslo meetup, 9 September 2026:
+From the EDS token rework in **`equinor/ids-meetup-oslo-26`**
+(Equinor-internal), prepared for the Into Design Systems Oslo meetup on
+9 September 2026:
 
 | Path | What it establishes |
 | --- | --- |

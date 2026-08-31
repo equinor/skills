@@ -78,7 +78,7 @@ def metrics(path, location=None):
                         "which includes overshoot on rounded designs")
     cap = getattr(os2, "sCapHeight", None)
     if not cap or cap <= 0:
-        cap = glyph_top(font, "H")
+        cap = glyph_top(font, "H")     # may still be None; the correction never uses it
     if not x:
         raise SystemExit(f"{path}: no usable x-height — is this a text font?")
 
@@ -88,9 +88,9 @@ def metrics(path, location=None):
         "instance": instance,
         "unitsPerEm": upm,
         "xHeight": x,
-        "capHeight": cap,
+        "capHeight": cap,       # None if the font declares none and has no H
         "xRatio": round(x / upm, 6),
-        "capRatio": round(cap / upm, 6),
+        "capRatio": None if not cap else round(cap / upm, 6),
         "extent": round((os2.sTypoAscender - os2.sTypoDescender) / upm, 6),
         "method": method,
         "source": str(path),

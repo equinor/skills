@@ -60,8 +60,9 @@ python3 -m venv .venv && .venv/bin/pip install fonttools brotli
 ```
 
 `scripts/xheight.py` reads `OS/2` and `head` from each file and prints the
-metrics, ratios and derived correction as JSON. Run it with **no arguments** to
-measure the bundled demo pair — the fastest check that your environment works.
+metrics, ratios and derived correction as JSON, with warnings on stderr. Run it
+with **no arguments** to measure the bundled demo pair — the fastest check that
+your environment works.
 
 It is a file rather than a snippet on purpose: the numbers it produces are
 load-bearing, and a script that is retyped from a code block can drift from the
@@ -94,9 +95,11 @@ Four things to check in the output before going further:
 - **`unitsPerEm` differs between families** — 1000 and 2048 are both common.
   That is why everything is normalised to a ratio before comparing. Never
   compare raw `sxHeight` values.
-- **`xRatio` is plausible** — roughly 0.45–0.55 for most text faces. A value
-  outside that range usually means an icon or display font, or a bad `OS/2`
-  table.
+- **`xRatio` is plausible.** Text faces mostly land around 0.45–0.55, but the
+  range is wider than that: EB Garamond, the bundled demo font, measures
+  0.400000 and is a perfectly ordinary text face. Treat anything below ~0.35 or
+  above ~0.60 as a prompt to check whether you have an icon or display font, or
+  a bad `OS/2` table — not as a rejection.
 - **Which `method` fired.** `OS/2.sxHeight` and `measured:x-glyph-bounds` are
   not the same quality of evidence — measured glyph bounds include *overshoot*
   on rounded letters, so a measured `x` can run a few units above the true
@@ -120,7 +123,7 @@ correction = referenceXRatio / selfXRatio
 ```
 Inter (ref)  upm 2048  xHeight 1118  →  0.545898
 Equinor      upm 1000  xHeight  480  →  0.480000  →  1.137288  (113.73%)
-CommitMono   upm 1000  xHeight  540  →  0.540000  →  1.010922  (101.09%)
+CommitMono   upm 1000  xHeight  540  →  0.540000  →  1.010923  (101.09%)
 ```
 
 The secondary face is then set at `nominalSize × correction`. At a 14px step
@@ -147,8 +150,9 @@ trust a committed number:
           "expression": "referenceXRatio / selfXRatio",
           "inputs": { "referenceXRatio": 0.545898, "selfXRatio": 0.48 }
         },
-        "metrics": { "unitsPerEm": 1000, "xHeight": 480, "source": "…",
-                     "extractedAt": "2026-08-29", "method": "OS/2.sxHeight" }
+        "metrics": { "family": "Equinor", "unitsPerEm": 1000, "xHeight": 480,
+                     "source": "…", "extractedAt": "2026-08-29",
+                     "method": "OS/2.sxHeight" }
       }
     }
   }

@@ -15,7 +15,7 @@ for (const [family, token] of Object.entries(corrections)) {
   const pct = +(token.$value * 100).toFixed(4)
   out.push(`@font-face {
   font-family: '${ext.metrics.family}';
-  src: url('${ext.metrics.source}') format('woff2-variations');${
+  src: url('${ext.metrics.source}') format('woff2');${
     token.$value === 1 ? '' : `
   /* generated from ${ext.metrics.method}, extracted ${ext.metrics.extractedAt} */
   size-adjust: ${pct}%;`}
@@ -27,7 +27,7 @@ for (const [family, token] of Object.entries(corrections)) {
 /* Generated — do not edit. Source: tokens/typography.tokens.json */
 @font-face {
   font-family: 'Equinor';
-  src: url('https://cdn.example.com/font/EquinorVariable-VF.woff2') format('woff2-variations');
+  src: url('https://cdn.example.com/font/EquinorVariable-VF.woff2') format('woff2');
   /* generated from OS/2.sxHeight, extracted 2026-08-29 */
   size-adjust: 113.7288%;
 }

@@ -1,12 +1,10 @@
 # The bundled demo pair
 
 `assets/fonts/` ships Inter and EB Garamond, both SIL OFL, so
-`scripts/xheight.py` runs with nothing supplied. Referenced from
-`SKILL.md`.
+`scripts/xheight.py` runs with nothing supplied. Referenced from `SKILL.md`.
 
-`assets/fonts/` ships Inter and EB Garamond, both SIL OFL, so the procedure runs
-with nothing supplied. Run the script with no arguments to check your
-environment works and to see the output shape:
+Run it with no arguments to check your environment works. It prints JSON; the
+figures that matter are:
 
 ```
 Inter        upm 2048  xHeight 1118  xRatio 0.545898  @ wght 400   (reference)
@@ -39,8 +37,8 @@ these two and you get "EB Garamond has a low x-height, so boost your headings �
 `0.545898 / 0.400 = 1.364746` at wght 400, which at a 32px step sets EB Garamond
 at 43.5px.
 
-Bundling these binaries does not contradict the rule below about not vendoring
-fonts. That rule is about **licence-restricted** faces — Equinor's cannot be
+Bundling these binaries does not contradict the no-vendoring rule in `SKILL.md`
+section 1. That rule is about **licence-restricted** faces — Equinor's cannot be
 redistributed. OFL fonts can, provided the licence travels with them; see
 [`assets/fonts/README.md`](../assets/fonts/README.md) for authorship, provenance
 and the terms, which are **not** this repository's MIT licence.

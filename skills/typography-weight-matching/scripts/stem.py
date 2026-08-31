@@ -29,12 +29,23 @@ def _segments(pen_value, start):
         elif op == "lineTo":
             segs.append((cur, pts[0])); cur = pts[0]
         elif op == "qCurveTo":
+            # TrueType routinely chains off-curve points with implied on-curve
+            # midpoints between them. Expand to individual quadratic segments.
+            ctrl, end = list(pts[:-1]), pts[-1]
+            if end is None:                      # all-off-curve closed contour
+                end = ctrl[0]
+            pieces = []
+            for i, c in enumerate(ctrl):
+                nxt = end if i == len(ctrl) - 1 else (
+                    (c[0] + ctrl[i + 1][0]) / 2, (c[1] + ctrl[i + 1][1]) / 2)
+                pieces.append((c, nxt))
             prev = cur
-            for i in range(1, FLATTEN + 1):
-                t = i / FLATTEN
-                p = _quad(cur, pts[0], pts[-1], t) if len(pts) == 2 else pts[-1]
-                segs.append((prev, p)); prev = p
-            cur = pts[-1]
+            for c, e in pieces:
+                start = prev
+                for i in range(1, FLATTEN + 1):
+                    p = _quad(start, c, e, i / FLATTEN)
+                    segs.append((prev, p)); prev = p
+            cur = end
         elif op == "curveTo":
             prev = cur
             for i in range(1, FLATTEN + 1):

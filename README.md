@@ -34,10 +34,10 @@ your own browser matrix first.
 
 ## Installing a skill
  
-Once skills are published, install a single one with:
+Install a single skill with:
  
 ```bash
-npx skills add equinor/skills --skill <skill-name>
+npx skills add equinor/skills --skill typography-scale
 ```
  
 ## Third-party assets

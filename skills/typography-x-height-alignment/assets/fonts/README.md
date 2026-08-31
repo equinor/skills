@@ -39,9 +39,12 @@ version to a Reserved Font Name.
 
 ## Verifying
 
+From this directory — `shasum` reads `SHA256SUMS` relative to the cwd, and the
+script resolves the fonts from its own location, so it can be invoked by path:
+
 ```bash
 shasum -a 256 -c SHA256SUMS
-python3 xheight.py            # no arguments → measures this pair
+../../.venv/bin/python ../../scripts/xheight.py   # no arguments → this pair
 ```
 
 Expected:

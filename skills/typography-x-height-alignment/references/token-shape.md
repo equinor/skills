@@ -19,7 +19,21 @@ happens to be right today.
       "text": {
         "$type": "number",
         "$value": 1,
-        "$description": "Reference family — corrected against itself."
+        "$description": "Reference family — corrected against itself.",
+        "$extensions": {
+          "com.equinor.typography": {
+            "metrics": {
+              "family": "Inter",
+              "unitsPerEm": 2048,
+              "xHeight": 1118,
+              "capHeight": 1490,
+              "extent": 1.209961,
+              "source": "https://cdn.example.com/font/InterVariable.woff2",
+              "extractedAt": "2026-08-29",
+              "method": "OS/2.sxHeight"
+            }
+          }
+        }
       },
       "display": {
         "$type": "number",
@@ -36,6 +50,7 @@ happens to be right today.
               }
             },
             "metrics": {
+              "family": "Equinor",
               "unitsPerEm": 1000,
               "xHeight": 480,
               "capHeight": 700,
@@ -73,6 +88,13 @@ reader cannot tell whether it applies to the weight they are setting.
 the path plus the `sha256` the script emits. The checksum pins the exact bytes
 measured, which is the property the URL was standing in for.
 
-**The reference family carries `$value: 1`.** Emitting it is deliberate — a
-consumer that special-cases "the family without a factor" breaks the first time
-the reference changes.
+**The reference family carries `$value: 1` *and* its own metrics.** Both are
+deliberate. A consumer that special-cases "the family without a factor" breaks
+the first time the reference changes — and the emitter in
+[`emit-font-faces.md`](emit-font-faces.md) reads `metrics` for every family, so
+omitting the block there makes it throw on the first iteration.
+
+**`metrics.family`** is the name from the font's `name` table, which
+`scripts/xheight.py` emits. The emitter uses it rather than the token key, so
+the `@font-face` family name matches the binary rather than whatever the token
+happened to be called.

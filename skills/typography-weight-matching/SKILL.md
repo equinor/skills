@@ -133,8 +133,8 @@ Pass the **matched** weights — side space shrinks as ink grows, so measuring
 both faces at 400 misstates the ratio for a pair that is not weight-matched.
 
 ```
-Inter    advance 0.5363em   ink 0.4322em   side space 0.1042em   19.4%
-Equinor  advance 0.4840em   ink 0.3953em   side space 0.0855em   17.4%
+Inter    @400   advance 0.5363em   ink 0.4322em   side space 0.1042em   19.4%
+Equinor  @460   advance 0.4905em   ink 0.4050em   side space 0.0855em   17.4%
 port factor = 0.0855 / 0.1042 = 0.82
 ```
 
