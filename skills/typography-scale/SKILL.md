@@ -264,11 +264,9 @@ Four choices here cost something, and a system under delivery pressure will be
 tempted to simplify each of them: half-pixel snapping, the second line-height
 curve, deriving weight and tracking per step, and keeping ten close steps rather
 than six wide ones — this is a scale for an application interface, not a page.
-Each is a measurement rather than a preference: the deviation table, the
-wrapped-label failure, what Inter's `opsz` axis does and stops doing above 32px,
-and the heading ramp you get by sub-selecting rather than widening the ratio.
-That file also records two limits where the snapped output does not deliver what
-the formula promises: [`references/positions.md`](references/positions.md).
+Each is a measurement rather than a preference — the deviation table, the
+wrapped-label failure, and what Inter's `opsz` axis does and stops doing above
+32px: [`references/positions.md`](references/positions.md).
 
 If you simplify any of them, do it knowing the cost and write down why.
 
