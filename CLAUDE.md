@@ -82,7 +82,7 @@ or one that should be two.
 **2. Keep `SKILL.md` under 300 lines.** Long files degrade on smaller runtimes,
 and 500 is a hard failure in Fusion's CI. Move overflow into `references/` one
 level deep — never a chain of links that forces partial reads. The typography
-skills sit at ~260 lines, so there is less headroom than it looks.
+skills sit at 188-300 lines, so there is less headroom than it looks.
 
 **3. Check `skills-lock.json` before editing an existing `SKILL.md`.** If the
 file is an *installed copy* — its `skillPath` matches and `source` names another
@@ -90,6 +90,20 @@ repository — editing it locally is pointless: `npx skills update` overwrites t
 change and no other consumer ever sees it. Make the change at the source, or
 open an issue there. `ids-meetup-oslo-26` has such a lockfile with four
 installed skills, so this is a live hazard rather than a hypothetical one.
+
+**4. Run `python3 scripts/check-skills.py` before committing a skill change**,
+and `--deep` after a round of fixes. It encodes the checks that kept being done
+by hand: frontmatter shape, the 300-line gate, relative links, JSON and Python
+blocks, and each skill's `scripts/selftest.sh`. A selftest exists to run a
+skill's worked examples **against the fixtures the skill documents** — not
+against fixtures written for the test, which is how an emitter that crashed on
+its own token file passed review.
+
+Neither catches the other class: an instruction that runs fine and leads
+somewhere bad. That needs a fresh session with the skill installed, working
+through its representative requests with no memory of having written it. Both
+defects found that way — the crashing emitter and the venv landing inside the
+installed package — survived every re-reading. Reports go in `docs/feedback/`.
 
 **What we deliberately do not adopt from that repo.** Its section structure
 (`When to use` / `When not to use` / `Required inputs` / …) and its richer
