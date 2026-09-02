@@ -182,10 +182,10 @@ not a ceiling for CSS.
 
 ## 8. Open before 9 September
 
-- **Figma step in `typography-scale`** (#22). Committed on 2 September: the scale's
-  DTCG output becomes Figma variables and text styles through the Figma MCP,
-  with the x-height skill's baked branch feeding it. Needs a fresh-session
-  test before the talk, per the authoring gates in `CLAUDE.md`.
+- **Figma step in `typography-scale`** (#22). Committed on 2 September: the
+  scale's DTCG output becomes Figma variables and text styles through the
+  Figma MCP, with the x-height skill's baked branch feeding it. Needs a
+  fresh-session test before the talk, per the authoring gates in `CLAUDE.md`.
 - **Wrapped labels in controls.** The optical-padding guidance in the meetup
   repo says a wrapped button label still uses the centred recipe;
   `button.css` in `equinor/design-system` gives wrapped labels the baseline
