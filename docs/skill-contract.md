@@ -14,10 +14,11 @@ everything else — CSS, Figma variables and text styles, React Native values �
 is an output derived from those tokens. Never the other way round.
 
 The derivation travels with the value, in `$extensions` under a reverse-DNS
-namespace of ours (`com.equinor.typography`, `com.equinor.colour`,
-`com.equinor.spacing`), as `derived: { expression, inputs }`. Where the value
-was measured rather than computed, the extension also carries what was
-measured: `instance`, `method`, `source`, `sha256`, and a date.
+namespace of ours — `com.equinor.typography`, `com.equinor.color`,
+`com.equinor.spacing`, in code spelling because it is a key in a file — as
+`derived: { expression, inputs }`. Where the value was measured rather than
+computed, the extension also carries what was measured: `instance`, `method`,
+`source`, `sha256`, and a date.
 
 The skill shows the shape in `references/token-shape.md`, as a JSON block that
 parses, and the selftest runs the skill's emitter against that block rather
@@ -86,11 +87,11 @@ a private token set — is referenced by URL and never committed.
 
 ## 8. Shape (C)
 
-The conventions in `CLAUDE.md`, checked mechanically: two frontmatter keys;
+The conventions in `CLAUDE.md`. Checked mechanically: two frontmatter keys;
 `USE FOR:` and `DO NOT USE FOR:` cues that name the neighbouring skill;
 `SKILL.md` within the 300-line gate with overflow in `references/` one level
-deep; a `## Related` section instead of a merged skill; Oxford English in
-prose and US English in code.
+deep; a `## Related` section instead of a merged skill. Checked by reading:
+Oxford English in prose and US English in code.
 
 ## 9. Degrade, never demand
 
@@ -106,3 +107,14 @@ Run `python3 scripts/check-skills.py`. Each `contract` warning is a to-do for
 that skill; open an issue for it or fix it in the same change. A new skill is
 not ready while any remain. An existing skill may carry them for a while, but
 the warning stays visible until it does not need to.
+
+**A skill that produces no values may waive items 1 and 4.** Some skills are
+guidance — a way of writing CSS, a review discipline — and have no number for a
+token to hold or a script to compute. Such a skill says so in one sentence near
+the top of `SKILL.md`, containing the words **emits no values**, and the checker
+then reports items 1 and 4 as notes rather than warnings. This is a declaration,
+not a fix: a skill that does produce numbers and writes the sentence anyway has
+lied to the checker, and a fresh-session test will show it. Items 2, 3, 5, 6, 8
+and 9 apply to every skill; the fixed cost of a narrow skill is a requests file,
+a positions file and a `## Related` section, which is what makes it a skill
+rather than a page.

@@ -19,9 +19,10 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
 SOFT_LINES, HARD_LINES = 300, 500
 
-fails, warns = [], []
+fails, warns, notes = [], [], []
 def fail(where, msg): fails.append(f"{where}: {msg}")
 def warn(where, msg): warns.append(f"{where}: {msg}")
+def note(where, msg): notes.append(f"{where}: {msg}")
 
 
 def frontmatter(path):
@@ -115,12 +116,17 @@ def check_contract(skill, md):
     """docs/skill-contract.md — the items a script can see. Warnings, not failures."""
     text = md.read_text()
     refs = skill / "references"
+    # A guidance-only skill declares "emits no values" and items 1 and 4 become notes.
+    values = not re.search(r"emits no values", text, re.I)
+    soft = warn if values else note
     if not (refs / "token-shape.md").exists() and not re.search(r"DTCG|\$extensions", text):
-        warn(skill, "contract 1: no references/token-shape.md and SKILL.md never mentions DTCG tokens")
-    if "Ask before emitting" not in text:
+        soft(skill, "contract 1: no references/token-shape.md and SKILL.md never mentions DTCG tokens")
+    if not re.search(r"ask before (you )?emit", text, re.I):
         warn(skill, "contract 2: SKILL.md has no 'Ask before emitting' question")
     if not list((skill / "scripts").glob("*.py")):
-        warn(skill, "contract 4: no scripts/*.py — the numbers come from snippets")
+        soft(skill, "contract 4: no scripts/*.py — the numbers come from snippets")
+    if not (skill / "scripts" / "selftest.sh").exists():
+        soft(skill, "contract 4: no scripts/selftest.sh — worked examples are unverified")
     if not (refs / "representative-requests.md").exists():
         warn(skill, "contract 5: no references/representative-requests.md")
     if not (refs / "positions.md").exists():
@@ -132,8 +138,7 @@ def check_contract(skill, md):
 def selftest(skill):
     script = skill / "scripts" / "selftest.sh"
     if not script.exists():
-        warn(skill, "no scripts/selftest.sh — worked examples are unverified")
-        return
+        return                      # already reported by check_contract
     r = subprocess.run(["bash", str(script)], cwd=skill, capture_output=True, text=True)
     if r.returncode == 2:
         warn(skill, "selftest skipped — " + (r.stdout + r.stderr).strip().splitlines()[0])
@@ -163,9 +168,10 @@ def main():
         if deep:
             selftest(skill)
 
+    for n in notes: print(f"note  {n}")
     for w in warns: print(f"warn  {w}")
     for f in fails: print(f"FAIL  {f}")
-    print(f"\n{len(skills)} skills — {len(fails)} failures, {len(warns)} warnings")
+    print(f"\n{len(skills)} skills — {len(fails)} failures, {len(warns)} warnings, {len(notes)} notes")
     return 1 if fails else 0
 
 
