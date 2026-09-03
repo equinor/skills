@@ -10,6 +10,7 @@ its own worked examples still run, against the fixtures it documents rather
 than fixtures the author invented.
 
 Exit status is non-zero if anything fails. Warnings do not fail the run.
+`contract N` warnings map to the numbered items in docs/skill-contract.md.
 """
 import json, re, subprocess, sys
 from pathlib import Path
@@ -110,6 +111,24 @@ def check_venv_advice(path):
                    "the venv lands inside the installed package (issue #20)")
 
 
+def check_contract(skill, md):
+    """docs/skill-contract.md — the items a script can see. Warnings, not failures."""
+    text = md.read_text()
+    refs = skill / "references"
+    if not (refs / "token-shape.md").exists() and not re.search(r"DTCG|\$extensions", text):
+        warn(skill, "contract 1: no references/token-shape.md and SKILL.md never mentions DTCG tokens")
+    if "Ask before emitting" not in text:
+        warn(skill, "contract 2: SKILL.md has no 'Ask before emitting' question")
+    if not list((skill / "scripts").glob("*.py")):
+        warn(skill, "contract 4: no scripts/*.py — the numbers come from snippets")
+    if not (refs / "representative-requests.md").exists():
+        warn(skill, "contract 5: no references/representative-requests.md")
+    if not (refs / "positions.md").exists():
+        warn(skill, "contract 6: no references/positions.md")
+    if "## Related" not in text:
+        warn(skill, "contract 8: no '## Related' section")
+
+
 def selftest(skill):
     script = skill / "scripts" / "selftest.sh"
     if not script.exists():
@@ -136,6 +155,7 @@ def main():
         check_frontmatter(skill, md)
         check_length(md)
         check_venv_advice(md)
+        check_contract(skill, md)
         check_scripts(skill)
         for doc in [md, *sorted(skill.rglob("*.md"))]:
             check_links(doc)

@@ -71,6 +71,12 @@ skill in [`equinor/fusion-skills`](https://github.com/equinor/fusion-skills)
 tooling — per-skill versioning, lifecycle metadata, and validation CI — and is
 worth reading in full before writing a new skill.
 
+**0. Read [`docs/skill-contract.md`](docs/skill-contract.md) first.** It
+states what every skill must deliver — tokens first, ask before emitting,
+scripts not snippets, positions with evidence — once, so a new skill can be
+built to it and an existing one checked against it. `check-skills.py` reports
+each item it can see as a `contract` warning.
+
 **1. Write three representative requests before drafting.** For each: the
 trigger phrase a user would actually type, the behaviour the skill should
 produce, and the mistake it must prevent. These are the acceptance criteria —
