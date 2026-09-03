@@ -65,19 +65,24 @@ Work on a new skill happens on a `skill/<skill-name>` branch (see `origin/skill/
 
 ## Authoring gates
 
-Three checks before a skill is ready, adopted from the `fusion-skill-authoring`
+Five checks before a skill is ready, adopted from the `fusion-skill-authoring`
 skill in [`equinor/fusion-skills`](https://github.com/equinor/fusion-skills)
 (`@equinor/fusion-core`). That repo is further along than this one on catalog
 tooling — per-skill versioning, lifecycle metadata, and validation CI — and is
 worth reading in full before writing a new skill.
 
-**1. Write three representative requests before drafting.** For each: the
-trigger phrase a user would actually type, the behaviour the skill should
-produce, and the mistake it must prevent. These are the acceptance criteria —
-check the finished skill against them, not against your intent while writing it.
-If you cannot write three, the scope is underspecified or too narrow to be
-reusable. This is also the cheapest way to catch two skills that should be one,
-or one that should be two.
+**0. Read [`docs/skill-contract.md`](docs/skill-contract.md) first.** It
+states what every skill must deliver — tokens first, ask before emitting,
+scripts not snippets, positions with evidence — once, so a new skill can be
+built to it and an existing one checked against it. `check-skills.py` reports
+each item it can see as a `contract` warning.
+
+**1. Write the representative requests before drafting** — the shape and the
+file they live in are [contract §5](docs/skill-contract.md). They are the
+acceptance criteria: check the finished skill against them, not against your
+intent while writing it. If you cannot write three, the scope is underspecified
+or too narrow to be reusable. This is also the cheapest way to catch two skills
+that should be one, or one that should be two.
 
 **2. Keep `SKILL.md` under 300 lines.** Long files degrade on smaller runtimes,
 and 500 is a hard failure in Fusion's CI. Move overflow into `references/` one
