@@ -53,6 +53,16 @@ meaningless.
 | 4 | Apply the type scale                      | always       | none      |
 | 5 | Align text to the baseline grid           | 4 is on      | snap      |
 
+Dependencies, as the enable rules above express them:
+
+```mermaid
+flowchart LR
+  G[0 Show layout guides]
+  F[1 Use Equinor for headings] --> X[2 Align x-height to Inter]
+  F --> W[3 Match weight to Inter]
+  S[4 Apply the type scale] --> B[5 Align to baseline grid]
+```
+
 Step 1 is the problem: the headings look smaller and thinner, because the two
 faces share neither x-height nor stem weight at the same nominal size. Steps
 2 and 3 are the `typography-x-height-alignment` and
