@@ -79,6 +79,8 @@ def metrics(path, location=None):
                 "correction holds only at the instance above")
     else:
         instance = None
+        if location:
+            warnings.append("static font, no fvar table; --location ignored")
 
     upm = font["head"].unitsPerEm
     os2 = font["OS/2"]

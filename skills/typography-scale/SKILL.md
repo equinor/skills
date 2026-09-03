@@ -240,7 +240,7 @@ A scale is a claim that N numbers all follow from four constants. Test it:
   sixth means a constant or a snap moved, and fails the build.
 - **Auditing an existing build** runs in a fixed order: reproduce the preset
   fixture, recompute the artefacts from the constants, regenerate and diff
-  byte-for-byte, then read values. `typography-x-height-alignment` request 5.
+  byte-for-byte, then read values.
 - **Every deviation from a previous build is enumerated.** Anything not on the
   list fails the harness. Silence is never a pass.
 - **Extrapolated values are flagged where they live** — in the token, in the

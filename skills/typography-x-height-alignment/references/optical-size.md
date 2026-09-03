@@ -18,13 +18,15 @@ Sample the correction at each step of the ramp you will actually ship, with
 
 ```bash
 for px in 10.5 12 14 16 18.5 21 24.5 28 32 37; do
-  python scripts/xheight.py --location opsz=$px,wght=400 REF.ttf SECONDARY.ttf
+  .venv/bin/python $skill/scripts/xheight.py --location opsz=$px,wght=400 REF.ttf SEC.ttf
 done
 ```
 
 Literata (reference, `opsz` 7–72, `MVAR` present) against Work Sans (no `opsz`,
-x-height 0.500 throughout), measured 2026-09-03 from the Google Fonts variable
-files:
+x-height 0.500 throughout), measured 2026-09-03 at **`wght` 400** from the
+Google Fonts variable files, `Literata[opsz,wght].ttf` sha256 `b41138c9…f274440`
+and `WorkSans[wght].ttf` sha256 `f50f61f2…62a9f63` — re-measure rather than
+trust these if either file differs:
 
 | opsz (px) | Literata xRatio | correction | vs. flat 1.014 |
 | --- | --- | --- | --- |
@@ -48,9 +50,14 @@ above 2% it does. State the bound you accept, and record it.
 1. **Drift within tolerance** — emit the flat correction measured at the text
    step, and record what was sampled so the claim is checkable:
 
+   `drift` sits beside `derived` and `metrics` in the shape from
+   [`token-shape.md`](token-shape.md); `instance` stays inside `metrics`, where
+   the emitter reads it:
+
    ```json
    "com.equinor.typography": {
-     "instance": { "opsz": 16, "wght": 400 },
+     "derived": { "…": "as in token-shape.md" },
+     "metrics": { "…": "as in token-shape.md", "instance": { "opsz": 16, "wght": 400 } },
      "drift": {
        "axis": "opsz",
        "sampledAt": [10.5, 12, 14, 16, 18.5, 21, 24.5, 28, 32, 37],
@@ -62,8 +69,14 @@ above 2% it does. State the bound you accept, and record it.
 
 2. **Drift exceeds tolerance, non-CSS target in play** — you are already in the
    two-ramp branch of `typography-scale`, baking a corrected size per step. Bake
-   each step with *its own* correction, sampled at that step's `opsz`. Nothing
-   else changes; the per-step table simply stops being one number times ten.
+   each step with *its own* correction, sampled at that step's `opsz` — but
+   only where the difference clears half the snap unit at that step. On the
+   0.5px grid that is 0.25px: about 1.6% at 16px and 0.7% at 37px. Below it
+   the snap erases the per-step value, and for the pair above the per-step
+   table comes out identical to the flat one at every step (10.5, 16.0, 37.5
+   either way). Check this before building the table, or you will diff two
+   identical files and not know whether the method or the arithmetic failed.
+   `typography-scale` records the same limit among its positions.
 
 3. **Drift exceeds tolerance, CSS only** — `size-adjust` is one number per
    `@font-face`, and `@font-face` has no size-range descriptor, so the flat

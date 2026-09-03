@@ -23,20 +23,19 @@ that turns up nothing. Never answer from remembered or documented metrics.
 *Prevents:* both the recalled-metrics failure this skill exists to stop, and a
 needless round trip when the files are sitting in the project.
 
-**5. "There is already a correction in the tokens. Is it right?"** — the audit
+**4. "There is already a correction in the tokens. Is it right?"** — the audit
 case, and the one §5 of the skill argues for without giving a procedure. Do it
 in this order: re-measure from the binaries at the token's recorded `instance`
 and confirm the `sha256`s still match the files; compare the result against
 the committed `$value` *and* against `derived.inputs`; regenerate every
 artefact the token feeds (`@font-face`, corrected sizes) and diff the output
 byte-for-byte against what is committed; only then run the test, and check it
-reaches an assertion. The same order applies to a committed type scale — see
-`typography-scale` §6.
+reaches an assertion.
 *Prevents:* trusting a stale derived value, which is §5's failure mode; and the
 quieter one, where the numbers are right but the generated file has been
 hand-edited since and nothing reproduces it.
 
-A sixth, for routing rather than behaviour: **"Build me a type scale based on
+A fifth, for routing rather than behaviour: **"Build me a type scale based on
 the EDS scale"** must load `typography-scale`, not this skill. The two share
 almost all their vocabulary, which is what the `DO NOT USE FOR:` cues in both
 descriptions exist to separate.

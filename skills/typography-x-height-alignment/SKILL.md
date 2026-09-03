@@ -54,15 +54,15 @@ no-vendoring rule below: [`references/demo-pair.md`](references/demo-pair.md).
 `fontTools` reads every common format; `brotli` is what lets it open `.woff2`.
 
 ```bash
-python -c 'import fontTools, brotli' || pip install fonttools brotli
-python scripts/xheight.py REFERENCE.otf SECONDARY.woff2
+skill=.claude/skills/typography-x-height-alignment   # where the installed copy lives
+python3 -m venv .venv && .venv/bin/pip install fonttools brotli   # project root, not $skill
+.venv/bin/python $skill/scripts/xheight.py REFERENCE.otf SECONDARY.woff2
 ```
 
-**Paths here are relative to this skill's own directory.** Once installed it
-sits under `.claude/skills/typography-x-height-alignment/` while your cwd is the
-project root — give the script its absolute path rather than `cd`-ing into the
-package, and use the project's own Python environment if it has one. Nothing
-you create inside the skill directory survives `npx skills update`.
+**Paths here are from the project root, and `$skill` is the installed copy.**
+Skip the venv line if the project already has a Python with `fontTools` and
+`brotli`. Never create anything inside `$skill`: `npx skills update` replaces
+that directory wholesale, and a venv built there is the classic casualty.
 
 `scripts/xheight.py` reads `OS/2` and `head` from each file and prints the
 metrics, ratios and derived correction as JSON, with warnings on stderr. Run it
@@ -88,7 +88,7 @@ point on its axes. Two traps follow:
   (Measured 2026-08-30 against `google/fonts`; re-run it, releases move these.)
 
 ```bash
-python scripts/xheight.py --location wght=400 REFERENCE.ttf SECONDARY.ttf
+.venv/bin/python $skill/scripts/xheight.py --location wght=400 REF.ttf SECONDARY.ttf
 ```
 
 The script warns on both traps, names every axis left at its default, and
