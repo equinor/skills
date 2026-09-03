@@ -9,9 +9,9 @@ tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT
 # Fail loudly on a missing dependency rather than dying inside a redirect.
 "$py" -c 'import fontTools, brotli' 2>/dev/null || {
   echo "  SKIP: $py has no fonttools/brotli." >&2
-  echo "  Point PYTHON at one that does:" >&2
-  echo "    python3 -m venv .venv && .venv/bin/pip install fonttools brotli" >&2
-  echo "    PYTHON=\$PWD/.venv/bin/python bash scripts/selftest.sh" >&2
+  echo "  Point PYTHON at one that does — a venv at the project root, not here:" >&2
+  echo "    (cd <project> && python3 -m venv .venv && .venv/bin/pip install fonttools brotli)" >&2
+  echo "    PYTHON=<project>/.venv/bin/python bash scripts/selftest.sh" >&2
   exit 2
 }
 command -v node >/dev/null || { echo "  SKIP: node not found (the emitter check needs it)" >&2; exit 2; }

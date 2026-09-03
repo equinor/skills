@@ -54,23 +54,23 @@ no-vendoring rule below: [`references/demo-pair.md`](references/demo-pair.md).
 `fontTools` reads every common format; `brotli` is what lets it open `.woff2`.
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install fonttools brotli
-.venv/bin/python scripts/xheight.py REFERENCE.otf SECONDARY.woff2
+skill=.claude/skills/typography-x-height-alignment   # where the installed copy lives
+python3 -m venv .venv && .venv/bin/pip install fonttools brotli   # project root, not $skill
+.venv/bin/python $skill/scripts/xheight.py REFERENCE.otf SECONDARY.woff2
 ```
 
-**Paths here are relative to this skill's own directory.** Once installed it
-sits under `.claude/skills/typography-x-height-alignment/` while your cwd is the
-project root — so `cd` there first, or give the script its absolute path. It
-resolves the bundled fonts from its own location either way.
+**Paths here are from the project root, and `$skill` is the installed copy.**
+Skip the venv line if the project already has a Python with `fontTools` and
+`brotli`. Never create anything inside `$skill`: `npx skills update` replaces
+that directory wholesale, and a venv built there is the classic casualty.
 
 `scripts/xheight.py` reads `OS/2` and `head` from each file and prints the
 metrics, ratios and derived correction as JSON, with warnings on stderr. Run it
 with **no arguments** to measure the bundled demo pair — the fastest check that
 your environment works.
 
-It is a file rather than a snippet on purpose: the numbers it produces are
-load-bearing, and a script that is retyped from a code block can drift from the
-one that was verified.
+It is a file rather than a snippet on purpose: its numbers are load-bearing,
+and a script retyped from a code block drifts from the one that was verified.
 
 ### Variable fonts: pin the instance
 
@@ -85,16 +85,18 @@ point on its axes. Two traps follow:
   single scalar per family only holds at one location. For Montserrat against
   Open Sans the correction crosses 1.0 near `wght 600` — pair at Bold and the
   "smaller" face needs setting *smaller still*, inverting the correction.
-  (Measured 2026-08-30 against `google/fonts`; re-run rather than trusting it,
-  since a foundry release moves these silently.)
+  (Measured 2026-08-30 against `google/fonts`; re-run it, releases move these.)
 
 ```bash
-.venv/bin/python scripts/xheight.py --location wght=400 REFERENCE.ttf SECONDARY.ttf
+.venv/bin/python $skill/scripts/xheight.py --location wght=400 REF.ttf SECONDARY.ttf
 ```
 
-The script warns on both traps and always reports the `instance` it measured.
-Pin the weight the pairing is actually set at; if a font's axis does not reach
-it, the value is clamped and a warning says so.
+The script warns on both traps, names every axis left at its default, and
+reports the `instance` it measured. Pin the weight the pairing is set at; an
+out-of-range value is clamped with a warning. **An `opsz` axis cannot be pinned
+this way** — engines set it per element from the rendered size, so a flat
+correction drifts across the ramp. Measure the drift and publish the bound:
+[`references/optical-size.md`](references/optical-size.md).
 
 Four things to check in the output before going further:
 
@@ -102,15 +104,13 @@ Four things to check in the output before going further:
   That is why everything is normalised to a ratio before comparing. Never
   compare raw `sxHeight` values.
 - **`xRatio` is plausible.** Text faces mostly land around 0.45–0.55, but the
-  range is wider than that: EB Garamond, the bundled demo font, measures
-  0.400000 and is a perfectly ordinary text face. Treat anything below ~0.35 or
-  above ~0.60 as a prompt to check whether you have an icon or display font, or
-  a bad `OS/2` table — not as a rejection.
+  range is wider: EB Garamond, the bundled demo font, measures 0.400000 and is
+  an ordinary text face. Treat anything below ~0.35 or above ~0.60 as a prompt
+  to check for an icon/display font or a bad `OS/2` table, not as a rejection.
 - **Which `method` fired.** `OS/2.sxHeight` and `measured:x-glyph-bounds` are
-  not the same quality of evidence — measured glyph bounds include *overshoot*
-  on rounded letters, so a measured `x` can run a few units above the true
-  x-height (Amatic SC: `OS/2` says 659, the glyph measures 662). The script
-  records which one it used; carry that into the token.
+  not the same quality of evidence: measured bounds include *overshoot* on
+  rounded letters, so a measured `x` runs a few units above the true x-height
+  (Amatic SC: `OS/2` 659, glyph 662). Carry the method into the token.
 - **The `instance`, and any warnings.** A correction with no instance recorded
   is only meaningful for a static font.
 
@@ -273,9 +273,9 @@ So:
 
 ## Representative requests
 
-Three acceptance criteria — the no-fonts demo path, the files-given path, and
-the refusal path when a font is named but unavailable — plus a routing check,
-each with the mistake it prevents:
+Four acceptance criteria — the no-fonts demo, files given, a font named but
+unavailable, and auditing a correction already committed — plus a routing
+check, each with the mistake it prevents:
 [`references/representative-requests.md`](references/representative-requests.md).
 
 ## Related
