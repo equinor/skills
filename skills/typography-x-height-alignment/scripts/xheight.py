@@ -5,6 +5,7 @@ Usage:
   python xheight.py                                   # bundled demo pair
   python xheight.py REFERENCE.ttf SECONDARY.woff2     # default instances
   python xheight.py --location wght=400 A.ttf B.ttf   # pinned instance
+  python xheight.py --location opsz=14,wght=400 A.ttf B.ttf
 
 The first font is the reference; every other font is corrected towards it.
 
@@ -45,6 +46,9 @@ def metrics(path, location=None):
     if axes:
         # Pin only the axes this font has, clamped to its own range.
         want = {t: v for t, v in (location or {}).items() if t in axes}
+        for t in (location or {}):
+            if t not in axes:
+                warnings.append(f"has no {t} axis; --location {t} ignored")
         pinned = {}
         for tag, value in want.items():
             lo, _, hi = axes[tag]
@@ -57,6 +61,14 @@ def metrics(path, location=None):
         if pinned:
             instancer.instantiateVariableFont(font, pinned, inplace=True)
         instance = {t: pinned.get(t, axes[t][1]) for t in axes}
+        unpinned = [t for t in axes if t not in pinned]
+        if unpinned:
+            note = ("; opsz cannot be pinned in CSS, see "
+                    "references/optical-size.md" if "opsz" in unpinned else "")
+            warnings.append(
+                "axes left at their default: "
+                + ", ".join(f"{t}={axes[t][1]:g}" for t in unpinned)
+                + " — name them in --location if the pairing sets them" + note)
         if not pinned and axes.get("wght", (None, 400, None))[1] != 400:
             warnings.append(
                 f"default instance is wght {axes['wght'][1]}, not 400 — "
@@ -67,6 +79,8 @@ def metrics(path, location=None):
                 "correction holds only at the instance above")
     else:
         instance = None
+        if location:
+            warnings.append("static font, no fvar table; --location ignored")
 
     upm = font["head"].unitsPerEm
     os2 = font["OS/2"]
@@ -114,14 +128,28 @@ def demo_pair():
     )
 
 
-args = sys.argv[1:]
-location = None
-if args and args[0] == "--location":
-    location = {p.split("=")[0]: float(p.split("=")[1])
-                for p in args[1].split(",")}
-    args = args[2:]
+def parse_args(argv):
+    import argparse
+    p = argparse.ArgumentParser(
+        description="Extract x-height metrics and derive the alignment "
+                    "correction. The first font is the reference.",
+        epilog="With no fonts given, measures the bundled demo pair.")
+    p.add_argument("fonts", nargs="*", metavar="FONT",
+                   help="reference first, then the fonts corrected towards it")
+    p.add_argument("--location", metavar="AXIS=VALUE[,AXIS=VALUE]",
+                   help="pin variable-font axes, e.g. wght=400 or opsz=14,wght=400")
+    a = p.parse_args(argv)
+    location = None
+    if a.location:
+        try:
+            location = {k: float(v) for k, v in
+                        (kv.split("=", 1) for kv in a.location.split(","))}
+        except ValueError:
+            p.error(f"--location expects AXIS=VALUE pairs, got {a.location!r}")
+    return a.fonts, location
 
-paths = args
+
+paths, location = parse_args(sys.argv[1:])
 if not paths:
     paths = demo_pair()
     print("No fonts given — measuring the bundled demo pair.", file=sys.stderr)

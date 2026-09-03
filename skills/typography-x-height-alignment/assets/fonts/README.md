@@ -44,7 +44,7 @@ script resolves the fonts from its own location, so it can be invoked by path:
 
 ```bash
 shasum -a 256 -c SHA256SUMS
-../../.venv/bin/python ../../scripts/xheight.py   # no arguments → this pair
+python3 ../../scripts/xheight.py   # any Python with fontTools + brotli; no arguments → this pair
 ```
 
 Expected:

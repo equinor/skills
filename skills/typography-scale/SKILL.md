@@ -228,10 +228,19 @@ note that caniuse has no feature for `round()`; webstatus calls it
 
 A scale is a claim that N numbers all follow from four constants. Test it:
 
-- **Every emitted value equals what the engine computes from the expression.**
-  Read back computed styles from a real browser, not from the generator that
-  produced them — otherwise the test only proves the generator agrees with
-  itself.
+- **Every emitted value equals what the formula gives** — checked differently
+  per branch of §5. Expressions shipped: read back computed styles from a real
+  browser, because the thing under test is rounding, where a generator's
+  `round()` can disagree with CSS `round(nearest)` on exact half-way values.
+  Baked values shipped: there is no expression for the browser to evaluate, so
+  recompute the literals from the four constants; a readback there only proves
+  the browser can parse a number.
+- **The five octave exceptions are a fixture.** The pairs that miss a clean 2×
+  are enumerated in [`references/positions.md`](references/positions.md) §5. A
+  sixth means a constant or a snap moved, and fails the build.
+- **Auditing an existing build** runs in a fixed order: reproduce the preset
+  fixture, recompute the artefacts from the constants, regenerate and diff
+  byte-for-byte, then read values.
 - **Every deviation from a previous build is enumerated.** Anything not on the
   list fails the harness. Silence is never a pass.
 - **Extrapolated values are flagged where they live** — in the token, in the

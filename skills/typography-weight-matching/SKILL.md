@@ -29,8 +29,9 @@ This skill measures both and derives the corrections.
 ## 1. Measure stem width from the outlines
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install fonttools brotli
-.venv/bin/python scripts/stem.py FONT.woff2 --weights 300,400,500,700
+skill=.claude/skills/typography-weight-matching   # where the installed copy lives
+python3 -m venv .venv && .venv/bin/pip install fonttools brotli   # project root, not $skill
+.venv/bin/python $skill/scripts/stem.py FONT.woff2 --weights 300,400,500,700
 ```
 
 `scripts/stem.py` reads the stem at the glyph's **vertical midpoint** by
@@ -75,7 +76,7 @@ But it does mean the named tiers are not evenly spaced, and the fix is to
 ## 3. Match weights across the pair
 
 ```bash
-.venv/bin/python scripts/stem.py REFERENCE.woff2 TARGET.woff2 \
+.venv/bin/python $skill/scripts/stem.py REFERENCE.woff2 TARGET.woff2 \
   --match 300,400,500 --correction 1.137288
 ```
 
@@ -126,7 +127,7 @@ Tracking removes an absolute amount per character, but how it *reads* depends on
 how much side space was there to begin with.
 
 ```bash
-.venv/bin/python scripts/stem.py REFERENCE.woff2 TARGET.woff2 --tracking --at 400,460
+.venv/bin/python $skill/scripts/stem.py REFERENCE.woff2 TARGET.woff2 --tracking --at 400,460
 ```
 
 Pass the **matched** weights — side space shrinks as ink grows, so measuring

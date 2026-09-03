@@ -103,13 +103,22 @@ def check_scripts(skill):
             fail(py, f"does not compile: line {e.lineno}, {e.msg}")
 
 
-def check_venv_advice(path):
-    """A venv created inside an installed skill is clobbered by `skills update`."""
-    text = path.read_text()
-    if re.search(r"python3? -m venv \.venv", text) and re.search(
-            r"`?cd`? there first|cd into (this|the) skill", text, re.I):
-        warn(path, "tells the reader to cd into the skill and create .venv there — "
-                   "the venv lands inside the installed package (issue #20)")
+def check_venv_advice(skill):
+    """A venv created inside an installed skill is clobbered by `skills update`.
+    Any `-m venv` in a skill file must say, within two lines, that it runs at
+    the project root."""
+    files = [skill / "SKILL.md", *skill.glob("references/*.md"),
+             *skill.glob("assets/**/*.md"), *skill.glob("scripts/*.sh")]
+    for f in files:
+        if not f.exists():
+            continue
+        lines = f.read_text().splitlines()
+        for i, line in enumerate(lines):
+            if re.search(r"-m venv", line):
+                window = "\n".join(lines[max(0, i - 2):i + 3])
+                if not re.search(r"project root", window, re.I):
+                    warn(f, f"line {i + 1}: creates a venv without saying it goes at the "
+                            "project root — it lands inside the installed package (issue #20)")
 
 
 def check_contract(skill, md):
@@ -159,7 +168,7 @@ def main():
             fail(skill, "no SKILL.md"); continue
         check_frontmatter(skill, md)
         check_length(md)
-        check_venv_advice(md)
+        check_venv_advice(skill)
         check_contract(skill, md)
         check_scripts(skill)
         for doc in [md, *sorted(skill.rglob("*.md"))]:
