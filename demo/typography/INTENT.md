@@ -164,10 +164,13 @@ side), so centring the line box centres the cap, and the half-leading
 approximation used for controls is exact. Equinor sets `USE_TYPO_METRICS`
 with an ascender of 0.788 em and a descender of 0.212 em; its cap centre
 sits 0.062 em above the line-box centre, up to three pixels at heading
-sizes, three quarters of a grid cell. So headings go through the trim path,
-and a browser without `text-box` will show Equinor headings visibly off the
-guides while Inter paragraphs stay on. The grid toggle's story says so in one
-sentence, or the demo declares its browser.
+sizes, three quarters of a grid cell. So headings go through the trim path.
+`text-box` is in Chrome 133, Safari 18.2 and Firefox 154 (18 August 2026; per
+caniuse and the Firefox release calendar, checked 4 September), so every
+current evergreen browser has it, and an older one falls through the
+`@supports` gate to untrimmed text with Equinor headings visibly off the
+guides while Inter paragraphs stay on. The grid toggle's story can say so in
+one sentence.
 
 ## 6. Guides
 
