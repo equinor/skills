@@ -176,7 +176,10 @@ def figma_scripts(correction=None, display=None, family="Inter", style="Regular"
     """Two Plugin API scripts for `use_figma` (or a local plugin): variables, then styles."""
     modes = list(densities or DENSITIES)
     if "comfortable" not in modes:
-        modes = ["comfortable", *modes]        # the ramp the code-syntax names describe
+        modes = ["comfortable", *modes]
+    # Comfortable first: a new collection's first mode is its default, and the
+    # styles resolve to it until a frame sets another. Verified live 2026-09-04.
+    modes.sort(key=lambda d: d != "comfortable")
     values = {d: ramp(d, correction) for d in modes}
     var_rows = []
     for row in values["comfortable"]:

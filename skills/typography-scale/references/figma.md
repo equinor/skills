@@ -10,7 +10,7 @@ never typed in — as variables, with text styles bound to them.
 them in order; both are idempotent and reuse anything with the same name.
 
 1. **`figma-variables.js`** — a collection `Typography` with one mode per
-   density (`compact`, `comfortable`, `relaxed`); `FLOAT` variables
+   density, `comfortable` first so it is the collection's default; `FLOAT` variables
    `font-size/<step>` scoped `FONT_SIZE` and `line-height/<step>/<curve>`
    scoped `LINE_HEIGHT`, with the pixel value per mode and the CSS custom
    property as `WEB` code syntax. With `--correction`, `font-size-display/<step>`
