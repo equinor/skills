@@ -24,7 +24,16 @@ ask only if that turns up nothing.
 *Prevents:* answering from remembered or documented metrics, which is the
 failure this skill exists to stop.
 
-A fourth, for routing: **"these two fonts look like different sizes"** must load
+**4. "The weights for the display face are already in the tokens. Are they still
+right?"** — the audit case. Re-measure both files at the tokens' recorded
+`instance` and confirm the `sha256`s match; compare against `$value` *and*
+`derived.inputs`, including which correction the weights assumed; regenerate
+the table from the algorithm and diff it byte for byte against what is
+committed; only then run the test.
+*Prevents:* a weight that was right for the previous release of the font, and
+a table someone hand-edited after it was generated.
+
+A fifth, for routing: **"these two fonts look like different sizes"** must load
 `typography-x-height-alignment`, not this skill. Size and weight are different
 complaints with different fixes, and the descriptions carry `DO NOT USE FOR:`
 cues to separate them.

@@ -19,9 +19,16 @@ Requires: pip install fonttools brotli   (brotli is what opens .woff2)
 """
 import sys, json, hashlib
 from pathlib import Path
-from fontTools.ttLib import TTFont
-from fontTools.pens.boundsPen import BoundsPen
-from fontTools.varLib import instancer
+try:
+    from fontTools.ttLib import TTFont
+    from fontTools.pens.boundsPen import BoundsPen
+    from fontTools.varLib import instancer
+    import brotli  # noqa: F401  — what opens .woff2
+except ImportError as e:                       # exit 2 with instructions, not a traceback
+    sys.stderr.write(f"missing dependency: {e.name}\n"
+                     "install fontTools and brotli in the project's Python environment, e.g. at the\n"
+                     "project root: python3 -m venv .venv && .venv/bin/pip install fonttools brotli\n")
+    sys.exit(2)
 
 
 def glyph_top(font, ch):

@@ -1,6 +1,6 @@
 ---
 name: typography-weight-matching
-description: 'Use when two paired font families look mismatched in weight or spacing rather than in size — one reads heavier, or headings look loose beside body text. USE FOR: finding the weight in face B that matches face A, deriving a per-step weight and letter-spacing ramp, checking whether a weight axis is perceptually evenly spaced, compensating for a face that lacks an optical-size axis. DO NOT USE FOR: matching apparent size (use typography-x-height-alignment), building the size ramp (use typography-scale), choosing which typefaces to pair.'
+description: 'Use when two paired font families look mismatched in weight or spacing rather than in size — one reads heavier, or headings look loose beside body text. USE FOR: finding the weight in face B that matches face A, deriving a per-step weight and letter-spacing ramp, checking whether a weight axis is perceptually evenly spaced, compensating for a face that lacks an optical-size axis, emitting matched weights and a tracking port factor as DTCG tokens. DO NOT USE FOR: matching apparent size (use typography-x-height-alignment), building the size ramp (use typography-scale), choosing which typefaces to pair.'
 ---
 
 # Weight matching
@@ -26,6 +26,10 @@ This skill measures both and derives the corrections.
    face is set larger, so its stems scale up with it and it needs *less* weight
    to match. Run `typography-x-height-alignment` first and pass its factor in.
 
+`assets/fonts/` bundles Inter (SIL OFL), so `scripts/stem.py` with no
+arguments measures a real variable face with both a `wght` and an `opsz` axis —
+the fastest check that your environment works, and the selftest's fixture.
+
 ## 1. Measure stem width from the outlines
 
 ```bash
@@ -33,6 +37,10 @@ skill=.claude/skills/typography-weight-matching   # where the installed copy liv
 python3 -m venv .venv && .venv/bin/pip install fonttools brotli   # project root, not $skill
 .venv/bin/python $skill/scripts/stem.py FONT.woff2 --weights 300,400,500,700
 ```
+
+Skip the venv line if the project already has a Python with `fontTools` and
+`brotli`; never create anything inside `$skill`, which `npx skills update`
+replaces. Every result records the file it came from by path and `sha256`.
 
 `scripts/stem.py` reads the stem at the glyph's **vertical midpoint** by
 intersecting the outline with a horizontal line — not from the bounding box.
@@ -82,9 +90,10 @@ But it does mean the named tiers are not evenly spaced, and the fix is to
 
 Returns the target weight whose stem matches the reference at each tier, at the
 same *perceived* size. The target's curve is sampled once and inverted by
-interpolation — instancing a variable font is expensive, so a search loop that
-re-instances per step is what makes this slow. Expect a few seconds for a woff2
-and around twenty for a full variable TTF.
+interpolation, then corrected with one real measurement per tier — instancing a
+variable font is what costs, so the sampling dominates. Expect 20–30 seconds
+for a large variable face such as Inter (measured 2026-09-04); each extra tier
+adds one instancing.
 
 **The offsets will not be constant.** Where the target's response curve is
 concave, the same relative stem change costs fewer weight units at the light end
@@ -112,7 +121,7 @@ Two things to know before trusting a single curve:
 
 - **The axes are not independent.** In the pair measured here, the optical
   correction peaked at the reference face's *default* weight and fell away on
-  both sides — −5.56% at 400 against −4.94% at 300 and −1.90% at 700. Compute
+  both sides — −5.56% at 400 against −4.93% at 300 and −1.89% at 700. Compute
   per tier rather than scaling one curve three ways.
 - **The correction stops at the axis maximum.** Above it, the face is no longer
   corrected — usually the display range, where it matters most, and where the
@@ -132,6 +141,8 @@ how much side space was there to begin with.
 
 Pass the **matched** weights — side space shrinks as ink grows, so measuring
 both faces at 400 misstates the ratio for a pair that is not weight-matched.
+(460 is the matched 458.5 rounded to the nearest 5 for a named tier; the
+factor is 0.821 either way.)
 
 ```
 Inter    @400   advance 0.5363em   ink 0.4322em   side space 0.1042em   19.4%
@@ -143,7 +154,37 @@ So the target's tracking ramp is the reference's **scaled by 0.82**. Identical e
 tracking would eat a larger share of the target's gap and read too tight — at
 32px, −0.047em removes 45% of one face's side space and 55% of the other's.
 
-## 6. Verify
+## 6. Ask before emitting, then emit tokens first
+
+> Will these weights be used in CSS only, or also in Figma, React Native or
+> another non-CSS target?
+
+The answer changes the value, not the packaging. CSS and Figma take the
+matched weight as measured — `font-weight: 458.5` is valid CSS and a variable
+font renders it; a Figma text style binds `fontWeight` to a variable holding it.
+React Native rounds weights to hundreds, so there emit with `--snap 100`: the
+token carries the snapped value, the measured one and the residual, and the
+pairing is checked at the snapped weight rather than assumed. The same applies
+in CSS wherever the *variable* font may not load and a static face stands in —
+a question for the project's `browserslist` and its `@font-face` fallbacks,
+not for this skill. A question that would not change the output is not asked.
+
+Then emit the tokens, and derive everything else from them:
+
+```bash
+.venv/bin/python $skill/scripts/stem.py REF.woff2 TARGET.woff2 \
+  --match 300,400,500 --correction 1.137288 --format tokens --display Equinor
+.venv/bin/python $skill/scripts/stem.py REF.woff2 TARGET.woff2 \
+  --tracking --at 400,458.5 --format tokens --display Equinor
+```
+
+One `fontWeight` token per tier and one port-factor token, each with its
+derivation, the tier's axis location and the `sha256` of both files:
+[`references/token-shape.md`](references/token-shape.md). Pass
+`--correction-token` with the alias of the x-height token so the chain back to
+the measurement survives.
+
+## 7. Verify
 
 - **Look at it.** The arithmetic can be right and the pairing still wrong;
   weight matching does not fix width, contrast or colour.
@@ -173,9 +214,20 @@ from `github.com/google/fonts`.
 
 ## Representative requests
 
-Acceptance criteria — the matched-weight path, the uneven-tier check, and the
-refusal path when a file cannot be obtained:
+Acceptance criteria — the matched-weight path, the uneven-tier check, the
+refusal path when a file cannot be obtained, and auditing committed weights —
+plus a routing check:
 [`references/representative-requests.md`](references/representative-requests.md).
+
+## Positions this skill takes
+
+Five choices here cost something, and each rests on a measurement rather than a
+preference: matching by measured stem, choosing tiers instead of inheriting the
+axis, porting tracking by side space, compensating a missing `opsz` per tier
+and stopping at the axis ceiling, and committing generated values with their
+inputs. The first also carries an accessibility consequence worth knowing about
+before it is claimed as a justification:
+[`references/positions.md`](references/positions.md).
 
 ## Related
 
