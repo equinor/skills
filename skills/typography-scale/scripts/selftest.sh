@@ -30,6 +30,7 @@ grep -q "setBoundVariable('fontSize'" "$tmp/figma/figma-text-styles.js"
 grep -q "setBoundVariable('lineHeight'" "$tmp/figma/figma-text-styles.js"
 grep -q '"font-size-display/md"' "$tmp/figma/figma-variables.js"
 grep -q '"scopes": \[' "$tmp/figma/figma-variables.js"
+grep -q 'const MODES = \["comfortable", "compact", "relaxed"\]' "$tmp/figma/figma-variables.js"   # comfortable is the default mode
 if command -v node >/dev/null; then
   for f in "$tmp"/figma/*.js; do
     # top-level await is what use_figma expects; wrap to syntax-check it
