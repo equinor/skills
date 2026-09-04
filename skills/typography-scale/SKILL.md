@@ -1,6 +1,6 @@
 ---
 name: typography-scale
-description: 'Defines, ports and reviews algorithmic typographic scales. USE FOR: building a size ramp from one base and ratio, choosing or indexing line-height curves, adding a density axis, porting the Equinor Design System scale, emitting scale tokens or CSS. DO NOT USE FOR: measuring a font or deriving an x-height correction (use typography-x-height-alignment), optical padding and control heights, choosing which typefaces to pair.'
+description: 'Defines, ports and reviews algorithmic typographic scales. USE FOR: building a size ramp from one base and ratio, choosing or indexing line-height curves, adding a density axis, porting the Equinor Design System scale, emitting scale tokens, CSS, or Figma variables and text styles. DO NOT USE FOR: measuring a font or deriving an x-height correction (use typography-x-height-alignment), optical padding and control heights, choosing which typefaces to pair.'
 ---
 
 # Typographic scale
@@ -42,9 +42,9 @@ which is why line-heights snap differently (section 2). Note that `0.03125rem`
 is half a pixel only while the root is 16px: `round()` snaps in the unit it is
 given, so changing the root changes the grid.
 
-**State the constants somewhere durable.** `base`, `n`, the step offset, and
-the snap are the entire scale. Anyone who has those four numbers can regenerate
-every token; anyone who has only the tokens has to reverse-engineer them.
+**State the constants somewhere durable.** `base`, `n`, the step offset and the
+snap are the entire scale: with them every token regenerates, without them the
+tokens have to be reverse-engineered.
 
 ## 2. Line-height: a curve indexed by step, snapped to the grid
 
@@ -75,10 +75,9 @@ is not. Each line box lands on the layout grid, which is the property that
 composes; the ratio is just what that costs at that step. Say so in a comment,
 because someone will find the table and file an issue.
 
-Name the second curve for what it does, not for how it looks. `compressed`
-describes leading; `squished` is Nathan Curtis's term for a *spacing*
-proportion (vertical inset one step below horizontal), and reusing it makes two
-unrelated ideas collide inside one expression.
+Name the second curve for what it does: `compressed` describes leading, while
+`squished` is Nathan Curtis's term for a *spacing* proportion, and reusing it
+makes two unrelated ideas collide inside one expression.
 
 ## 3. Density is one number
 
@@ -94,9 +93,8 @@ on the root:
 [data-density='compact'] { --_base: 0.875rem; }
 ```
 
-The attribute has to sit on the element that declares `--_base` — usually the
-root. An attribute selector matches that element, not its descendants, so
-`[data-density]` on a wrapper will not reach a `--_base` declared on `:root`.
+The attribute must sit on the element that declares `--_base`: `[data-density]`
+on a wrapper does not reach a `--_base` declared on `:root`.
 
 Derive companions from the step rather than tabulating them: an icon gap of
 `round(fontSize × 0.618, 2px)` stays in proportion at every density, where a
@@ -113,9 +111,8 @@ leading depending on which label produced it:
 
 Indexing by *absolute size* instead makes leading purely a function of size.
 Both are defensible. Label-indexing is the incumbent in EDS and was kept
-deliberately — changing it moves rendered values in an existing product, which
-is a redesign, not a fix. Decide, record the choice, and move on; do not
-discover it by accident later.
+deliberately — changing it moves rendered values in a shipped product, which is
+a redesign, not a fix. Decide, record the choice, and do not rediscover it.
 
 ## 4. Building a scale for a paired family
 
@@ -142,11 +139,6 @@ It corrects continuously, so it also fixes sizes that are not scale steps.
   font-family: 'Equinor';
   src: url('EquinorVariable-VF.woff2') format('woff2-variations');
   size-adjust: 113.7288%; /* generated from the correction token, not typed */
-}
-
-:root {
-  --_base: 1rem;
-  --font-size-md: round(calc(var(--_base) * pow(2, -1/5)), 0.03125rem); /* 14px */
 }
 ```
 
@@ -182,6 +174,7 @@ Four rules make this work:
   smallest step it is erased there: `× 1.019345` lands as 0.00% at `xs`/`sm` but
   +3.57% at `md`. Figures in [`references/positions.md`](references/positions.md).
 
+`scripts/scale.py --correction 1.137288 --display Equinor` emits this branch.
 Two numbers under one step label is the correct outcome: `display-md = 16`
 beside `text-md = 14` means *the same perceived size*, reached from different
 nominal values. A designer and a developer both see 16 for a display step, with
@@ -189,18 +182,31 @@ no hidden multiplier anywhere. The cost is that off-scale sizes get no
 correction — acceptable, since they are already outside the system, and
 lintable.
 
-## 5. Emit the formula where it can run
+## 5. Emit: tokens first, then CSS and Figma
 
-Keep the algorithm legible in the artefact rather than only in the generator:
+`scripts/scale.py` derives every number from the constants and emits them,
+**tokens first** — the DTCG file is the source, and CSS and Figma are outputs
+derived from it, never the other way round:
+
+```bash
+skill=.claude/skills/typography-scale             # where the installed copy lives
+python3 $skill/scripts/scale.py --check                        # fixtures still hold
+python3 $skill/scripts/scale.py --out tokens                   # one file per density
+python3 $skill/scripts/scale.py --format figma --out figma     # variables + text styles
+```
+
+Token shape: [`references/token-shape.md`](references/token-shape.md). Figma —
+density as modes, styles bound to variables, no-MCP fallback: [`references/figma.md`](references/figma.md).
+
+Keep the algorithm legible in the CSS rather than only in the generator:
 
 ```css
 --font-size-xl: round(calc(var(--_base) * pow(2, 1/5)), 0.03125rem);
 ```
 
 A reader can see the scale; changing density changes one variable and the
-browser recomputes. Platforms that cannot evaluate expressions — Figma
-variables, React Native — get **baked values from the same source**, never
-hand-transcribed ones.
+browser recomputes. Platforms that cannot evaluate expressions — Figma, React
+Native — get **baked values from the same source**, never hand-transcribed.
 
 `round()` and `pow()` are CSS Values 4 math functions. `round()` is Baseline
 *newly*, which is a question about the target, not a verdict — **so ask it
@@ -215,14 +221,12 @@ rather than deciding for the reader:**
   expression in a comment, so the derivation survives even though the browser
   never sees it.
 
-Defaulting to baked values "to be safe" is not neutral. It discards the
-readable artefact for a constraint the project may not have, and it does so
-silently. If no matrix is declared and nobody answers, say which way you went
-and why. Verify current status against
-`https://raw.githubusercontent.com/Fyrd/caniuse/main/features-json/<slug>.json`
-or `https://api.webstatus.dev/v1/features/<id>` rather than recalling it — and
-note that caniuse has no feature for `round()`; webstatus calls it
-`round-mod-rem`.
+Defaulting to baked values "to be safe" is not neutral: it discards the
+readable artefact for a constraint the project may not have, silently. If no
+matrix is declared and nobody answers, say which way you went. Verify status at
+`https://api.webstatus.dev/v1/features/round-mod-rem` (caniuse has no feature
+for `round()`) rather than recalling it — *newly* since 2024-05-17, checked
+2026-09-04; expect *widely* around late 2026, which retires this question.
 
 ## 6. Verification discipline
 
@@ -243,33 +247,33 @@ A scale is a claim that N numbers all follow from four constants. Test it:
   byte-for-byte, then read values.
 - **Every deviation from a previous build is enumerated.** Anything not on the
   list fails the harness. Silence is never a pass.
-- **Extrapolated values are flagged where they live** — in the token, in the
-  CSS, in the harness output. A scale that has been extended past its evidence
-  should say so at the point of use.
+- **Extrapolated values are flagged where they live** — token, CSS, harness
+  output. A scale extended past its evidence says so at the point of use.
 - **No off-scale sizes.** A hard-coded `20px` is outside the system and gets
-  none of its guarantees — not the grid, not the paired line-height, and not
-  any correction applied to the steps.
+  none of its guarantees: grid, paired line-height, or any step correction.
 
 ## The EDS preset
 
-Asked for a scale "based on the Equinor Design System"? The constants — ratio,
-steps, both snaps, both line-height curves, the three densities — and the
-comfortable ramp as a fixture to check a port against:
-[`references/eds-preset.md`](references/eds-preset.md).
+Asked for a scale "based on the Equinor Design System"? The constants and the
+comfortable ramp as a fixture: [`references/eds-preset.md`](references/eds-preset.md).
 
 ## Positions this skill takes
 
 Four choices here cost something, and a system under delivery pressure will be
-tempted to simplify each of them: half-pixel snapping, the second line-height
-curve, deriving weight and tracking per step, and keeping ten close steps rather
-than six wide ones — this is a scale for an application interface, not a page.
-Each is a measurement rather than a preference: the deviation table, the
-wrapped-label failure, what Inter's `opsz` axis does and stops doing above 32px,
-and the heading ramp you get by sub-selecting rather than widening the ratio.
-That file also records two limits where the snapped output does not deliver what
-the formula promises: [`references/positions.md`](references/positions.md).
+tempted to simplify each: half-pixel snapping, the second line-height curve,
+deriving weight and tracking per step, and ten close steps rather than six wide
+ones — this is a scale for an application interface, not a page. Each rests on
+a measurement, not a preference, and the file also records two limits where the
+snapped output does not deliver what the formula promises:
+[`references/positions.md`](references/positions.md).
 
 If you simplify any of them, do it knowing the cost and write down why.
+
+## Representative requests
+
+Four acceptance criteria — the EDS build, the compressed line-heights, the
+two-family Figma push, and auditing a committed scale — plus a routing check:
+[`references/representative-requests.md`](references/representative-requests.md).
 
 ## Related
 
@@ -286,14 +290,10 @@ If you simplify any of them, do it knowing the cost and write down why.
 
 From the EDS token rework in **`equinor/ids-meetup-oslo-26`**
 (Equinor-internal), prepared for the Into Design Systems Oslo meetup on
-9 September 2026:
-
-| Path | What it establishes |
-| --- | --- |
-| `eds-tokens-reworked/src/formulas.ts` | The algorithms — scale, line-height curves, density |
-| `eds-tokens-reworked/DECISIONS.md` | Decision 1 — indexing the line-height curve by step label, and why it was kept |
-| `eds-tokens-reworked/build/css/typography.css` | The emitted scale with formulas intact |
-| `eds-tokens-reworked/test/deviations.ts` | The enumerated-deviation discipline in section 6 |
+9 September 2026: `src/formulas.ts` (the algorithms), `DECISIONS.md` decision 1
+(indexing the curve by step label), `build/css/typography.css` (the emitted
+scale with formulas intact) and `test/deviations.ts` (the enumerated-deviation
+discipline in section 6), all under `eds-tokens-reworked/`.
 
 Optical padding — cap height, half-leading, and landing a control on the 4px
 grid while keeping an honest line-height — derives from these values but is a

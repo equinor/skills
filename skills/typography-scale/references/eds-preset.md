@@ -23,6 +23,16 @@ xs 10.5/16   sm 12/16   md 14/20   lg 16/24   xl 18.5/24
 2xl 21/28   3xl 24.5/32   4xl 28/36   5xl 32/36   6xl 37/40
 ```
 
+The compressed (scanned) line-heights at the same density:
+
+```
+xs 12   sm 12   md 16   lg 20   xl 20   2xl 24   3xl 28   4xl 28   5xl 32   6xl 36
+```
+
+`scripts/scale.py --check` reproduces both rows, the ratio table in section 2,
+the five octave exceptions and the snap-limit table from `positions.md`, and
+fails if any of them stop agreeing with the constants above.
+
 Reproduce these exactly before shipping a port: off by 0.5px means the snap is
 wrong, off by 4px means the curve is indexed differently (section 3).
 
