@@ -2,8 +2,15 @@
 """Measure stem width from glyph outlines, and match weights across a font pair.
 
 Usage:
+  python stem.py                                     # bundled Inter, default weights
   python stem.py FONT.ttf --weights 300,400,500      # one face, several weights
-  python stem.py REFERENCE.ttf TARGET.ttf --match 400 --correction 1.137288
+  python stem.py REFERENCE.ttf TARGET.ttf --match 300,400,500 --correction 1.137288
+  python stem.py REFERENCE.ttf TARGET.ttf --tracking --at 400,460
+  python stem.py REF.ttf TARGET.ttf --match 400 --format tokens --display Equinor
+
+`--format tokens` emits DTCG tokens with the derivation attached; `json` (the
+default) is the raw measurement. Every result records the files it came from,
+by path and sha256.
 
 Stem width is read at the vertical midpoint of the glyph, not from its bounding
 box. The two differ at the extremes of a weight axis, where flare or overshoot
@@ -11,7 +18,8 @@ widens the box without widening the stroke.
 
 Requires: pip install fonttools brotli   (brotli is what opens .woff2)
 """
-import sys, json
+import sys, json, hashlib, argparse
+from pathlib import Path
 from fontTools.ttLib import TTFont
 from fontTools.varLib import instancer
 from fontTools.pens.recordingPen import RecordingPen
@@ -140,11 +148,13 @@ def side_space(path, weight=400):
             "sideSpaceShare": round((adv - ink) / adv, 6)}
 
 
-def curve(path, samples=21):
+def curve(path, samples=11):
     """Stem width across the target's weight axis, sampled once.
 
     Instancing a font is expensive, so sample the curve once and invert by
-    interpolation rather than re-instancing inside a search loop.
+    interpolation rather than re-instancing inside a search loop. Eleven
+    samples over the axis plus one measured correction per tier (see match())
+    lands within a few hundredths of a weight unit.
     """
     axes = axis_info(path)["axes"]
     lo, _, hi = axes.get("wght", [300, 400, 700])
@@ -162,7 +172,12 @@ def invert(points, goal):
 
 
 def match(ref_path, target_path, ref_weights, correction, opsz=None):
-    """Target weights whose stems match the reference at the same perceived size."""
+    """Target weights whose stems match the reference at the same perceived size.
+
+    The sampled curve gives a first estimate by interpolation; one real
+    measurement at that estimate, corrected along the local slope, takes the
+    residual from about a weight unit to a few hundredths. One instancing per
+    tier is the cost."""
     points = curve(target_path)
     out = {}
     for w in ref_weights:
@@ -171,38 +186,131 @@ def match(ref_path, target_path, ref_weights, correction, opsz=None):
             loc["opsz"] = opsz
         goal = stem(at(ref_path, loc)) / correction
         found = invert(points, goal)
+        if found is not None:
+            lo, hi = points[0][0], points[-1][0]
+            for (wa, sa), (wb, sb) in zip(points, points[1:]):
+                if wa <= found <= wb and sb != sa:
+                    slope = (sb - sa) / (wb - wa)
+                    measured = stem(at(target_path, {"wght": found}))
+                    found = min(max(found + (goal - measured) / slope, lo), hi)
+                    break
         out[int(w)] = None if found is None else round(found, 1)
     return out
 
 
-if __name__ == "__main__":
-    args = sys.argv[1:]
-    fonts = [a for a in args if not a.startswith("--")]
-    def opt(name, default=None):
-        return args[args.index(name) + 1] if name in args else default
+NS = "com.equinor.typography"
+NS_FIGMA = "com.equinor.figma"
 
-    if "--tracking" in args:
-        ref, target = fonts[0], fonts[1]
-        # Compare at the MATCHED weights — side space shrinks as ink grows, so
-        # measuring both at 400 misstates the ratio for an unmatched pair.
-        wa, wb = [float(x) for x in opt("--at", "400,400").split(",")]
-        a, b = side_space(ref, wa), side_space(target, wb)
-        a["weight"], b["weight"] = wa, wb
-        print(json.dumps({"reference": {"path": ref, **a},
-                          "target": {"path": target, **b},
-                          "portFactor": round(b["sideSpaceEm"] / a["sideSpaceEm"], 3)}, indent=2))
-    elif "--match" in args:
-        ref, target = fonts[0], fonts[1]
-        corr = float(opt("--correction", "1.0"))
-        ws = [float(x) for x in opt("--match", "400").split(",")]
-        matches = match(ref, target, ws, corr,
-                        opsz=float(opt("--opsz")) if opt("--opsz") else None)
-        print(json.dumps({"reference": ref, "target": target,
-                          "correction": corr, "matches": matches}, indent=2))
+
+def sha256(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def source(path):
+    return {"path": str(path), "sha256": sha256(path)}
+
+
+def demo_font():
+    """The bundled Inter, looked up next to this script."""
+    here = Path(__file__).resolve().parent
+    for base in (here.parent, here, Path.cwd()):
+        f = base / "assets/fonts/Inter.woff2"
+        if f.exists():
+            return str(f)
+    raise SystemExit("No font given and the bundled Inter was not found; pass a font path.")
+
+
+def weight_tokens(ref, target, matches, correction, correction_token, display, opsz):
+    """DTCG fontWeight tokens: the target weight that matches the reference at each tier."""
+    fam = display or "display"
+    out = {}
+    for tier, w in matches.items():
+        if w is None:
+            continue
+        out[str(tier)] = {"$type": "fontWeight", "$value": w, "$extensions": {
+            NS: {"derived": {"expression": "stem(target, w) = stem(reference, tier) / correction",
+                             "inputs": {"tier": tier, "correction": correction_token or correction,
+                                        "correctionValue": correction,
+                                        "instance": ({"opsz": opsz} if opsz is not None else {}) | {"wght": tier}}},
+                 "metrics": {"reference": source(ref), "target": source(target), "glyph": "l",
+                             "method": "outline:mid-height-stem"},
+                 "family": fam},
+            NS_FIGMA: {"collection": "Typography", "scopes": ["FONT_WEIGHT"]}}}
+    return {"typography": {"font-weight": {fam: out}}}
+
+
+def tracking_tokens(ref, target, a, b, factor, display):
+    fam = display or "display"
+    return {"typography": {"letter-spacing-port-factor": {fam: {
+        "$type": "number", "$value": factor, "$extensions": {
+            NS: {"derived": {"expression": "target.sideSpaceEm / reference.sideSpaceEm",
+                             "inputs": {"reference": a, "target": b}},
+                 "metrics": {"reference": source(ref), "target": source(target),
+                             "glyphs": "a-z", "method": "outline:advance-minus-ink"},
+                 "family": fam}}}}}}
+
+
+def parse_args(argv):
+    p = argparse.ArgumentParser(
+        description="Measure stem width from glyph outlines, and match weights across a font pair.",
+        epilog="With no fonts given, measures the bundled Inter.")
+    p.add_argument("fonts", nargs="*", metavar="FONT", help="one face, or REFERENCE then TARGET")
+    p.add_argument("--weights", default="300,400,500,700", metavar="W,W,...",
+                   help="weights to measure a single face at (default 300,400,500,700)")
+    p.add_argument("--match", metavar="W,W,...", help="reference tiers to find matching target weights for")
+    p.add_argument("--correction", type=float, default=1.0, metavar="FACTOR",
+                   help="x-height correction applied to the target (typography-x-height-alignment)")
+    p.add_argument("--correction-token", metavar="ALIAS", help="DTCG alias of the correction token")
+    p.add_argument("--opsz", type=float, metavar="PX", help="pin the reference's optical size when matching")
+    p.add_argument("--tracking", action="store_true", help="side space of both faces and the port factor")
+    p.add_argument("--at", default="400,400", metavar="WREF,WTARGET", help="weights for --tracking (matched!)")
+    p.add_argument("--format", choices=["json", "tokens"], default="json")
+    p.add_argument("--display", metavar="FAMILY", help="name of the target family, for token paths")
+    a = p.parse_args(argv)
+    if (a.match or a.tracking) and len(a.fonts) != 2:
+        p.error("--match and --tracking need REFERENCE and TARGET")
+    if a.format == "tokens" and not (a.match or a.tracking):
+        p.error("--format tokens applies to --match or --tracking; a single-face measurement is not a token")
+    return a, p
+
+
+def main(argv):
+    a, p = parse_args(argv)
+    floats = lambda t: [float(x) for x in t.split(",")]
+    if a.tracking:
+        ref, target = a.fonts
+        wa, wb = floats(a.at)
+        sa, sb = side_space(ref, wa), side_space(target, wb)
+        sa["weight"], sb["weight"] = wa, wb
+        factor = round(sb["sideSpaceEm"] / sa["sideSpaceEm"], 3)
+        if a.format == "tokens":
+            print(json.dumps(tracking_tokens(ref, target, sa, sb, factor, a.display), indent=2))
+        else:
+            print(json.dumps({"reference": {**source(ref), **sa}, "target": {**source(target), **sb},
+                              "portFactor": factor}, indent=2))
+    elif a.match:
+        ref, target = a.fonts
+        matches = match(ref, target, floats(a.match), a.correction, opsz=a.opsz)
+        if any(v is None for v in matches.values()):
+            print("warning: some tiers fall outside the target's weight axis (null)", file=sys.stderr)
+        if a.format == "tokens":
+            print(json.dumps(weight_tokens(ref, target, matches, a.correction, a.correction_token,
+                                           a.display, a.opsz), indent=2))
+        else:
+            print(json.dumps({"reference": source(ref), "target": source(target), "correction": a.correction,
+                              "opsz": a.opsz, "matches": matches}, indent=2))
     else:
-        path = fonts[0]
+        if len(a.fonts) > 1:
+            p.error("one face for --weights; add --match or --tracking for a pair")
+        path = a.fonts[0] if a.fonts else demo_font()
+        if not a.fonts:
+            print("No font given — measuring the bundled Inter.", file=sys.stderr)
         info = axis_info(path)
-        info["path"] = path
-        info["stem"] = {int(w): round(stem(at(path, {"wght": float(w)})), 6)
-                        for w in opt("--weights", "300,400,500,700").split(",")}
+        info.update(source(path))
+        info["stem"] = {int(w): round(stem(at(path, {"wght": w})), 6) for w in floats(a.weights)}
         print(json.dumps(info, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
