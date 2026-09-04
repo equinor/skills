@@ -42,8 +42,10 @@ to set up Figma.
 
 ## What the scripts check
 
-- The text family (`--family`, default `Inter`) and any display family are
-  present in the file; a missing font throws before anything is created.
+- Every family *and style* the styles will use — `--family` / `--style`
+  (default Inter Regular) and `--display` / `--display-style` — is present in
+  the file, checked as pairs before the loop; a missing one throws before
+  anything is created, and names what is missing.
 - The variables exist before the styles are bound; running the styles script
   first fails with a message, not a half-built set.
 

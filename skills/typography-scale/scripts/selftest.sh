@@ -18,9 +18,10 @@ want = json.loads(doc)
 out = subprocess.run([sys.executable, str(here/"scripts/scale.py"), "--density", "comfortable"],
                      capture_output=True, text=True, check=True).stdout
 got = json.loads(out)["typography"]
-assert want["typography"]["font-size"]["md"] == got["font-size"]["md"], "font-size.md drifted from token-shape.md"
-assert want["typography"]["line-height"]["md"]["default"] == got["line-height"]["md"]["default"], "line-height.md drifted"
-print("  token-shape.md matches the emitted md tokens")
+dump = lambda o: json.dumps(o, sort_keys=True)   # keeps 20 and 20.0 distinct
+assert dump(want["typography"]["font-size"]["md"]) == dump(got["font-size"]["md"]), "font-size.md drifted from token-shape.md"
+assert dump(want["typography"]["line-height"]["md"]["default"]) == dump(got["line-height"]["md"]["default"]), "line-height.md drifted"
+print("  token-shape.md matches the emitted md tokens, byte for byte")
 PY
 
 # 3. The Figma scripts are generated, bind rather than bake, and parse.
@@ -46,4 +47,12 @@ fi
 test "$(grep -c '^  --font-size-[a-z0-9]*:' "$tmp/expr.css")" -eq 10
 grep -q 'pow(2, -3/5)' "$tmp/expr.css"
 grep -q -- '--font-size-xs: 0.65625rem; /\* round(' "$tmp/baked.css"
-echo "  css: 10 steps, expressions shipped or kept in comments"
+test "$(grep -c "^\\(:root\\|\\[data-density='[a-z]*'\\]\\) {$" "$tmp/baked.css")" -eq 3   # one literal block per density
+grep -q "^:root {" "$tmp/baked.css" && grep -q "^\\[data-density='compact'\\] {" "$tmp/baked.css"
+! grep -q -- '--_base' <(grep -v '^ */\\*\\|^   ' "$tmp/baked.css" | grep -v '/\\*') || true
+echo "  css: 10 steps, expressions shipped or kept in comments, baked block per density"
+
+# 5. Multi-file output refuses stdout rather than concatenating.
+if "$py" "$here/scripts/scale.py" >/dev/null 2>"$tmp/err.txt"; then echo "  expected --out to be required"; exit 1; fi
+grep -q 'pass --out DIR' "$tmp/err.txt"
+echo "  refuses to concatenate three token files on stdout"

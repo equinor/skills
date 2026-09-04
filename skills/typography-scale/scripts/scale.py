@@ -2,12 +2,13 @@
 """Derive a typographic scale from its constants and emit it — tokens first.
 
 Usage:
-  python scale.py                          # EDS preset, all densities, DTCG tokens
+  python scale.py --out DIR                # EDS preset, DTCG tokens, one file per density
+  python scale.py --density comfortable    # one density → one token file on stdout
   python scale.py --format table           # the ramp, for reading
   python scale.py --format css             # CSS with the expressions intact
-  python scale.py --format css --css baked # CSS with literals, expression in comments
-  python scale.py --format figma --out DIR # Plugin API scripts for use_figma
-  python scale.py --correction 1.137288 --display Equinor   # two-ramp branch
+  python scale.py --format css --css baked # CSS literals per density, expressions in comments
+  python scale.py --format figma --out DIR # two Plugin API scripts for use_figma
+  python scale.py --correction 1.137288 --display Equinor --out DIR   # two-ramp branch
   python scale.py --check                  # reproduce the documented fixtures
 
 Everything derives from four constants — base, steps per octave, step offset,
@@ -91,10 +92,12 @@ def octave_exceptions():
 
 # ---- outputs -----------------------------------------------------------------
 def dim(value, unit):
+    if isinstance(value, float) and value.is_integer():
+        value = int(value)
     return {"value": value, "unit": unit}
 
 
-def tokens(density, correction=None, display=None):
+def tokens(density, correction=None, display=None, correction_token=None):
     base = DENSITIES[density]
     size_expr = f"round(base * pow(2, step / {STEPS_PER_OCTAVE}), {SIZE_SNAP_REM}rem)"
     lh_expr = "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)"
@@ -118,7 +121,8 @@ def tokens(density, correction=None, display=None):
             disp[s] = {"$type": "dimension", "$value": dim(row["display_rem"], "rem"), "$extensions": {
                 NS: {"derived": {"expression": f"round(fontSize * correction, {SIZE_SNAP_REM}rem)",
                                  "inputs": {"fontSize": f"{{typography.font-size.{s}}}",
-                                            "correction": correction}},
+                                            "correction": correction_token or correction,
+                                            "correctionValue": correction}},
                      "step": s, "family": display or "display", "density": density,
                      "lineHeight": f"{{typography.line-height.{s}}}"},
                 NS_FIGMA: {"collection": "Typography", "mode": density, "scopes": ["FONT_SIZE"]}}}
@@ -129,43 +133,50 @@ def tokens(density, correction=None, display=None):
 
 
 def css(density_list, baked, correction=None, display=None):
-    lines = [":root {"]
-    for d in density_list:
-        sel = ":root" if d == "comfortable" else f"[data-density='{d}']"
-        lines.append(f"  /* {d}: base {DENSITIES[d]}rem */")
-    lines.append(f"  --_base: {DENSITIES['comfortable']}rem;")
-    lines.append("}")
-    for d in density_list:
-        if d != "comfortable":
-            lines.append(f"[data-density='{d}'] {{ --_base: {DENSITIES[d]}rem; }}")
-    lines.append(":root {")
-    for row in ramp("comfortable", correction):
-        s, i = row["step"], row["index"]
-        expr = f"round(calc(var(--_base) * pow(2, {i}/{STEPS_PER_OCTAVE})), {SIZE_SNAP_REM}rem)"
-        if baked:
-            lines.append(f"  --font-size-{s}: {row['rem']}rem; /* {expr} */")
-        else:
-            lines.append(f"  --font-size-{s}: {expr}; /* {row['px']}px at comfortable */")
-        for c, (mx, drop) in CURVES.items():
-            n = STEPS.index(s)
-            lexpr = f"round(calc(var(--font-size-{s}) * ({mx} - pow({n}/{len(STEPS)-1}, 3) * {drop})), 4px)"
-            if baked:
-                lines.append(f"  --line-height-{s}-{c}: {row['lh'][c]}px; /* {lexpr} */")
-            else:
-                lines.append(f"  --line-height-{s}-{c}: {lexpr}; /* {row['lh'][c]}px at comfortable */")
-        if correction:
-            dexpr = f"round(calc(var(--font-size-{s}) * {correction}), {SIZE_SNAP_REM}rem)"
-            lines.append(f"  --font-size-display-{s}: {row['display_rem'] if baked else dexpr}"
-                         f"{'rem' if baked else ''}; /* {row['display_px']}px, {display or 'display'} */")
-    lines.append("}")
+    """Expressions: one ramp reading `--_base`, and a `--_base` per density.
+    Baked: nothing reads `--_base`, so every density gets its own block of
+    literals under its own selector — otherwise the density axis is inert."""
+    def block(selector, density, literal):
+        out = [f"{selector} {{"]
+        for row in ramp(density, correction):
+            s_, i = row["step"], row["index"]
+            expr = f"round(calc(var(--_base) * pow(2, {i}/{STEPS_PER_OCTAVE})), {SIZE_SNAP_REM}rem)"
+            out.append(f"  --font-size-{s_}: {row['rem']:g}rem; /* {expr} */" if literal else
+                       f"  --font-size-{s_}: {expr}; /* {row['px']}px at {density} */")
+            for c, (mx, drop) in CURVES.items():
+                n = STEPS.index(s_)
+                lexpr = f"round(calc(var(--font-size-{s_}) * ({mx} - pow({n}/{len(STEPS)-1}, 3) * {drop})), 4px)"
+                out.append(f"  --line-height-{s_}-{c}: {row['lh'][c]}px; /* {lexpr} */" if literal else
+                           f"  --line-height-{s_}-{c}: {lexpr}; /* {row['lh'][c]}px at {density} */")
+            if correction:
+                dexpr = f"round(calc(var(--font-size-{s_}) * {correction}), {SIZE_SNAP_REM}rem)"
+                out.append(f"  --font-size-display-{s_}: {row['display_rem']:g}rem; /* {dexpr} */" if literal else
+                           f"  --font-size-display-{s_}: {dexpr}; /* {row['display_px']}px, {display or 'display'} */")
+        out.append("}")
+        return out
+    order = sorted(density_list, key=lambda d: d != "comfortable")   # comfortable first
+    first = order[0]
+    sel = lambda d: ":root" if d == first else f"[data-density='{d}']"
+    lines = []
     if baked:
-        lines.insert(0, "/* Baked values: the browser never evaluates the expressions in the comments. */")
+        lines.append("/* Baked values. Nothing here reads --_base, so each density is its own block;")
+        lines.append("   the expressions that produced the literals are kept in the comments. */")
+        for d in order:
+            lines += block(sel(d), d, literal=True)
+    else:
+        lines.append(f"/* Density is one number: --_base. Sizes and line-heights recompute in the browser. */")
+        for d in order:
+            lines.append(f"{sel(d)} {{ --_base: {DENSITIES[d]:g}rem; }}")
+        lines += block(":root", first, literal=False)
     return "\n".join(lines) + "\n"
 
 
-def figma_scripts(correction=None, display=None, family="Inter", style="Regular"):
+def figma_scripts(correction=None, display=None, family="Inter", style="Regular",
+                  display_style=None, densities=None):
     """Two Plugin API scripts for `use_figma` (or a local plugin): variables, then styles."""
-    modes = list(DENSITIES)
+    modes = list(densities or DENSITIES)
+    if "comfortable" not in modes:
+        modes = ["comfortable", *modes]        # the ramp the code-syntax names describe
     values = {d: ramp(d, correction) for d in modes}
     var_rows = []
     for row in values["comfortable"]:
@@ -210,21 +221,23 @@ return {{ collectionId: col.id, modes: modeId, createdVariableIds: created, upda
         style_rows.append({"name": f"label/{s}", "size": f"font-size/{s}", "lh": f"line-height/{s}/compressed"})
         if correction:
             style_rows.append({"name": f"display/{s}", "size": f"font-size-display/{s}",
-                               "lh": f"line-height/{s}/default", "family": display or "display"})
+                               "lh": f"line-height/{s}/default", "family": display or "display",
+                               "style": display_style or style})
     styles_js = f"""// Generated by typography-scale/scripts/scale.py — text styles bound to the variables above.
 const STYLES = {json.dumps(style_rows, indent=2)};
 const FONT = {{ family: {json.dumps(family)}, style: {json.dumps(style)} }};
 const fonts = await figma.listAvailableFontsAsync();
-const families = new Set(fonts.map(f => f.fontName.family));
-const need = new Set([FONT.family, ...STYLES.map(s => s.family).filter(Boolean)]);
-for (const f of need) if (!families.has(f)) throw new Error(`Font not available in this file: ${{f}}`);
+const have = new Set(fonts.map(f => `${{f.fontName.family}} / ${{f.fontName.style}}`));
+const need = new Set(STYLES.map(s => `${{s.family || FONT.family}} / ${{s.style || FONT.style}}`));
+const missing = [...need].filter(k => !have.has(k));
+if (missing.length) throw new Error(`Fonts not available in this file, nothing created: ${{missing.join(', ')}}`);
 const byName = {{}};
 for (const v of await figma.variables.getLocalVariablesAsync('FLOAT')) byName[v.name] = v;
 const existing = {{}};
 for (const st of await figma.getLocalTextStylesAsync()) existing[st.name] = st;
 const created = [], updated = [];
 for (const s of STYLES) {{
-  const fontName = {{ family: s.family || FONT.family, style: FONT.style }};
+  const fontName = {{ family: s.family || FONT.family, style: s.style || FONT.style }};
   await figma.loadFontAsync(fontName);
   let st = existing[s.name];
   if (!st) {{ st = figma.createTextStyle(); st.name = s.name; created.push(st.id); }} else updated.push(st.id);
@@ -266,6 +279,8 @@ FIXTURE = {
                           ("relaxed", "xl", 21.5, "6xl", 42.5)],
     # positions.md §6: × 1.019345 at comfortable, display px
     "small_correction_display": {"xs": 10.5, "sm": 12, "md": 14.5, "lg": 16.5, "xl": 19, "3xl": 25, "6xl": 37.5},
+    # SKILL.md §4: × 1.137288 at comfortable, display px
+    "two_family_display": {"md": 16, "lg": 18, "xl": 21, "5xl": 36.5},
 }
 
 
@@ -283,11 +298,13 @@ def check():
     small = {x["step"]: x["display_px"] for x in ramp("comfortable", 1.019345)}
     eq("small correction survives the snap", {k: small[k] for k in FIXTURE["small_correction_display"]},
        FIXTURE["small_correction_display"])
+    two = {x["step"]: x["display_px"] for x in ramp("comfortable", 1.137288)}
+    eq("two-family table (§4)", {k: two[k] for k in FIXTURE["two_family_display"]}, FIXTURE["two_family_display"])
     for f in fails:
         print("FAIL " + f, file=sys.stderr)
     if not fails:
         print("ok: comfortable ramp, both line-height curves, ratio table, "
-              f"{len(FIXTURE['octave_exceptions'])} octave exceptions, snap-limit table")
+              f"{len(FIXTURE['octave_exceptions'])} octave exceptions, snap-limit table, two-family table")
     return 1 if fails else 0
 
 
@@ -302,6 +319,9 @@ def main(argv):
     p.add_argument("--correction", type=float, metavar="FACTOR",
                    help="x-height correction for a second family → baked display ramp")
     p.add_argument("--display", metavar="FAMILY", help="name of the corrected family")
+    p.add_argument("--display-style", metavar="STYLE", help="font style name for the display family")
+    p.add_argument("--correction-token", metavar="ALIAS",
+                   help="DTCG alias of the x-height correction token, e.g. {typography.x-height-correction.display}")
     p.add_argument("--family", default="Inter", help="text family for Figma text styles")
     p.add_argument("--style", default="Regular", help="font style name for Figma text styles")
     p.add_argument("--out", metavar="DIR", help="write files here instead of stdout")
@@ -313,22 +333,23 @@ def main(argv):
     files = {}
     if a.format == "tokens":
         for d in densities:
-            files[f"scale.{d}.tokens.json"] = json.dumps(tokens(d, a.correction, a.display), indent=2) + "\n"
+            files[f"scale.{d}.tokens.json"] = json.dumps(tokens(d, a.correction, a.display, a.correction_token), indent=2) + "\n"
     elif a.format == "css":
         files["scale.css"] = css(densities, a.css == "baked", a.correction, a.display)
     elif a.format == "figma":
-        files.update(figma_scripts(a.correction, a.display, a.family, a.style))
+        files.update(figma_scripts(a.correction, a.display, a.family, a.style, a.display_style, densities))
     else:
         files["scale.txt"] = table(densities, a.correction)
+    if len(files) > 1 and not a.out:
+        p.error(f"this writes {len(files)} files ({', '.join(files)}); pass --out DIR, "
+                "or --density <one> for a single file on stdout")
     if a.out:
         out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
         for name, body in files.items():
             (out / name).write_text(body)
             print(f"wrote {out / name}", file=sys.stderr)
     else:
-        for name, body in files.items():
-            if len(files) > 1:
-                print(f"// ---- {name}" if name.endswith(".js") else f"/* ---- {name} */" if name.endswith(".css") else f"# ---- {name}", file=sys.stderr)
+        for body in files.values():
             sys.stdout.write(body)
     return 0
 

@@ -205,9 +205,8 @@ Keep the algorithm legible in the CSS rather than only in the generator:
 ```
 
 A reader can see the scale; changing density changes one variable and the
-browser recomputes. Platforms that cannot evaluate expressions — Figma
-variables, React Native — get **baked values from the same source**, never
-hand-transcribed ones.
+browser recomputes. Platforms that cannot evaluate expressions — Figma, React
+Native — get **baked values from the same source**, never hand-transcribed.
 
 `round()` and `pow()` are CSS Values 4 math functions. `round()` is Baseline
 *newly*, which is a question about the target, not a verdict — **so ask it
@@ -226,7 +225,8 @@ Defaulting to baked values "to be safe" is not neutral: it discards the
 readable artefact for a constraint the project may not have, silently. If no
 matrix is declared and nobody answers, say which way you went. Verify status at
 `https://api.webstatus.dev/v1/features/round-mod-rem` (caniuse has no feature
-for `round()`) rather than recalling it.
+for `round()`) rather than recalling it — *newly* since 2024-05-17, checked
+2026-09-04; expect *widely* around late 2026, which retires this question.
 
 ## 6. Verification discipline
 

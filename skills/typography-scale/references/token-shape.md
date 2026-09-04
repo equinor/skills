@@ -27,7 +27,7 @@ right today. The `md` step at comfortable density, exactly as emitted:
               "expression": "round(base * pow(2, step / 5), 0.03125rem)",
               "inputs": {
                 "base": {
-                  "value": 1.0,
+                  "value": 1,
                   "unit": "rem"
                 },
                 "step": -1
@@ -106,11 +106,14 @@ nothing about text styles; those are derived from the curve name
 [`figma.md`](figma.md).
 
 **Two families.** With `--correction`, a third group `font-size-display`
-appears, each token deriving from its text-size sibling times the factor, and
+appears, each token deriving from its text-size sibling times the factor and
 pointing at the *shared* line-height, per section 4's rule that both families
-take the same line box. The correction itself is not restated here; it lives
-in the token `typography-x-height-alignment` emitted, and its `inputs` name
-that token's value.
+take the same line box. Its `inputs` carry `correctionValue`, the resolved
+factor, and `correction`, which is the DTCG alias of the token
+`typography-x-height-alignment` emitted when `--correction-token` names it
+(for example `{typography.x-height-correction.display}`) and the bare factor
+otherwise. Pass the alias: it is what lets an audit follow the number back to
+the fonts it was measured from.
 
 **Namespace.** Reverse-DNS, in code spelling. Use the project's existing
 namespace if it has one — grep for `"$extensions"` in the token files — and
