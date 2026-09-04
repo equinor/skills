@@ -174,9 +174,11 @@ def css(density_list, baked, correction=None, display=None):
 def figma_scripts(correction=None, display=None, family="Inter", style="Regular",
                   display_style=None, densities=None):
     """Two Plugin API scripts for `use_figma` (or a local plugin): variables, then styles."""
-    modes = list(densities or DENSITIES)
-    if "comfortable" not in modes:
-        modes = ["comfortable", *modes]        # the ramp the code-syntax names describe
+    # Comfortable is always present (the code-syntax names describe its ramp, and
+    # the step list below is enumerated from it) and always first: a new
+    # collection's first mode is its default, and every style resolves to it
+    # until a frame sets another. Verified live 2026-09-04.
+    modes = ["comfortable", *(d for d in (densities or DENSITIES) if d != "comfortable")]
     values = {d: ramp(d, correction) for d in modes}
     var_rows = []
     for row in values["comfortable"]:
@@ -203,6 +205,14 @@ for (const m of MODES) {{
   const found = col.modes.find(x => x.name === m);
   modeId[m] = found ? found.modeId : col.addMode(m);
 }}
+// A collection's default mode is fixed at creation; the API cannot change it.
+// A collection built before comfortable-first would default to compact here.
+if (col.defaultModeId !== modeId[MODES[0]]) {{
+  const current = col.modes.find(m => m.modeId === col.defaultModeId).name;
+  throw new Error(`Collection 'Typography' defaults to mode '${{current}}', not '${{MODES[0]}}'; `
+    + `every style would resolve to it. The Plugin API cannot change a collection's default: `
+    + `delete the collection and run this script again.`);
+}}
 const existing = {{}};
 for (const id of col.variableIds) {{ const v = await figma.variables.getVariableByIdAsync(id); if (v) existing[v.name] = v; }}
 const created = [], updated = [];
@@ -213,7 +223,7 @@ for (const r of ROWS) {{
   for (const m of MODES) v.setValueForMode(modeId[m], r.values[m]);
   v.setVariableCodeSyntax('WEB', r.css);
 }}
-return {{ collectionId: col.id, modes: modeId, createdVariableIds: created, updatedVariableIds: updated }};
+return {{ collectionId: col.id, defaultMode: MODES[0], modes: modeId, createdVariableIds: created, updatedVariableIds: updated }};
 """
     style_rows = []
     for s in STEPS:
@@ -277,10 +287,10 @@ FIXTURE = {
     "octave_exceptions": [("compact", "xs", 9.0, "2xl", 18.5), ("compact", "md", 12.0, "4xl", 24.5),
                           ("comfortable", "sm", 12.0, "3xl", 24.5), ("relaxed", "xs", 12.0, "2xl", 24.5),
                           ("relaxed", "xl", 21.5, "6xl", 42.5)],
-    # positions.md §6: × 1.019345 at comfortable, display px
+    # positions.md §7: × 1.019345 at comfortable, display px
     "small_correction_display": {"xs": 10.5, "sm": 12, "md": 14.5, "lg": 16.5, "xl": 19, "3xl": 25, "6xl": 37.5},
     # SKILL.md §4: × 1.137288 at comfortable, display px
-    "two_family_display": {"md": 16, "lg": 18, "xl": 21, "5xl": 36.5},
+    "two_family_display": {"sm": 13.5, "md": 16, "lg": 18, "xl": 21, "2xl": 24, "5xl": 36.5},
 }
 
 

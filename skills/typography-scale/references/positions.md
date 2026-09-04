@@ -1,6 +1,6 @@
 # Positions
 
-Four places where this skill takes a stance that costs something, with the
+Five places where this skill takes a stance that costs something, with the
 evidence for it. Systems under delivery pressure often simplify in the opposite
 direction, and these are the arguments for not doing that.
 
@@ -131,7 +131,36 @@ Neither of these is a reason to change the grid. Both are reasons to state the
 limit, because in each case the formula promises something the rounded output
 does not always deliver — and the gap is small enough to read as a bug.
 
-## 5. The octave doubling is exact in the formula, not always in the output
+## 5. Snap the corrected size to half a pixel, not to a scale step
+
+**The simplification:** the x-height correction for the pair measured here is
+`× 1.137288` and one step of the scale is `× 1.1487`, so a corrected display
+size lands almost one step above its text size. Read that as "one step up,
+exactly" and reuse the text ramp for the display face: fewer distinct values,
+and a Figma display style can share the text variable one step up.
+
+**Why it costs more than it looks.** Compared with the true correction at
+comfortable density (2026-09-04):
+
+```
+step   text   exact    half-px   error    on-step   error
+sm     12     13.65    13.5      -1.1%    14        +2.6%
+lg     16     18.20    18        -1.1%    18.5      +1.7%
+2xl    21     23.88    24        +0.5%    24.5      +2.6%
+5xl    32     36.39    36.5      +0.3%    37        +1.7%
+```
+
+Five steps (`xs md xl 3xl 4xl`) agree under both rules, and `6xl` has no step
+above it to snap to unless the ramp is extended (which gives 42, agreeing).
+Half-pixel keeps the alignment error under 1.1% everywhere; on-step reaches
+2.6%, where a size difference starts to read, and does so at the small steps
+that carry interface text. The saving is not worth a 2.6% miss on the alignment
+the correction exists to deliver. Section 4 of `SKILL.md` therefore re-snaps to
+the *same grid* as the text ramp, the emitter and the shipped build agree
+(`12 / 13.5 / 16 / 18` for `xs`–`lg` at comfortable), and `scale.py --check`
+holds the four rows above as a fixture.
+
+## 6. The octave doubling is exact in the formula, not always in the output
 
 Section 1 of [`SKILL.md`](../SKILL.md) leans on the octave landmark: five steps
 up doubles the size. That is what makes it safe to sub-select steps for a
@@ -159,7 +188,7 @@ reader who takes "doubles every n steps" literally will eventually find a
 Treat the list as a fixture. A sixth deviation means the constants or the snap
 moved, and should fail a build rather than pass quietly.
 
-## 6. A correction smaller than the snap grid does not survive it
+## 7. A correction smaller than the snap grid does not survive it
 
 Section 4 of [`SKILL.md`](../SKILL.md) applies `round(step × correction,
 0.5px)`. When the correction is small, the grid is coarser than the correction

@@ -14,6 +14,7 @@ skill by using it found things no amount of re-reading did.
 | [2026-08-30-typography-x-height-alignment.md](2026-08-30-typography-x-height-alignment.md) | `typography-x-height-alignment` | Aligning Montserrat with Open Sans |
 | [2026-08-30-typography-scale.md](2026-08-30-typography-scale.md) | `typography-scale` | Building the EDS-preset scale for that pair, Figma/RN target |
 | [2026-09-03-typography-round-2.md](2026-09-03-typography-round-2.md) | both | Second round against Literata + Work Sans; the fixture still held the first round's output, so both tasks became audits |
+| [2026-09-04-typography-scale-figma-live-run.md](2026-09-04-typography-scale-figma-live-run.md) | `typography-scale` | Pushing the two-family EDS scale into a real Figma file through the MCP |
 
 ## Where the findings went
 
@@ -37,7 +38,7 @@ All four became #17, merged via #14:
 | Finding | Outcome |
 | --- | --- |
 | 1. "Doubles every n steps" is true of the formula, not the output — 5 of 15 pairs miss | Fixed — `references/positions.md`, with the exception list |
-| 2. A correction smaller than the snap grid does not survive it | Fixed — `references/positions.md` §6 |
+| 2. A correction smaller than the snap grid does not survive it | Fixed — `references/positions.md` §7 (was §6 until 4 September) |
 | 3. Say this is a scale for an application interface | Fixed — stated in `SKILL.md` and argued in `positions.md` |
 | 4. The ramp is a palette, not a sequence | Fixed — the sub-selection ratio is now given |
 
@@ -60,6 +61,13 @@ neither skill described it.
 | scale 2. Browser readback contradicts the baked branch | Fixed — §6 first bullet split by branch; readback tests rounding mode, baked values are recomputed from the constants |
 | scale 3. Audit path missing here too | Fixed — §6 bullet with the order, the same order as x-height request 4 |
 | Fixture: six scripts hardcoded to `/private/tmp/skilltest2` | Test-setup defect from moving the folder, not a skill finding; the tester repaired them |
+
+### Live Figma run, 2026-09-04
+
+| Finding | Outcome |
+| --- | --- |
+| The collection's default mode was `compact`; every style resolved to compact values | Fixed in #28 — comfortable is created first; the selftest pins the order and the wiring |
+| A re-run could not repair a collection built before the fix, while `figma.md` promised idempotence | Fixed in #28 — the script reads `defaultModeId` and refuses with a remedy; `figma.md` says to delete and re-run |
 
 ## Why these are worth keeping
 
