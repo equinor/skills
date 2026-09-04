@@ -56,7 +56,11 @@ here = pathlib.Path(sys.argv[1]); got = json.load(open(sys.argv[2]))
 w = got["typography"]["font-weight"]["Inter"]["400"]["$value"]
 assert abs(w - 400) <= 0.5, f"self-match returned {w}"
 doc = json.loads(re.search(r"```json\n(.*?)```", (here/"references/token-shape.md").read_text(), re.S).group(1))
-dump = lambda o: json.dumps(o, sort_keys=True)
+def basenames(o):                       # the recorded path legitimately varies with cwd; the sha256 must not
+    if isinstance(o, dict):
+        return {k: (pathlib.Path(v).name if k == "path" else basenames(v)) for k, v in o.items()}
+    return o
+dump = lambda o: json.dumps(basenames(o), sort_keys=True)
 assert dump(doc["typography"]["font-weight"]) == dump(got["typography"]["font-weight"]), "font-weight token drifted from token-shape.md"
 print(f"  self-match returns {w}; token-shape.md matches the emitted token byte for byte")
 PY
