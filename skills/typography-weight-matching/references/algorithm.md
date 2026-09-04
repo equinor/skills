@@ -21,7 +21,7 @@ at that weight. It is not constant across weights — measured:
 
 ```
 wght     300     350     400     450     500     550     600     700
-thinning -4.94%  -5.28%  -5.56%  -4.64%  -3.89%  -3.27%  -2.74%  -1.90%
+thinning -4.93%  -5.28%  -5.56%  -4.64%  -3.89%  -3.27%  -2.74%  -1.89%
 ```
 
 It peaks at the default weight and falls away both ways. Within any single
@@ -38,10 +38,13 @@ avar(n) piecewise linear through (−1,−1) (−0.5,−0.42) (0,0) (1,1)
 
 equinor_stem(w) = S500 + |avar(n)| × (S300 − S500)    for n < 0
                 = S500 +  avar(n)  × (S700 − S500)    for n ≥ 0
-                  S300 = 0.03600   S500 = 0.08600   S700 = 0.11475
+                  S300 = 0.03600   S500 = 0.08600   S700 = 0.11800
 ```
 
-This reproduces every measured stem to five decimal places.
+This reproduces every measured stem to five decimal places. (`S700` read
+`0.11475` until 2026-09-04; a reviewer inverting the form by hand got 558.7
+for tier 500 against the measured 552.7, and re-measuring the `l` stem at 700
+gave `0.11800`, which closes the gap exactly. The other two constants held.)
 
 ## Matching
 

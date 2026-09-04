@@ -50,17 +50,20 @@ PY
 
 # 4. Matching a face against itself returns the tier back, and the documented token is the emitted token.
 "$py" "$here/scripts/stem.py" "$F" "$F" --match 400 --format tokens --display Inter > "$tmp/tok.json"
-"$py" - "$here" "$tmp/tok.json" <<'PY'
+"$py" "$here/scripts/stem.py" "$F" "$F" --tracking --at 400,400 --format tokens --display Inter > "$tmp/trktok.json"
+"$py" - "$here" "$tmp/tok.json" "$tmp/trktok.json" <<'PY'
 import json, re, sys, pathlib
 here = pathlib.Path(sys.argv[1]); got = json.load(open(sys.argv[2]))
 w = got["typography"]["font-weight"]["Inter"]["400"]["$value"]
 assert abs(w - 400) <= 0.5, f"self-match returned {w}"
 doc = json.loads(re.search(r"```json\n(.*?)```", (here/"references/token-shape.md").read_text(), re.S).group(1))
-def basenames(o):                       # the recorded path legitimately varies with cwd; the sha256 must not
+def norm(o):     # path varies with cwd and extractedAt with the day; the sha256 and every derived value must not
     if isinstance(o, dict):
-        return {k: (pathlib.Path(v).name if k == "path" else basenames(v)) for k, v in o.items()}
+        return {k: ("<path>" if k == "path" else "<date>" if k == "extractedAt" else norm(v)) for k, v in o.items()}
     return o
-dump = lambda o: json.dumps(basenames(o), sort_keys=True)
+dump = lambda o: json.dumps(norm(o), sort_keys=True)
 assert dump(doc["typography"]["font-weight"]) == dump(got["typography"]["font-weight"]), "font-weight token drifted from token-shape.md"
-print(f"  self-match returns {w}; token-shape.md matches the emitted token byte for byte")
+trk = json.load(open(sys.argv[3]))
+assert dump(doc["typography"]["letter-spacing-port-factor"]) == dump(trk["typography"]["letter-spacing-port-factor"]), "port-factor token drifted from token-shape.md"
+print(f"  self-match returns {w}; both documented tokens match the emitted ones (paths and dates normalised)")
 PY

@@ -121,7 +121,7 @@ Two things to know before trusting a single curve:
 
 - **The axes are not independent.** In the pair measured here, the optical
   correction peaked at the reference face's *default* weight and fell away on
-  both sides — −5.56% at 400 against −4.94% at 300 and −1.90% at 700. Compute
+  both sides — −5.56% at 400 against −4.93% at 300 and −1.89% at 700. Compute
   per tier rather than scaling one curve three ways.
 - **The correction stops at the axis maximum.** Above it, the face is no longer
   corrected — usually the display range, where it matters most, and where the
@@ -141,6 +141,8 @@ how much side space was there to begin with.
 
 Pass the **matched** weights — side space shrinks as ink grows, so measuring
 both faces at 400 misstates the ratio for a pair that is not weight-matched.
+(460 is the matched 458.5 rounded to the nearest 5 for a named tier; the
+factor is 0.821 either way.)
 
 ```
 Inter    @400   advance 0.5363em   ink 0.4322em   side space 0.1042em   19.4%
@@ -160,9 +162,12 @@ tracking would eat a larger share of the target's gap and read too tight — at
 The answer changes the value, not the packaging. CSS and Figma take the
 matched weight as measured — `font-weight: 458.5` is valid CSS and a variable
 font renders it; a Figma text style binds `fontWeight` to a variable holding it.
-React Native rounds weights to hundreds, so there the token carries the snapped
-value *and* the residual, and the pairing is checked at the snapped weight
-rather than assumed. A question that would not change the output is not asked.
+React Native rounds weights to hundreds, so there emit with `--snap 100`: the
+token carries the snapped value, the measured one and the residual, and the
+pairing is checked at the snapped weight rather than assumed. The same applies
+in CSS wherever the *variable* font may not load and a static face stands in —
+a question for the project's `browserslist` and its `@font-face` fallbacks,
+not for this skill. A question that would not change the output is not asked.
 
 Then emit the tokens, and derive everything else from them:
 

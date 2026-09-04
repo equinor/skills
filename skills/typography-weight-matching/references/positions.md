@@ -19,7 +19,8 @@ Two faces at "the same weight" differ by a quarter of a stem. The simplification
 is to ship the same nominal weight for both and call it consistent; the cost is
 a display face that reads lighter than the body text it sits above, at every
 size. The matched values (`376.2 / 458.5 / 552.7` for tiers 300 / 400 / 500 at
-the ×1.137288 size correction) are what "the same weight" actually means.
+the ×1.137288 size correction, re-measured 2026-09-04) are what "the same
+weight" actually means; 460 in the tables below is 458.5 rounded for a tier.
 
 **A consequence, not a justification.** APCA's readability tables assume the
 stroke of a reference font, Barlow. Barlow 400 measures 0.071 em; Equinor 400

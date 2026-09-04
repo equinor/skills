@@ -1,6 +1,6 @@
 # Token shape
 
-The DTCG output of `scripts/stem.py --format tokens`, referenced from section 7
+The DTCG output of `scripts/stem.py --format tokens`, referenced from section 6
 of `SKILL.md`. Two token kinds: a **matched weight** per tier for the target
 family, and the **letter-spacing port factor** that scales the reference's
 tracking ramp for it. Both carry the derivation and the exact bytes they were
@@ -9,9 +9,10 @@ measured from.
 The example below is the bundled Inter matched against itself at tier 400 —
 the one pair the selftest can run without a second font — exactly as emitted.
 A real pair reads the same way with two different `sha256`s and a
-`correctionValue` other than 1; Inter against Equinor at ×1.137288 gave
-`376.2 / 458.5 / 552.7` for tiers 300 / 400 / 500 on 2026-09-01, which is what
-the `--match` example in section 3 reproduces.
+`correctionValue` other than 1; Inter against Equinor at ×1.137288 gives
+`376.2 / 458.5 / 552.7` for tiers 300 / 400 / 500, re-measured with the current
+script on 2026-09-04 and unchanged from 2026-09-01. Equinor is proprietary, so
+that pair is not in the selftest; re-run the section 3 example to check it.
 
 ```json
 {
@@ -44,7 +45,8 @@ the `--match` example in section 3 reproduces.
                   "sha256": "87a69aeae6290d8f4fc68e89eaca9a605defc155a3ea2bcb1f756fded1359722"
                 },
                 "glyph": "l",
-                "method": "outline:mid-height-stem"
+                "method": "outline:mid-height-stem",
+                "extractedAt": "2026-09-04"
               },
               "family": "Inter"
             },
@@ -93,7 +95,8 @@ the `--match` example in section 3 reproduces.
                 "sha256": "87a69aeae6290d8f4fc68e89eaca9a605defc155a3ea2bcb1f756fded1359722"
               },
               "glyphs": "a-z",
-              "method": "outline:advance-minus-ink"
+              "method": "outline:advance-minus-ink",
+              "extractedAt": "2026-09-04"
             },
             "family": "Inter"
           }
@@ -109,8 +112,25 @@ the `--match` example in section 3 reproduces.
 **`$value` is a plain number**, not a `100`–`900` keyword. CSS accepts any
 weight in 1–1000 including fractions, and a variable font renders it.
 Platforms that cannot — React Native rounds to hundreds — are the reason
-section 7 asks about the target before emitting: on those, snap and record the
-residual rather than pretend 458.5 was 500 all along.
+section 6 asks about the target before emitting: on those, `--snap 100` records
+the snapped value, the measured one and the residual rather than pretending
+458.5 was 500 all along, like this (Inter against itself, tier 400):
+
+```json
+{
+  "expression": "stem(target, w) = stem(reference, tier) / correction; value = round(w / 100) * 100",
+  "inputs": {
+    "tier": 400,
+    "correction": 1.0,
+    "correctionValue": 1.0,
+    "instance": {
+      "wght": 400
+    }
+  },
+  "measured": 400.1,
+  "residual": -0.1
+}
+```
 
 **`derived.inputs.correction`** is the DTCG alias of the x-height correction
 token when `--correction-token` names it, and the bare factor otherwise;

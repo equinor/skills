@@ -18,12 +18,19 @@ widens the box without widening the stroke.
 
 Requires: pip install fonttools brotli   (brotli is what opens .woff2)
 """
-import sys, json, hashlib, argparse
+import sys, json, hashlib, argparse, datetime
 from pathlib import Path
-from fontTools.ttLib import TTFont
-from fontTools.varLib import instancer
-from fontTools.pens.recordingPen import RecordingPen
-from fontTools.pens.boundsPen import BoundsPen
+try:
+    from fontTools.ttLib import TTFont
+    from fontTools.varLib import instancer
+    from fontTools.pens.recordingPen import RecordingPen
+    from fontTools.pens.boundsPen import BoundsPen
+    import brotli  # noqa: F401  — what opens .woff2
+except ImportError as e:                       # exit 2 with instructions, not a traceback
+    sys.stderr.write(f"missing dependency: {e.name}\n"
+                     "install fontTools and brotli in the project's Python environment, e.g. at the\n"
+                     "project root: python3 -m venv .venv && .venv/bin/pip install fonttools brotli\n")
+    sys.exit(2)
 
 FLATTEN = 64          # line segments per curve; sub-unit precision at any upm
 
@@ -154,7 +161,7 @@ def curve(path, samples=11):
     Instancing a font is expensive, so sample the curve once and invert by
     interpolation rather than re-instancing inside a search loop. Eleven
     samples over the axis plus one measured correction per tier (see match())
-    lands within a few hundredths of a weight unit.
+    lands within about a tenth of a weight unit.
     """
     axes = axis_info(path)["axes"]
     lo, _, hi = axes.get("wght", [300, 400, 700])
@@ -194,7 +201,8 @@ def match(ref_path, target_path, ref_weights, correction, opsz=None):
                     measured = stem(at(target_path, {"wght": found}))
                     found = min(max(found + (goal - measured) / slope, lo), hi)
                     break
-        out[int(w)] = None if found is None else round(found, 1)
+        key = int(w) if float(w).is_integer() else w
+        out[key] = None if found is None else round(found, 1)
     return out
 
 
@@ -220,20 +228,34 @@ def demo_font():
     raise SystemExit("No font given and the bundled Inter was not found; pass a font path.")
 
 
-def weight_tokens(ref, target, matches, correction, correction_token, display, opsz):
-    """DTCG fontWeight tokens: the target weight that matches the reference at each tier."""
+def today():
+    return datetime.date.today().isoformat()
+
+
+def weight_tokens(ref, target, matches, correction, correction_token, display, opsz, snap=None):
+    """DTCG fontWeight tokens: the target weight that matches the reference at each tier.
+
+    `snap` rounds the value to a multiple (React Native takes hundreds only) and
+    records what was measured and what the rounding cost, so nobody later reads
+    500 as the measurement."""
     fam = display or "display"
     out = {}
     for tier, w in matches.items():
         if w is None:
             continue
-        out[str(tier)] = {"$type": "fontWeight", "$value": w, "$extensions": {
-            NS: {"derived": {"expression": "stem(target, w) = stem(reference, tier) / correction",
-                             "inputs": {"tier": tier, "correction": correction_token or correction,
-                                        "correctionValue": correction,
-                                        "instance": ({"opsz": opsz} if opsz is not None else {}) | {"wght": tier}}},
+        value = w if not snap else int(round(w / snap) * snap)
+        inputs = {"tier": tier, "correction": correction_token or correction,
+                  "correctionValue": correction,
+                  "instance": ({"opsz": opsz} if opsz is not None else {}) | {"wght": tier}}
+        derived = {"expression": "stem(target, w) = stem(reference, tier) / correction", "inputs": inputs}
+        if snap:
+            derived["expression"] += f"; value = round(w / {snap}) * {snap}"
+            derived["measured"] = w
+            derived["residual"] = round(value - w, 1)
+        out[str(tier)] = {"$type": "fontWeight", "$value": value, "$extensions": {
+            NS: {"derived": derived,
                  "metrics": {"reference": source(ref), "target": source(target), "glyph": "l",
-                             "method": "outline:mid-height-stem"},
+                             "method": "outline:mid-height-stem", "extractedAt": today()},
                  "family": fam},
             NS_FIGMA: {"collection": "Typography", "scopes": ["FONT_WEIGHT"]}}}
     return {"typography": {"font-weight": {fam: out}}}
@@ -246,7 +268,8 @@ def tracking_tokens(ref, target, a, b, factor, display):
             NS: {"derived": {"expression": "target.sideSpaceEm / reference.sideSpaceEm",
                              "inputs": {"reference": a, "target": b}},
                  "metrics": {"reference": source(ref), "target": source(target),
-                             "glyphs": "a-z", "method": "outline:advance-minus-ink"},
+                             "glyphs": "a-z", "method": "outline:advance-minus-ink",
+                             "extractedAt": today()},
                  "family": fam}}}}}}
 
 
@@ -266,6 +289,8 @@ def parse_args(argv):
     p.add_argument("--at", default="400,400", metavar="WREF,WTARGET", help="weights for --tracking (matched!)")
     p.add_argument("--format", choices=["json", "tokens"], default="json")
     p.add_argument("--display", metavar="FAMILY", help="name of the target family, for token paths")
+    p.add_argument("--snap", type=int, metavar="N",
+                   help="round matched weights to a multiple of N and record the residual (React Native: 100)")
     a = p.parse_args(argv)
     if (a.match or a.tracking) and len(a.fonts) != 2:
         p.error("--match and --tracking need REFERENCE and TARGET")
@@ -295,7 +320,7 @@ def main(argv):
             print("warning: some tiers fall outside the target's weight axis (null)", file=sys.stderr)
         if a.format == "tokens":
             print(json.dumps(weight_tokens(ref, target, matches, a.correction, a.correction_token,
-                                           a.display, a.opsz), indent=2))
+                                           a.display, a.opsz, a.snap), indent=2))
         else:
             print(json.dumps({"reference": source(ref), "target": source(target), "correction": a.correction,
                               "opsz": a.opsz, "matches": matches}, indent=2))
