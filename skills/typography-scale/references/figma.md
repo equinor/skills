@@ -10,8 +10,9 @@ never typed in — as variables, with text styles bound to them.
 them in order; both are idempotent and reuse anything with the same name.
 
 1. **`figma-variables.js`** — a collection `Typography` with one mode per
-   density, `comfortable` first so it is the collection's default; `FLOAT` variables
-   `font-size/<step>` scoped `FONT_SIZE` and `line-height/<step>/<curve>`
+   density, `comfortable` first so it is the collection's default;
+   `FLOAT` variables `font-size/<step>` scoped `FONT_SIZE` and
+   `line-height/<step>/<curve>`
    scoped `LINE_HEIGHT`, with the pixel value per mode and the CSS custom
    property as `WEB` code syntax. With `--correction`, `font-size-display/<step>`
    as well.
@@ -23,6 +24,13 @@ them in order; both are idempotent and reuse anything with the same name.
 
 Density as modes is the whole reason to bind rather than bake into styles: a
 style holding a literal 14 cannot follow a mode.
+
+A collection's default mode is fixed when it is created and the Plugin API
+cannot change it afterwards. The variables script checks the default on every
+run and refuses, with a message, if it is not `comfortable` — which is what a
+collection built by a version of this emitter before 4 September 2026 looks
+like. The remedy is to delete that collection and run the script again; the
+styles re-bind to the new variables on the next run of the styles script.
 
 ## With a Figma MCP
 

@@ -240,7 +240,7 @@ A scale is a claim that N numbers all follow from four constants. Test it:
   recompute the literals from the four constants; a readback there only proves
   the browser can parse a number.
 - **The five octave exceptions are a fixture.** The pairs that miss a clean 2×
-  are enumerated in [`references/positions.md`](references/positions.md) §5. A
+  are enumerated in [`references/positions.md`](references/positions.md) §6. A
   sixth means a constant or a snap moved, and fails the build.
 - **Auditing an existing build** runs in a fixed order: reproduce the preset
   fixture, recompute the artefacts from the constants, regenerate and diff

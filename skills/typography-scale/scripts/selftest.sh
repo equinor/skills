@@ -31,6 +31,8 @@ grep -q "setBoundVariable('lineHeight'" "$tmp/figma/figma-text-styles.js"
 grep -q '"font-size-display/md"' "$tmp/figma/figma-variables.js"
 grep -q '"scopes": \[' "$tmp/figma/figma-variables.js"
 grep -q 'const MODES = \["comfortable", "compact", "relaxed"\]' "$tmp/figma/figma-variables.js"   # comfortable is the default mode
+grep -q 'renameMode(col.modes\[0\].modeId, MODES\[0\])' "$tmp/figma/figma-variables.js"          # ...and is wired to the first mode
+grep -q 'col.defaultModeId !== modeId\[MODES\[0\]\]' "$tmp/figma/figma-variables.js"              # ...and a stale collection refuses
 if command -v node >/dev/null; then
   for f in "$tmp"/figma/*.js; do
     # top-level await is what use_figma expects; wrap to syntax-check it
