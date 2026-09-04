@@ -194,3 +194,30 @@ deliberately between: accepting the unevenness; dropping the correction, since a
 well-matched pair may be better served by none than by an uneven one; or giving
 the display ramp a finer grid, at the cost of leaving the shared half-pixel one.
 Do not let rounding make that choice silently.
+
+## 7. Snap the corrected size to half a pixel, not to a scale step
+
+The x-height correction for the pair measured here is `× 1.137288`, and one
+step of the scale is `× 1.1487`. So a corrected display size lands almost one
+step above its text size, and it is tempting to read that as "one step up,
+exactly" and reuse the text ramp for the display face. Compared with the true
+correction at comfortable density (2026-09-04):
+
+```
+step   text   exact    half-px   error    on-step   error
+sm     12     13.65    13.5      -1.1%    14        +2.6%
+lg     16     18.20    18        -1.1%    18.5      +1.7%
+2xl    21     23.88    24        +0.5%    24.5      +2.6%
+5xl    32     36.39    36.5      +0.3%    37        +1.7%
+```
+
+The other six steps agree under both rules. Half-pixel keeps the alignment
+error under 1.1% at every step; on-step reaches 2.6%, where a size difference
+starts to read, and does so at the small steps that carry interface text.
+
+What on-step buys is real: every display size is also a text size, so there
+are fewer distinct values and a Figma display style could reuse the text
+variable one step up. The position is that this is not worth a 2.6% miss on
+the alignment the correction exists to deliver. Section 4 of `SKILL.md`
+therefore re-snaps to the *same grid* as the text ramp, and the emitter and
+the shipped build agree: `12 / 13.5 / 16 / 18` for `xs`–`lg` at comfortable.
