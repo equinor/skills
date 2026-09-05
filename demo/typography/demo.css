@@ -17,26 +17,12 @@
   font-weight: 1 999;
   font-display: block;
 }
-/* The x-height skill's CSS-only output: the same file, size-adjusted. The demo
- * animates a scaled font-size to *show* the correction happening (size-adjust
- * cannot animate), then swaps to this face at rest, so the CSS that is running
- * when the motion stops is the CSS the panel shows. */
-@font-face {
-  font-family: "Equinor Aligned";
-  src: url(https://cdn.eds.equinor.com/font/EquinorVariable-VF.woff2) format("woff2-variations");
-  font-weight: 1 999;
-  font-display: block;
-  size-adjust: 113.7288%; /* Inter 0.545898 / Equinor 0.48 — typography-x-height-alignment */
-}
 @font-face {
   font-family: CommitMono;
   src: url(https://cdn.eds.equinor.com/font/CommitMonoV143-VF.woff2) format("woff2-variations");
   font-weight: 1 999;
   font-display: swap;
 }
-
-/* ---- animatable custom properties (the simulation, declared) */
-@property --_xh { syntax: "<number>"; inherits: true; initial-value: 1; }
 
 /* ---- tokens: EDS palette steps and spacing ladder */
 :root {
@@ -79,6 +65,11 @@
   --line-height-3xl: round(calc(var(--font-size-3xl) * (1.39 - pow(6/9, 3) * 0.29)), 4px);
   --line-height-4xl: round(calc(var(--font-size-4xl) * (1.39 - pow(7/9, 3) * 0.29)), 4px);
   --line-height-5xl: round(calc(var(--font-size-5xl) * (1.39 - pow(8/9, 3) * 0.29)), 4px);
+  /* the display ramp: the text size × the x-height correction, re-snapped to
+     the same half-pixel grid (typography-scale §4, two-ramp branch) */
+  --font-size-display-2xl: round(calc(var(--font-size-2xl) * 1.137288), 0.03125rem);
+  --font-size-display-3xl: round(calc(var(--font-size-3xl) * 1.137288), 0.03125rem);
+  --font-size-display-5xl: round(calc(var(--font-size-5xl) * 1.137288), 0.03125rem);
   /* spacing-baseline-grid: trim to x-height, pad up to the rounded cap */
   --padding-top-baseline: calc(round(1cap, 4px) - 1ex);
 }
@@ -112,42 +103,37 @@ body { margin: 0; font-family: Inter, system-ui, sans-serif; }
 .surface h1, .surface h2, .surface h3 {
   font-family: Inter, system-ui, sans-serif;
   font-weight: var(--_h-weight, 700);
-  /* the x-height simulation: font-size × --_xh, animated; 1 at rest */
-  font-size: calc(var(--_h-size) * var(--_xh));
-  transition: --_xh 700ms ease-in-out, font-weight 700ms ease-in-out;
+  font-size: var(--_h-size);
 }
-.surface h1 { --_h-size: 2em; }
-.surface h2 { --_h-size: 1.5em; }
-.surface h3 { --_h-size: 1.17em; }
+.surface h1 { --_h-size: 2em;    --_h-size-display: calc(2em * 1.137288); }
+.surface h2 { --_h-size: 1.5em;  --_h-size-display: calc(1.5em * 1.137288); }
+.surface h3 { --_h-size: 1.17em; --_h-size-display: calc(1.17em * 1.137288); }
 
 /* 1. the problem: swap the heading face, change nothing else */
 .surface[data-swap="on"] h1, .surface[data-swap="on"] h2, .surface[data-swap="on"] h3 {
   font-family: Equinor, sans-serif;
 }
-/* 2. x-height: animate the scaled size, then rest on the size-adjusted face */
-.surface[data-xheight="on"] h1, .surface[data-xheight="on"] h2, .surface[data-xheight="on"] h3 { --_xh: 1.137288; }
-.surface[data-xheight="rest"] h1, .surface[data-xheight="rest"] h2, .surface[data-xheight="rest"] h3 {
-  --_xh: 1;
-  font-family: "Equinor Aligned", sans-serif;
-  transition: font-weight 700ms ease-in-out;                 /* no transition on the swap: the two states are geometrically equal */
-}
-/* 3. weight: the matched value for the current tier, from typography-weight-matching */
-.surface[data-weight="on"] h1, .surface[data-weight="on"] h2, .surface[data-weight="on"] h3 {
-  font-weight: var(--_h-weight-matched, var(--_h-weight, 700));
-}
+/* 2. x-height: the display ramp — the text size × 1.137288, snapped. Only while
+      the headings are actually in Equinor; the toggle keeps its state otherwise. */
+.surface[data-swap="on"][data-xheight="on"] :is(h1, h2, h3) { font-size: var(--_h-size-display); }
+/* 3. weight: the matched value for this heading's size and tier, from
+      typography-weight-matching; set per heading by demo.js */
+.surface[data-swap="on"][data-weight="on"] h1 { font-weight: var(--_h1-matched, var(--_h-weight, 700)); }
+.surface[data-swap="on"][data-weight="on"] h2 { font-weight: var(--_h2-matched, var(--_h-weight, 700)); }
+.surface[data-swap="on"][data-weight="on"] h3 { font-weight: var(--_h3-matched, var(--_h-weight, 700)); }
 /* 4. the scale: sizes from the steps, line-heights from the curve, EDS heading weight */
 .surface[data-scale="on"] { line-height: var(--line-height-lg); }
 .surface[data-scale="on"] p { font-size: var(--font-size-lg); line-height: var(--line-height-lg); }
 .surface[data-scale="on"] p.lead { font-size: var(--font-size-xl); line-height: var(--line-height-xl); }
-.surface[data-scale="on"] h1 { --_h-size: var(--font-size-5xl); line-height: var(--line-height-5xl); }
-.surface[data-scale="on"] h2 { --_h-size: var(--font-size-3xl); line-height: var(--line-height-3xl); }
-.surface[data-scale="on"] h3 { --_h-size: var(--font-size-2xl); line-height: var(--line-height-2xl); }
-.surface[data-scale="on"] :is(h1, h2, h3) { --_h-weight: 400; }      /* EDS headings are not bold: hierarchy comes from size */
+.surface[data-scale="on"] h1 { --_h-size: var(--font-size-5xl); --_h-size-display: var(--font-size-display-5xl); line-height: var(--line-height-5xl); --_flow-space: var(--space-3xl); }
+.surface[data-scale="on"] h2 { --_h-size: var(--font-size-3xl); --_h-size-display: var(--font-size-display-3xl); line-height: var(--line-height-3xl); --_flow-space: var(--space-2xl); }
+.surface[data-scale="on"] h3 { --_h-size: var(--font-size-2xl); --_h-size-display: var(--font-size-display-2xl); line-height: var(--line-height-2xl); --_flow-space: var(--space-xl); }
+.surface[data-scale="on"] p  { --_flow-space: var(--space-lg); }
+.surface[data-scale="on"] :is(h1, h2, h3) { --_h-weight: 600; }      /* EDS headings take the bolder tier */
+/* flow spacing as in EDS elements.css: each block carries the space before it */
 .surface[data-scale="on"] :is(h1, h2, h3, p) { margin: 0; }
 .surface[data-scale="on"] :is(h1, h2, h3, p) + :is(h1, h2, h3, p) { margin-top: var(--_flow-space, var(--space-lg)); }
-.surface[data-scale="on"] :is(p) + :is(h2, h3) { --_flow-space: var(--space-2xl); }
-.surface[data-scale="on"] h1 + h2 { --_flow-space: var(--space-md); }
-.surface[data-scale="on"] :is(h1, h2, h3) + p { --_flow-space: var(--space-md); }
+.surface[data-scale="on"] h1 + h2 { --_flow-space: var(--space-md); }   /* the one pair tighter than its own kind */
 /* 5. baseline grid: text in flow snaps, headings included */
 @supports (text-box: trim-both ex alphabetic) {
   .surface[data-baseline="on"] :is(h1, h2, h3, p) {

@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 .venv/
+
+# Local reference material, never committed (contains third-party keys)
+last-years-pen/

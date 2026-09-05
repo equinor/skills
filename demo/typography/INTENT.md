@@ -70,16 +70,16 @@ faces share neither x-height nor stem weight at the same nominal size. Steps
 the spacing skill not yet written; the demo is that skill's worked example,
 not a hard-coded stand-in for it.
 
-**Weight is matched at the tier the headings are set at** (decided while
-building, 5 September). Browser-default headings are bold, 700, and Inter 700
-has a stem no weight on Equinor's 300–700 axis reaches, so with the scale
-off the weight toggle holds at 700 and the code panel shows the skill's
-warningrather than pretending. The scale sets EDS headings at the normal tier,
-400,
-where the match is 458.5 and the toggle visibly changes the text. The
-recommended telling is therefore swap → scale → x-height → weight →
-baseline, and the page's control order says so. Deep links apply controls in
-order: `index.html?on=swap,scale,xheight,weight,baseline,guides`.
+**Weight is matched at the tier and size the headings are set at** (5
+September). Browser-default headings are bold, 700, and Inter 700 has a stem
+no weight on Equinor's 300–700 axis reaches, so with the scale off the weight
+toggle holds at 700 and the code panel shows the skill's warning rather than
+pretending. The scale sets headings at the bolder tier, Inter 600, and the
+match is taken per heading size with Inter's `opsz` following the size: `h1`
+5xl 640.8, `h2` 3xl 648.8, `h3` 2xl 652.5 (the full 300 / 400 / 600 table
+across the ramp is in `demo.js`; measured 5 September). The values fall with
+size because Inter's optical axis thins its stems and Equinor has none. Deep
+links apply controls in order: `index.html?on=scale,baseline,swap,xheight,weight,guides`.
 
 Each control's label is the request itself, in the wording of the skill's
 representative requests, for example "Align the x-height of Equinor and
