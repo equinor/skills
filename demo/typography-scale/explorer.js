@@ -14,13 +14,13 @@ const clean = (n) => Math.round(n * 1e6) / 1e6;
 
 function size(basePx, i) { return clean(cssRound(basePx * 2 ** ((i - BASE_STEP) / STEPS_PER_OCTAVE), SIZE_SNAP)); }
 function multiplier(i, curve) { const { max, drop } = CURVES[curve]; return max - (i / (STEPS.length - 1)) ** 3 * drop; }
-function lineHeight(px, i, curve) { return clean(cssRound(px * multiplier(i, curve), LH_SNAP)); }
+function lineHeight(px, i, curve, snap = true) { const raw = px * multiplier(i, curve); return clean(snap ? cssRound(raw, LH_SNAP) : raw); }
 
 const $ = (id) => document.getElementById(id);
 const stepInput = $('step');
 const preview = $('preview');
 const sample = $('sample');
-const state = { i: 3, curve: 'default', density: 'comfortable' };
+const state = { i: 3, curve: 'default', density: 'comfortable', snap: true };
 
 // ticks
 const ticks = $('ticks');
@@ -33,7 +33,7 @@ function render() {
   const i = state.i, s = STEPS[i];
   const px = size(base, i);
   const m = multiplier(i, state.curve);
-  const lh = lineHeight(px, i, state.curve);
+  const lh = lineHeight(px, i, state.curve, state.snap);
   const raw = px * m;
 
   $('step-label').textContent = `${s} · ${fmt(px)}px`;
@@ -44,25 +44,29 @@ function render() {
 
   $('t-size').textContent = `${fmt(px)}px`;
   $('t-size-note').textContent = `i = ${i - BASE_STEP}: base × 2^(${i - BASE_STEP}/5)`;
-  $('t-lh').textContent = `${lh}px`;
+  $('t-lh').textContent = `${fmt(lh)}px`;
   $('t-lh-note').textContent = `${fmt(lh / px * 100, 1)}% of the size`;
   $('t-mult').textContent = fmt(m, 4);
-  $('t-mult-note').textContent = `${state.curve}: ${CURVES[state.curve].max} − ${CURVES[state.curve].drop} × (${i}/9)³`;
+  $('t-mult-note').textContent = `${state.curve}: ${CURVES[state.curve].max} − ${CURVES[state.curve].drop} × (${i}/9)³${state.snap ? ', before the 4px snap' : ', no snap'}`;
 
   const rows = [
     ['base', `${fmt(base)}px <small>(${state.density})</small>`],
     ['size', `round(${fmt(base)} × 2^(${i - BASE_STEP}/5), 0.5px) = round(${fmt(base * 2 ** ((i - BASE_STEP) / 5), 3)}, 0.5) = <b>${fmt(px)}px</b>`],
     ['multiplier', `${CURVES[state.curve].max} − (${i}/9)³ × ${CURVES[state.curve].drop} = ${CURVES[state.curve].max} − ${fmt((i / 9) ** 3, 4)} × ${CURVES[state.curve].drop} = <b>${fmt(m, 4)}</b>`],
-    ['line-height', `round(${fmt(px)} × ${fmt(m, 4)}, 4px) = round(${fmt(raw, 2)}, 4) = <b>${lh}px</b>`],
-    ['ratio', `${lh} / ${fmt(px)} = <b>${fmt(lh / px * 100, 1)}%</b> — the grid is the invariant, the ratio is derived`],
+    ['line-height', state.snap
+      ? `round(${fmt(px)} × ${fmt(m, 4)}, 4px) = round(${fmt(raw, 2)}, 4) = <b>${lh}px</b>`
+      : `${fmt(px)} × ${fmt(m, 4)} = <b>${fmt(lh)}px</b> — not on the grid`],
+    ['ratio', state.snap
+      ? `${lh} / ${fmt(px)} = <b>${fmt(lh / px * 100, 1)}%</b> — the grid is the invariant, the ratio is derived`
+      : `${fmt(lh)} / ${fmt(px)} = <b>${fmt(lh / px * 100, 1)}%</b> — the curve itself, smooth and off-grid`],
   ];
   $('breakdown').innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
 
   $('table-density').textContent = state.density;
   const tbody = document.querySelector('#table tbody');
   tbody.innerHTML = STEPS.map((name, k) => {
-    const p = size(base, k), d = lineHeight(p, k, 'default'), c = lineHeight(p, k, 'compressed');
-    return `<tr${k === i ? ' aria-current="true"' : ''}><td>${name}</td><td>${k - BASE_STEP}</td><td>${fmt(p)}px</td><td>${d}px</td><td>${fmt(d / p * 100, 1)}%</td><td>${c}px</td><td>${fmt(c / p * 100, 1)}%</td></tr>`;
+    const p = size(base, k), d = lineHeight(p, k, 'default', state.snap), c = lineHeight(p, k, 'compressed', state.snap);
+    return `<tr${k === i ? ' aria-current="true"' : ''}><td>${name}</td><td>${k - BASE_STEP}</td><td>${fmt(p)}px</td><td>${fmt(d)}px</td><td>${fmt(d / p * 100, 1)}%</td><td>${fmt(c)}px</td><td>${fmt(c / p * 100, 1)}%</td></tr>`;
   }).join('');
 }
 
@@ -70,5 +74,6 @@ stepInput.addEventListener('input', () => { state.i = Number(stepInput.value); r
 document.querySelectorAll('input[name="curve"]').forEach((r) => r.addEventListener('change', () => { state.curve = r.value; render(); }));
 document.querySelectorAll('input[name="density"]').forEach((r) => r.addEventListener('change', () => { state.density = r.value; render(); }));
 $('guides').addEventListener('change', (e) => { preview.dataset.guides = e.target.checked ? 'on' : 'off'; });
+$('snap').addEventListener('change', (e) => { state.snap = e.target.checked; render(); });
 ticks.addEventListener('click', (e) => { const li = e.target.closest('li'); if (li) { state.i = Number(li.dataset.i); stepInput.value = state.i; render(); } });
 render();

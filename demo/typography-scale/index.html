@@ -31,7 +31,10 @@
       <label><input type="radio" name="density" value="comfortable" checked> <span><b>Comfortable</b> <small>base 16px</small></span></label>
       <label><input type="radio" name="density" value="relaxed"> <span><b>Relaxed</b> <small>base 18.5px</small></span></label>
     </fieldset>
-    <label class="control control--check"><input type="checkbox" id="guides"> <span><b>Show the 4px grid</b></span></label>
+    <div class="control control--checks">
+      <label><input type="checkbox" id="snap" checked> <span><b>Snap line-heights to the 4px grid</b> <small>off: the raw curve, monotonic percentages, off-grid line boxes</small></span></label>
+      <label><input type="checkbox" id="guides"> <span><b>Show the 4px grid</b></span></label>
+    </div>
   </section>
 
   <section class="preview surface" id="preview" data-guides="off">
@@ -41,7 +44,7 @@
   <section class="tiles">
     <div class="tile"><span class="tile__label">Font size</span><output class="tile__value" id="t-size">16px</output><span class="tile__note" id="t-size-note">step 0 of the octave</span></div>
     <div class="tile"><span class="tile__label">Line-height</span><output class="tile__value" id="t-lh">24px</output><span class="tile__note" id="t-lh-note">150% of the size</span></div>
-    <div class="tile"><span class="tile__label">Curve multiplier</span><output class="tile__value" id="t-mult">1.379</output><span class="tile__note" id="t-mult-note">before the 4px snap</span></div>
+    <div class="tile"><span class="tile__label">Curve multiplier</span><output class="tile__value" id="t-mult">1.379</output><span class="tile__note" id="t-mult-note"></span></div>
   </section>
 
   <section class="breakdown surface">
