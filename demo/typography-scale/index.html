@@ -33,11 +33,12 @@
     </fieldset>
     <div class="control control--checks">
       <label><input type="checkbox" id="snap" checked> <span><b>Snap line-heights to the 4px grid</b> <small>off: the raw curve, monotonic percentages, off-grid line boxes</small></span></label>
+      <label><input type="checkbox" id="baseline"> <span><b>Align the baselines to the 4px grid</b> <small>trim to x-height and baseline, pad the top up to the rounded cap · needs the snap</small></span></label>
       <label><input type="checkbox" id="guides"> <span><b>Show the 4px grid</b></span></label>
     </div>
   </section>
 
-  <section class="preview surface" id="preview" data-guides="off">
+  <section class="preview surface" id="preview" data-guides="off" data-baseline="off">
     <p id="sample">Sphinx of black quartz, judge my vow. Typography is the art of arranging type so that written language is legible, readable and appealing. It involves choosing typefaces, sizes, line lengths, line spacing and letter spacing, and it starts with a scale.</p>
   </section>
 

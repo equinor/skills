@@ -42,7 +42,8 @@ h2 small { color: var(--color-text-subtle); font-weight: 400; font-size: var(--f
 .control label { display: grid; grid-template-columns: 20px 1fr; gap: var(--space-sm); align-items: start; cursor: pointer; }
 .control label b { font-weight: 500; }
 .control label small { display: block; color: var(--color-text-subtle); font-size: var(--font-size-sm); line-height: var(--line-height-sm); }
-.control--checks { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }
+.control--checks { grid-column: 1 / -1; grid-template-columns: 1fr 1fr 1fr; }
+.control--checks label:has(input:disabled) { opacity: 0.45; cursor: not-allowed; }
 .control--checks input { margin: 2px 0 0; }
 @media (max-width: 700px) { .control--checks { grid-template-columns: 1fr; } }
 input[type="range"] { width: 100%; accent-color: var(--color-accent); margin: var(--space-xs) 0 0; }
@@ -56,6 +57,15 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; }
 
 .preview { padding: var(--space-3xl); min-height: 200px; }
 .preview p { margin: 0; }
+/* spacing-baseline-grid: the block ends on its last baseline and the first
+   baseline sits at the rounded cap height from the top — a multiple of 4. */
+@supports (text-box: trim-both ex alphabetic) {
+  .preview[data-baseline="on"] p {
+    text-box: trim-both ex alphabetic;
+    padding-top: calc(round(1cap, 4px) - 1ex);
+    padding-bottom: 0;
+  }
+}
 .preview[data-guides="on"]::after {
   content: ""; pointer-events: none; position: absolute; inset: 0; border-radius: inherit;
   background-image:

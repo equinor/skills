@@ -20,7 +20,7 @@ const $ = (id) => document.getElementById(id);
 const stepInput = $('step');
 const preview = $('preview');
 const sample = $('sample');
-const state = { i: 3, curve: 'default', density: 'comfortable', snap: true };
+const state = { i: 3, curve: 'default', density: 'comfortable', snap: true, baseline: false };
 
 // ticks
 const ticks = $('ticks');
@@ -61,6 +61,25 @@ function render() {
       : `${fmt(lh)} / ${fmt(px)} = <b>${fmt(lh / px * 100, 1)}%</b> — the curve itself, smooth and off-grid`],
   ];
   $('breakdown').innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
+  requestAnimationFrame(() => {
+    // Measure rather than assert: a zero-size inline-block sits on the first
+    // baseline; report its distance from the surface's content edge, modulo 4.
+    const probe = document.createElement('span');
+    probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+    sample.prepend(probe);
+    const top = preview.getBoundingClientRect().top + parseFloat(getComputedStyle(preview).paddingTop);
+    const b = probe.getBoundingClientRect().bottom - top;
+    probe.remove();
+    const rem = ((b % 4) + 4) % 4;
+    const on = Math.abs(rem) < 0.05 || Math.abs(rem - 4) < 0.05;
+    const cs = getComputedStyle(sample);
+    const dd = document.createElement('dd'); const dt = document.createElement('dt');
+    dt.textContent = 'first baseline';
+    dd.innerHTML = state.baseline
+      ? `padding-top = round(1cap, 4px) − 1ex = ${fmt(parseFloat(cs.paddingTop), 2)}px → baseline at <b>${fmt(b, 2)}px</b> from the top, ${on ? 'on the grid' : `${fmt(rem, 2)}px off the grid`} (measured)`
+      : `half-leading + ascent = <b>${fmt(b, 2)}px</b> from the top, ${on ? 'on the grid by luck' : `${fmt(rem, 2)}px off the grid`} (measured)`;
+    $('breakdown').append(dt, dd);
+  });
 
   $('table-density').textContent = state.density;
   const tbody = document.querySelector('#table tbody');
@@ -74,6 +93,21 @@ stepInput.addEventListener('input', () => { state.i = Number(stepInput.value); r
 document.querySelectorAll('input[name="curve"]').forEach((r) => r.addEventListener('change', () => { state.curve = r.value; render(); }));
 document.querySelectorAll('input[name="density"]').forEach((r) => r.addEventListener('change', () => { state.density = r.value; render(); }));
 $('guides').addEventListener('change', (e) => { preview.dataset.guides = e.target.checked ? 'on' : 'off'; });
-$('snap').addEventListener('change', (e) => { state.snap = e.target.checked; render(); });
+$('snap').addEventListener('change', (e) => {
+  state.snap = e.target.checked;
+  $('baseline').disabled = !state.snap;            // the recipe needs 4px line boxes to land on
+  if (!state.snap) { state.baseline = false; $('baseline').checked = false; preview.dataset.baseline = 'off'; }
+  render();
+});
+$('baseline').addEventListener('change', (e) => { state.baseline = e.target.checked; preview.dataset.baseline = e.target.checked ? 'on' : 'off'; render(); });
 ticks.addEventListener('click', (e) => { const li = e.target.closest('li'); if (li) { state.i = Number(li.dataset.i); stepInput.value = state.i; render(); } });
+
+// Deep links for the talk: ?step=5&curve=compressed&density=compact&snap=0&baseline=1&guides=1
+const params = new URLSearchParams(location.search);
+if (params.has('step')) { state.i = Math.min(9, Math.max(0, Number(params.get('step')))); stepInput.value = state.i; }
+if (params.has('curve') && CURVES[params.get('curve')]) { state.curve = params.get('curve'); document.querySelector(`input[name="curve"][value="${state.curve}"]`).checked = true; }
+if (params.has('density') && DENSITIES[params.get('density')]) { state.density = params.get('density'); document.querySelector(`input[name="density"][value="${state.density}"]`).checked = true; }
+if (params.get('snap') === '0') { state.snap = false; $('snap').checked = false; $('baseline').disabled = true; }
+if (params.get('baseline') === '1' && state.snap) { state.baseline = true; $('baseline').checked = true; preview.dataset.baseline = 'on'; }
+if (params.get('guides') === '1') { $('guides').checked = true; preview.dataset.guides = 'on'; }
 render();
