@@ -24,7 +24,11 @@ const state = { i: 3, curve: 'default', density: 'comfortable', snap: true, base
 
 // ticks
 const ticks = $('ticks');
-STEPS.forEach((s, i) => { const li = document.createElement('li'); li.textContent = s; li.dataset.i = i; li.style.setProperty('--i', i); ticks.append(li); });
+STEPS.forEach((s, i) => {
+  const li = document.createElement('li'); li.dataset.i = i; li.style.setProperty('--i', i);
+  const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.setAttribute('aria-label', `step ${s}`);
+  li.append(b); ticks.append(li);
+});
 
 function fmt(n, d = 2) { return Number.isInteger(n) ? String(n) : n.toFixed(d).replace(/\.?0+$/, ''); }
 
@@ -37,7 +41,7 @@ function render() {
   const raw = px * m;
 
   $('step-label').textContent = `${s} · ${fmt(px)}px`;
-  ticks.querySelectorAll('li').forEach((li) => li.toggleAttribute('aria-current', Number(li.dataset.i) === i));
+  ticks.querySelectorAll('li').forEach((li) => { if (Number(li.dataset.i) === i) li.setAttribute('aria-current', 'true'); else li.removeAttribute('aria-current'); });
 
   sample.style.fontSize = `${px}px`;
   sample.style.lineHeight = `${lh}px`;

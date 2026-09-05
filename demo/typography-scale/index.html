@@ -14,12 +14,11 @@
   </header>
 
   <section class="controls">
-    <label class="control control--range">
-      <span class="control__label">Step <output id="step-label">lg · 16px</output></span>
-      <input type="range" id="step" min="0" max="9" value="3" step="1" list="steps">
-      <datalist id="steps"></datalist>
+    <div class="control control--range">
+      <label for="step" class="control__label">Step <output id="step-label">lg · 16px</output></label>
+      <input type="range" id="step" min="0" max="9" value="3" step="1">
       <ol class="ticks" id="ticks"></ol>
-    </label>
+    </div>
     <fieldset class="control">
       <legend class="control__label">Line-height curve</legend>
       <label><input type="radio" name="curve" value="default" checked> <span><b>Default</b> <small>text meant to be read · 139% → 110%</small></span></label>

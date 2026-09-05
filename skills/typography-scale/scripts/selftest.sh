@@ -59,3 +59,14 @@ echo "  css: 10 steps, expressions shipped or kept in comments, baked block per 
 if "$py" "$here/scripts/scale.py" >/dev/null 2>"$tmp/err.txt"; then echo "  expected --out to be required"; exit 1; fi
 grep -q 'pass --out DIR' "$tmp/err.txt"
 echo "  refuses to concatenate three token files on stdout"
+
+# 6. The scale explorer in demo/, when this checkout has it, carries the same constants.
+explorer="$here/../../demo/typography-scale/explorer.js"
+if [ -f "$explorer" ]; then
+  grep -q "const STEPS_PER_OCTAVE = 5;" "$explorer"
+  grep -q "const SIZE_SNAP = 0.5;" "$explorer"
+  grep -q "const LH_SNAP = 4;" "$explorer"
+  grep -q "default: { max: 1.39, drop: 0.29 }, compressed: { max: 1.13, drop: 0.13 }" "$explorer"
+  grep -q "compact: 14, comfortable: 16, relaxed: 18.5" "$explorer"
+  echo "  demo/typography-scale/explorer.js carries the same constants"
+fi

@@ -16,8 +16,12 @@ Consequences for how you work here:
 
 ```
 skills/<domain>-<topic>/SKILL.md   one skill per directory, kebab-case
+demo/<topic>/                      talk artefacts; each has an INTENT.md that governs it
 .github/workflows/claude.yml       @claude bot, gated to write-access collaborators
 ```
+
+`demo/` pages quote the skills' emitted numbers and reference fonts from the
+EDS CDN, never bundle them; `demo/typography/INTENT.md` records the rules.
 
 **Skill names are prefixed by domain** — `typography-`, `colour-`, `spacing-`,
 `design-system-` — so the install command reads as a namespace:
