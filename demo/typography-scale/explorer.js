@@ -24,7 +24,7 @@ const state = { i: 3, curve: 'default', density: 'comfortable' };
 
 // ticks
 const ticks = $('ticks');
-STEPS.forEach((s, i) => { const li = document.createElement('li'); li.textContent = s; li.dataset.i = i; ticks.append(li); });
+STEPS.forEach((s, i) => { const li = document.createElement('li'); li.textContent = s; li.dataset.i = i; li.style.setProperty('--i', i); ticks.append(li); });
 
 function fmt(n, d = 2) { return Number.isInteger(n) ? String(n) : n.toFixed(d).replace(/\.?0+$/, ''); }
 
