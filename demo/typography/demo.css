@@ -8,13 +8,13 @@
 @font-face {
   font-family: Inter;
   src: url(https://cdn.eds.equinor.com/font/InterVariable.woff2) format("woff2-variations");
-  font-weight: 1 999;
+  font-weight: 100 900;   /* the file's wght axis */
   font-display: block;
 }
 @font-face {
   font-family: Equinor;
   src: url(https://cdn.eds.equinor.com/font/EquinorVariable-VF.woff2) format("woff2-variations");
-  font-weight: 1 999;
+  font-weight: 300 700;   /* the file's wght axis — the one the weight toggle runs out of */
   font-display: block;
 }
 @font-face {
@@ -28,7 +28,6 @@
 :root {
   --color-canvas: oklch(0.97 0 0);              /* gray 1 */
   --color-surface: oklch(0.999 0 0);            /* gray 2 */
-  --color-muted: oklch(0.91 0 0);               /* gray 3 */
   --color-border-subtle: oklch(0.87 0 0);       /* gray 6 */
   --color-border-medium: oklch(0.75 0 0);       /* gray 7 */
   --color-text-subtle: oklch(0.46 0 0);         /* gray 12 */
@@ -36,7 +35,6 @@
   --color-accent: oklch(0.5 0.075 204.6);       /* moss green 9 */
   --color-accent-hover: oklch(0.44 0.062 204.6);/* moss green 10 */
   --color-accent-surface: oklch(0.999 0.01 184.6); /* moss green 2 */
-  --color-on-accent: oklch(1 0.011 204.6);      /* moss green 15 */
   --color-guide: oklch(0.5 0.075 204.6 / 0.09);
   --color-guide-edge: oklch(0.5 0.075 204.6 / 0.3);
 
@@ -187,6 +185,7 @@ body { margin: 0; font-family: Inter, system-ui, sans-serif; }
   background: var(--color-surface); transition: translate 200ms;
 }
 .controls input:checked { background: var(--color-accent); }
+@media (prefers-reduced-motion: reduce) { .controls input, .controls input::after { transition: none; } }
 .controls input:checked::after { translate: 16px 0; }
 .controls input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 .controls b { font-weight: 500; }
