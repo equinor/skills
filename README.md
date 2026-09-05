@@ -21,6 +21,15 @@ Planned areas:
 - **Spacing** – ratio-based spacing scales, inset proportions
 - **Design systems** – broader EDS-informed practices
 
+## Demo
+
+[`demo/typography/`](demo/typography/) is the page shown at the meetup: an
+article set in Inter and Equinor, six controls labelled with the request you
+would type to an agent, and a panel showing the CSS each request produces.
+Open `index.html` over HTTP (the fonts load from the EDS CDN), or append
+`?on=swap,scale,xheight,weight,baseline,guides` to arrive with everything on.
+`INTENT.md` alongside records why it is built the way it is.
+
 ## Browser support
 
 The CSS in these skills targets modern, evergreen browsers. Features are

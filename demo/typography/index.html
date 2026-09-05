@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typography that fits — a demo of three skills</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<main class="stage">
+
+  <article class="surface" id="article" data-guides="off" data-swap="off" data-xheight="off" data-weight="off" data-scale="off" data-baseline="off">
+    <h1>Type that fits</h1>
+    <h2>Two typefaces, one rhythm</h2>
+    <p class="lead">A design system pairs a display face with a text face and asks them to behave as one. They rarely do. The same nominal size renders smaller in one than the other, the same nominal weight renders lighter, and neither lands on the grid the layout is built on.</p>
+    <p>The usual answer is to eyeball it: nudge the heading size until it looks right, pick a heavier weight until it stops looking thin, and accept that the baselines drift. That works for one screen, in one browser, at one size. It stops working the moment the scale changes.</p>
+    <p>The alternative is to measure. Every mismatch on this page has a number behind it — an x-height ratio read from the font file, a stem width read from the outline, a cap height the browser reports — and every fix below is that number, applied. Nothing is typed in.</p>
+    <h3>What the toggles show</h3>
+    <p>Each control on the right is a request a designer or developer would type to an agent. The panel underneath shows the CSS that request produces, and the text on the left shows what it does. Switch the heading face first: that is the problem. Then apply the fixes in order.</p>
+    <p>The x-height correction is derived from the two font files, not from a specification page. The weight is matched by measured stem width, not by the number in the font's name. The scale is one base and one ratio, snapped to half a pixel. The line-heights are a curve, snapped to four. The baseline grid is what all of that was for.</p>
+    <p>When the last toggle is on, every line of text on this page sits on the same four-pixel grid, in both typefaces, and the code that does it fits on a slide.</p>
+  </article>
+
+  <aside class="panel">
+    <header class="panel__head">
+      <h2 class="panel__title">Requests</h2>
+      <p class="panel__hint">Each switch is what you would ask. The code is what you get.</p>
+    </header>
+
+    <ul class="controls">
+      <li><label><input type="checkbox" data-control="guides"> <span><b>Show the 4px layout grid</b></span></label></li>
+      <li><label><input type="checkbox" data-control="swap"> <span><b>Set the headings in Equinor</b> <small>the problem</small></span></label></li>
+      <li><label><input type="checkbox" data-control="scale"> <span><b>Build a type scale based on the EDS scale</b> <small>typography-scale</small></span></label></li>
+      <li><label><input type="checkbox" data-control="xheight" disabled> <span><b>Align the x-height of Equinor and Inter, Inter is the master</b> <small>typography-x-height-alignment</small></span></label></li>
+      <li><label><input type="checkbox" data-control="weight" disabled> <span><b>Equinor looks lighter than Inter at the same weight. What should it be?</b> <small>typography-weight-matching</small></span></label></li>
+      <li><label><input type="checkbox" data-control="baseline" disabled> <span><b>Align the text to the baseline grid</b> <small>spacing, not yet published</small></span></label></li>
+    </ul>
+
+    <section class="code" aria-live="polite">
+      <div class="code__bar"><span id="code-title">Before: browser defaults</span><span class="code__state" id="code-state">nothing applied</span></div>
+      <pre id="code"><code>/* No stylesheet beyond the two @font-face rules.
+   Body is Inter at 16px; the headings are whatever
+   the browser does when nobody decides. */
+h1 { font-size: 2em;    font-weight: bold; line-height: normal; }
+h2 { font-size: 1.5em;  font-weight: bold; line-height: normal; }
+h3 { font-size: 1.17em; font-weight: bold; line-height: normal; }</code></pre>
+    </section>
+
+    <footer class="panel__foot">
+      <p>Do the same in your project:</p>
+      <pre><code>npx skills add equinor/skills --skill typography-scale</code></pre>
+      <p><a href="https://github.com/equinor/skills">github.com/equinor/skills</a></p>
+    </footer>
+  </aside>
+
+</main>
+<script src="demo.js"></script>
+</body>
+</html>

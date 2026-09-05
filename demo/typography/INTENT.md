@@ -70,6 +70,17 @@ faces share neither x-height nor stem weight at the same nominal size. Steps
 the spacing skill not yet written; the demo is that skill's worked example,
 not a hard-coded stand-in for it.
 
+**Weight is matched at the tier the headings are set at** (decided while
+building, 5 September). Browser-default headings are bold, 700, and Inter 700
+has a stem no weight on Equinor's 300–700 axis reaches, so with the scale
+off the weight toggle holds at 700 and the code panel shows the skill's
+warningrather than pretending. The scale sets EDS headings at the normal tier,
+400,
+where the match is 458.5 and the toggle visibly changes the text. The
+recommended telling is therefore swap → scale → x-height → weight →
+baseline, and the page's control order says so. Deep links apply controls in
+order: `index.html?on=swap,scale,xheight,weight,baseline,guides`.
+
 Each control's label is the request itself, in the wording of the skill's
 representative requests, for example "Align the x-height of Equinor and
 Inter, Inter is the master". The code panel shows the CSS that request emits.
@@ -98,6 +109,12 @@ anything.
   not performed.
 - **The card is not draggable.** Dragging demonstrated nothing about
   typography and cost a paragraph of explanation. Dropped.
+- **The claims are measured in the page itself.** `index.html?measure` turns
+  transitions off, applies the controls, and prints the box of every text
+  block under the simulation and under `size-adjust` (identical, 5 September),
+  and each block's first baseline modulo 4 with the grid toggle off and on
+  (off: remainders 1, 0, 3, 2; on: 0.00 for the headings and 3.98 for the
+  paragraphs, a 0.02px rounding of `1ex`).
 
 ## 5. The baseline mechanism
 
