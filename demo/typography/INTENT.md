@@ -44,14 +44,22 @@ Toggles are shown in this order and told in this order. A toggle that depends
 on another is disabled until its dependency is on, so no reachable state is
 meaningless.
 
-| # | Control                                   | Enabled when | Motion    |
-|---|-------------------------------------------|--------------|-----------|
-| 0 | Show layout guides (4px grid)             | always       | none      |
-| 1 | Use Equinor for headings                  | always       | none      |
-| 2 | Align the x-height of Equinor to Inter    | 1 is on      | animated  |
-| 3 | Match Equinor's weight to Inter           | 1 is on      | animated  |
-| 4 | Apply the type scale                      | always       | none      |
-| 5 | Align text to the baseline grid           | 4 is on      | snap      |
+| # | Control                                   | Enabled when              |
+|---|-------------------------------------------|---------------------------|
+| 0 | Show layout guides (4px grid)             | always                    |
+| 1 | Apply the type scale                      | always                    |
+| 2 | Align text to the baseline grid           | 1 is on                   |
+| 3 | Use Equinor for headings                  | always                    |
+| 4 | Align the x-height of Equinor to Inter    | 3 has been on once        |
+| 5 | Match Equinor's weight to Inter           | 3 has been on once        |
+
+Revised 5 September after seeing the page: this is the telling order (grid,
+scale, baseline, then the problem and its two fixes). Controls 4 and 5 unlock
+the first time the headings are set in Equinor and *keep their state* when
+Equinor is toggled off again; their effect is gated in the CSS on the swap,
+and the code panel says "on, but the headings are in Inter" meanwhile, so the
+face can be switched back and forth with the fixes in place — the comparison
+worth showing. Nothing animates.
 
 Dependencies, as the enable rules above express them:
 
@@ -70,6 +78,20 @@ faces share neither x-height nor stem weight at the same nominal size. Steps
 the spacing skill not yet written; the demo is that skill's worked example,
 not a hard-coded stand-in for it.
 
+**Weight is matched at the tier and size the headings are set at** (5
+September). Browser-default headings are bold, 700, and Inter 700 has a stem
+no weight on Equinor's 300–700 axis reaches, so with the scale off the weight
+toggle holds at 700 and the code panel shows the skill's warning rather than
+pretending. The scale sets headings at the bolder tier, Inter 600, and the
+match is taken per heading size with Inter's `opsz` following the size: `h1`
+5xl 640.8, `h2` 3xl 648.8, `h3` 2xl 652.5 (the full 300 / 400 / 600 table
+across the ramp is in `demo.js`; measured 5 September with
+`stem.py Inter.woff2 EquinorVariable-VF.woff2 --match 600 --opsz <px>
+--correction 1.137288` per step). Holding an unreachable tier at the axis
+maximum is the demo's choice; the skill reports null. The values fall with
+size because Inter's optical axis thins its stems and Equinor has none. Deep
+links apply controls in order: `index.html?on=guides,scale,baseline,swap,xheight,weight`.
+
 Each control's label is the request itself, in the wording of the skill's
 representative requests, for example "Align the x-height of Equinor and
 Inter, Inter is the master". The code panel shows the CSS that request emits.
@@ -82,15 +104,15 @@ anything.
 - **The code panel shows whatever is running.** Not an idealised version.
   Anyone who opens devtools on the published artefact finds what the panel
   showed.
-- **The x-height animation is a simulation, declared in a code comment.**
-  `size-adjust` is an `@font-face` descriptor and cannot animate, so the
-  motion is done by animating a scaled font-size on the headings. When the
-  animation ends, the page swaps to the real `@font-face` with `size-adjust`
-  and drops the scaled size, so the rest state is the real mechanism. If the
-  swap cannot be made seamless, the simulation stays and the panel shows the
-  baked sizes it actually uses. Either way, rule one holds. The residual
-  between the two states is `em`-based letter-spacing, which follows computed
-  font-size and not `size-adjust`: a few hundredths of a pixel per glyph.
+- **No animation, and the baked branch rather than `size-adjust`** (revised
+  5 September). The page is a visualisation of the solution, and the two-ramp
+  branch — display size = text size × 1.137288, re-snapped to the half-pixel
+  grid — is what EDS ships for Figma and React Native parity, so it is the
+  CSS that runs and the CSS the panel shows. Before the scale is applied the
+  browser's em sizes are multiplied as they are, and the panel says so. The
+  earlier plan, a simulated size animating into a `size-adjust` rest state,
+  was built, measured geometrically identical, and dropped as not worth the
+  explanation.
 - **No simulated agent replies.** A terminal that types a prompt and
   "produces" CSS is a fake of the very thing the talk claims, and no one in
   the room can tell it from the real thing. The prompts on the card are the
@@ -98,6 +120,14 @@ anything.
   not performed.
 - **The card is not draggable.** Dragging demonstrated nothing about
   typography and cost a paragraph of explanation. Dropped.
+- **The claims are measured in the page itself.** `index.html?measure`
+  applies the scale, the swap, the x-height and the weight, then prints each
+  block's family, size, weight and first baseline modulo 4 with the grid
+  toggle off and on. Off: remainders 2, 2, 3, 2. On: 0.00 for the headings
+  and 3.98 for the paragraphs, a 0.02px rounding of `1ex` (5 September).
+- **The code panel never claims less than is running.** When a control goes
+  off, the panel falls back to the last control in the telling order that is
+  still on, and to the browser-default text only when nothing is.
 
 ## 5. The baseline mechanism
 
@@ -203,7 +233,5 @@ not a ceiling for CSS.
   repo says a wrapped button label still uses the centred recipe;
   `button.css` in `equinor/design-system` gives wrapped labels the baseline
   padding. Reconcile before the demo inherits one of them.
-- **`size-adjust` swap at rest.** Verify the animation-to-real handover is
-  seamless. If not, fall back per the honesty rules.
 - **Spacing skill.** Baseline alignment, flow spacing and the inset patterns
   above belong to it. This demo is its fixture.

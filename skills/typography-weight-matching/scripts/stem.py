@@ -316,8 +316,9 @@ def main(argv):
     elif a.match:
         ref, target = a.fonts
         matches = match(ref, target, floats(a.match), a.correction, opsz=a.opsz)
-        if any(v is None for v in matches.values()):
-            print("warning: some tiers fall outside the target's weight axis (null)", file=sys.stderr)
+        for tier, v in matches.items():
+            if v is None:
+                print(f"warning: tier {tier} falls outside the target's weight axis (null)", file=sys.stderr)
         if a.format == "tokens":
             print(json.dumps(weight_tokens(ref, target, matches, a.correction, a.correction_token,
                                            a.display, a.opsz, a.snap), indent=2))
