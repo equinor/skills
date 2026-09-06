@@ -42,6 +42,18 @@ All in the same change as this report:
 | Icon size flat across densities | Fixed — `sizing-icon` sequence with the ladder's density offset, emitted as tokens and CSS, relaxed `6xl` flagged extrapolated |
 | Icon-only treated as squared | Already fixed in #32; §4 now says "no pixel to fudge" and points at the seat |
 
+## Re-run against the fix
+
+Attempt 2 was re-run the same night from this branch — same prompt, same
+model, the five skills installed from the checkout — and measured the same
+way in headless Chrome. Icon drift on every labelled button: **0.00px** (was
+4px low). The agent ran `spacing.py glyph`, reproduced the small button's
+worked example (cap 8, glyph 16, margin −4 at comfortable) and ran the
+fixtures before trusting them. The re-run guessed elsewhere instead — an
+attribute-omitted default read the wrong way, so unmarked buttons rendered
+bordered at 38px — which is a contract-reading finding for the meetup repo,
+not a spacing one: guessing migrates to wherever nothing is derived.
+
 ## Reproduction
 
 ```bash

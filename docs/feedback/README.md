@@ -76,6 +76,7 @@ neither skill described it.
 | --- | --- |
 | The skill taught the icon gap but not the seat; the agent wrapped the svg and its centre sat 4px low | Fixed — `SKILL.md` §5, `spacing.py glyph`, fixtures in `check` and the selftest, positions §5 |
 | Icon sizes held flat across densities | Fixed — `sizing-icon` sequence with the density offset, in tokens and CSS |
+| Re-run from the fix, same prompt and model | Measured 0.00px icon drift on every labelled button; the remaining guess moved to a contract default outside this skill |
 
 ## Why these are worth keeping
 
