@@ -1,0 +1,116 @@
+// Overlay demo — behaviour. Every snap value below was measured by the skills
+// on 2026-09-06 from the font files; the derivation is quoted in the readout.
+
+// x-height ratios (OS/2.sxHeight / unitsPerEm, wght 400) — typography-x-height-alignment
+const X = { inter: 0.545898, equinor: 0.48, barlow: 0.506 };
+// Equinor's target weight for a reference weight, by the px the browser gives
+// Inter's opsz axis (clamped 14–32; Barlow has no optical axis) — typography-weight-matching,
+// stems at the same perceived size (the x-height correction applied).
+const MATCH = {
+  inter:   { 400: { 14: 458.5, 32: 438.0 }, 500: { 14: 552.7, 32: 529.8 }, 600: { 14: 660.0, 32: 640.8 } },
+  barlow:  { 400: { 14: 411.4, 32: 411.4 }, 500: { 14: 531.7, 32: 531.7 }, 600: { 14: 650.3, 32: 650.3 } },
+  // reference Equinor → target Inter (Inter measured at its default opsz 14)
+  equinor: { 400: { 14: 336.0, 32: 336.0 }, 500: { 14: 450.8, 32: 450.8 } },
+};
+const FAMILY = { inter: 'Inter', equinor: 'Equinor', barlow: 'Barlow' };
+const AXIS = { equinor: [300, 700], inter: [100, 900] };
+
+const $ = (id) => document.getElementById(id);
+const overlay = $('overlay'), pair = $('pair'), refEl = $('ref'), targetEl = $('target');
+const size = $('size'), weight = $('weight');
+const state = { ref: 'inter', px: 14, tier: 400, scale: 1, weight: 400, snappedSize: false, snappedWeight: false };
+
+const targetOf = (ref) => (ref === 'equinor' ? 'inter' : 'equinor');
+const correction = () => X[state.ref] / X[targetOf(state.ref)];
+const opszKey = () => (state.px >= 32 ? 32 : 14);
+const matched = () => (MATCH[state.ref][state.tier] || {})[opszKey()];
+
+function fmt(n, d = 6) { return Number.isInteger(n) ? String(n) : n.toFixed(d).replace(/\.?0+$/, ''); }
+
+function snap(value, target, tolerance) {
+  return target != null && Math.abs(value - target) <= tolerance ? target : value;
+}
+
+function render() {
+  const t = targetOf(state.ref);
+  const [lo, hi] = AXIS[t];
+  weight.min = lo; weight.max = hi;
+  // reference weights Equinor can play: only 400 / 500 are measured
+  document.querySelectorAll('input[name="tier"]').forEach((r) => {
+    const ok = Boolean(MATCH[state.ref][Number(r.value)]);
+    r.disabled = !ok;
+    if (!ok && r.checked) { state.tier = 400; document.querySelector('input[name="tier"][value="400"]').checked = true; }
+  });
+
+  const corr = correction();
+  const m = matched();
+  state.scale = snap(state.scale, corr, 0.004);
+  state.weight = Math.min(hi, Math.max(lo, snap(state.weight, m, 2.5)));
+  state.snappedSize = state.scale === corr;
+  state.snappedWeight = m != null && state.weight === m;
+  size.value = state.scale; weight.value = state.weight;
+  size.classList.toggle('snapped', state.snappedSize);
+  weight.classList.toggle('snapped', state.snappedWeight);
+
+  // the pair renders at the real px so opsz is honest, then is scaled up to be seen
+  pair.style.fontSize = `${state.px}px`;
+  pair.style.setProperty('--_ref-family', FAMILY[state.ref]);
+  pair.style.setProperty('--_target-family', FAMILY[t]);
+  pair.style.setProperty('--_weight', state.tier);
+  pair.style.setProperty('--_scale', state.scale);
+  pair.style.setProperty('--_target-weight', state.weight);
+  pair.style.setProperty('--_x-ref', `${X[state.ref]}em`);
+  pair.style.setProperty('--_x-target', `${X[t] * state.scale}em`);
+  requestAnimationFrame(() => {
+    const avail = overlay.clientWidth - 2 * 24 - 40;
+    const prev = Number(pair.dataset.zoom) || 1;
+    const w = Math.max(refEl.getBoundingClientRect().width, targetEl.getBoundingClientRect().width) / prev;
+    const h = pair.getBoundingClientRect().height / prev;
+    const zoom = Math.max(1, Math.min(avail / w, 14));
+    pair.dataset.zoom = zoom;
+    pair.style.transform = `scale(${zoom})`;
+    pair.style.marginTop = `${(zoom - 1) * h}px`;          // room for the scaled glyphs above the baseline
+    pair.style.marginLeft = `${Math.max(0, (overlay.clientWidth - 48 - w * zoom) / 2)}px`;
+    $('scale-note').textContent = `Rendered at ${state.px}px — what the optical-size axis sees — and shown ${zoom.toFixed(1)}× larger. Reference ${FAMILY[state.ref]} ${state.tier}; ${FAMILY[t]} at ${fmt(state.scale, 3)}× the size, weight ${fmt(state.weight, 1)}.`;
+  });
+
+  $('size-out').textContent = `× ${fmt(state.scale, 3)}`;
+  $('weight-out').textContent = fmt(state.weight, 1);
+  $('size-snap').innerHTML = `snaps at <b>× ${fmt(corr)}</b> = ${fmt(X[state.ref])} / ${fmt(X[t])}`;
+  $('weight-snap').innerHTML = m != null ? `snaps at <b>${fmt(m, 1)}</b> for ${FAMILY[state.ref]} ${state.tier} @ opsz ${opszKey()}` : 'no measured match for this pairing';
+
+  const rows = [
+    ['x-height', `${FAMILY[state.ref]} ${fmt(X[state.ref])} · ${FAMILY[t]} ${fmt(X[t])} — OS/2.sxHeight / unitsPerEm, read from the files`],
+    ['correction', `${fmt(X[state.ref])} / ${fmt(X[t])} = <b>× ${fmt(corr)}</b> — size the ${FAMILY[t]} text by this and the x-heights coincide${state.snappedSize ? ' ✓' : ''}`],
+    ['stem match', m != null
+      ? `${FAMILY[state.ref]} ${state.tier} at opsz ${opszKey()} → ${FAMILY[t]} <b>${fmt(m, 1)}</b>, measured at the glyph midpoint at the same perceived size${state.snappedWeight ? ' ✓' : ''}`
+      : `not measured for this pairing`],
+    ['why it moves', state.ref === 'inter'
+      ? `Inter's opsz axis thins its stems above 14px; Equinor has no such axis, so the match falls from ${MATCH.inter[state.tier][14]} to ${MATCH.inter[state.tier][32]} between 14px and 32px`
+      : state.ref === 'barlow'
+        ? `Barlow has no optical axis, so one match holds at every size. Equinor 500 (stem 0.086em) sits below Barlow Medium (0.096em); Inter 500 (0.107em) sits above it — Equinor needs 531.7 and Inter only 480.4 to match Barlow Medium, measured here from the outlines`
+        : `Equinor as the reference: Inter is set smaller (× ${fmt(corr, 4)}) and needs less weight than its name says`],
+  ];
+  if (state.ref === 'barlow') {
+    rows.push(['about Barlow', `The Lc contrast number is colour math with no font in it. The lookup table that turns an Lc target into a minimum size and weight — shipped in apca-w3 (src/apca-w3.js, data/LUT-GseriesMay28-2022.js) — says in its source: "reference font is Barlow". By APCA's own x-height-ratio method, 14px Barlow (x-height 7.08px) is 13px Inter. Its docs call weight matching "ongoing research"; the weight slider is a measured answer.`]);
+  }
+  $('readout').innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
+}
+
+document.querySelectorAll('input[name="ref"]').forEach((r) => r.addEventListener('change', () => { state.ref = r.value; render(); }));
+document.querySelectorAll('input[name="px"]').forEach((r) => r.addEventListener('change', () => { state.px = Number(r.value); render(); }));
+document.querySelectorAll('input[name="tier"]').forEach((r) => r.addEventListener('change', () => { state.tier = Number(r.value); render(); }));
+size.addEventListener('input', () => { state.scale = Number(size.value); render(); });
+weight.addEventListener('input', () => { state.weight = Number(weight.value); render(); });
+$('guides').addEventListener('change', (e) => { overlay.dataset.guides = e.target.checked ? 'on' : 'off'; });
+window.addEventListener('resize', render);
+
+// Deep links: ?ref=inter&px=14&tier=400&size=1.137288&weight=458.5 (or size=snap&weight=snap)
+const q = new URLSearchParams(location.search);
+if (FAMILY[q.get('ref')]) { state.ref = q.get('ref'); document.querySelector(`input[name="ref"][value="${state.ref}"]`).checked = true; }
+if ([14, 32, 48].includes(Number(q.get('px')))) { state.px = Number(q.get('px')); document.querySelector(`input[name="px"][value="${state.px}"]`).checked = true; }
+if ([400, 500, 600].includes(Number(q.get('tier')))) { state.tier = Number(q.get('tier')); document.querySelector(`input[name="tier"][value="${state.tier}"]`).checked = true; }
+if (q.get('size') === 'snap') state.scale = correction(); else if (q.has('size')) state.scale = Number(q.get('size'));
+if (q.get('weight') === 'snap') state.weight = matched() ?? state.weight; else if (q.has('weight')) state.weight = Number(q.get('weight'));
+document.fonts.ready.then(render);
+render();
