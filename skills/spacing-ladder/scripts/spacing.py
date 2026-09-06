@@ -3,7 +3,8 @@
 
 Usage:
   python spacing.py table [--density comfortable]        # the ladder and the relationships
-  python spacing.py control --size md --proportion squished --label md [--density all]
+  python spacing.py control --size md --proportion squished --label md [--icon md] [--density all]
+  python spacing.py glyph --label md --icon md [--density all]   # an icon's seat in a label's cap cell
   python spacing.py strip --control 36 [--density comfortable]   # a seated strip's height
   python spacing.py tokens --out DIR                      # DTCG, one file per density
   python spacing.py css [--css baked]                     # expressions, or literals per density
@@ -13,7 +14,9 @@ Usage:
 One sequence of values; density picks where the rung names land on it. A
 control's height is never authored: it is inset × 2 + the label's cap height
 rounded to the grid, and the vertical padding is what makes that true once the
-label's half-leading is subtracted. Type constants match typography-scale.
+label's half-leading is subtracted. An icon beside the label sits in the label's
+cap cell: its footprint is the cap, its ink overflows by (cap − glyph) / 2 on every
+side, negative by construction. Type constants match typography-scale.
 
 Requires: Python 3.9+, nothing else.
 """
@@ -29,6 +32,11 @@ RELATIONSHIPS = [("page → sections", "xl"), ("container → children", "md"),
                  ("strip → seated control", "xs")]
 INSET_SIZES = ["xs", "sm", "md", "lg", "xl"]
 PROPORTIONS = {"squished": -1, "squared": 0, "stretched": +1}      # vertical rung relative to horizontal
+
+# ---- icon sizes: the same offset scheme, a second sequence -----------------------
+# The glyph's INK size. It never sets layout: the glyph sits in the label's cap cell.
+ICON_SEQUENCE = [14, 16, 18, 20, 24, 28, 32, 37, 42, 48, 56, 64]   # px; 64 is extrapolated (56 × 2^(1/5))
+ICON_SIZES = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl"]
 
 # ---- type, as typography-scale defines it ------------------------------------------
 # These mirror typography-scale/scripts/scale.py (STEPS, BASE_REM, the compressed
@@ -59,6 +67,14 @@ def shifted(name, by):
     return RUNGS[RUNGS.index(name) + by]
 
 
+def icon_px(size, density):
+    return ICON_SEQUENCE[ICON_SIZES.index(size) + DENSITY_OFFSET[density]]
+
+
+def icon_extrapolated(size, density):
+    return ICON_SIZES.index(size) + DENSITY_OFFSET[density] == len(ICON_SEQUENCE) - 1
+
+
 def font_px(step, density):
     i = STEPS.index(step) - 3
     return round(css_round(BASE_REM[density] * 2 ** (i / 5), 0.03125) * 16, 6)
@@ -74,12 +90,29 @@ def cap_rounded(step, density, cap_ratio=CAP_RATIO):
     return css_round(font_px(step, density) * cap_ratio, 4)
 
 
-def control(size, proportion, label, density, cap_ratio=CAP_RATIO, icon_only=False):
+def glyph(label, icon, density, cap_ratio=CAP_RATIO):
+    """An icon's seat beside a label: one element, no wrapper.
+
+    The glyph's layout footprint is the label's cap cell (cap rounded to 4px), never
+    its own box; its ink overflows that cell like ascenders and descenders, by
+    (cap − glyph) / 2 on every side — negative by construction. Because the margin
+    box then equals the cap, centring it on the label's line box puts the glyph's
+    centre on the cap's centre, and on the control's."""
+    cap = cap_rounded(label, density, cap_ratio)
+    g = icon_px(icon, density)
+    return {"density": density, "label": label, "icon": icon, "footprint": cap, "glyph": g,
+            "margin": (cap - g) / 2, "marginBox": cap,
+            "css": f"inline-size: {g}px; block-size: {g}px; margin: {(cap - g) / 2:g}px;",
+            "rule": "one element (<svg class=\"icon\">) is its own cell; a wrapper is Figma-only mask machinery"}
+
+
+def control(size, proportion, label, density, cap_ratio=CAP_RATIO, icon_only=False, icon=None):
     """Optical padding and emergent height of a control with a single-line label.
 
     icon_only: no text, so no half-leading to take off, and the horizontal inset
     collapses to the vertical one — padding equals that inset on all sides and the
-    control is a square whose side is the labelled control's height."""
+    control is a square whose side is the labelled control's height.
+    icon: an icon step; adds the glyph's seat in the label's cap cell."""
     h_rung = size
     v_rung = shifted(size, PROPORTIONS[proportion])
     inset_h, inset_v = rung(h_rung, density), rung(v_rung, density)
@@ -95,6 +128,8 @@ def control(size, proportion, label, density, cap_ratio=CAP_RATIO, icon_only=Fal
            "height": 2 * inset_v + cap, "iconGap": css_round(font_px(label, density) * GAP_RATIO, GAP_SNAP)}
     if icon_only:
         out["width"] = 2 * inset_h + cap
+    if icon:
+        out["glyph"] = glyph(label, icon, density, cap_ratio)
     return out
 
 
@@ -154,7 +189,13 @@ def tokens(density, cap_ratio=CAP_RATIO):
                              "inputs": {"fontSize": px, "label": s}}, "density": density,
                  "note": "inside the atom only: glyph to label, never between siblings"},
             NS_FIGMA: {"collection": "Spacing", "mode": density, "scopes": ["GAP"]}}}
-    return {"spacing": {"ladder": ladder, "inset": inset, "optical-padding": optical, "icon-gap": gap}}
+    sizing = {s: {"$type": "dimension", "$value": dim(icon_px(s, density)), "$extensions": {
+        NS: {"derived": {"expression": "ICON_SEQUENCE[index(size) + offset(density)]",
+                         "inputs": {"sequence": ICON_SEQUENCE, "size": s, "offset": DENSITY_OFFSET[density]}},
+             "density": density, **({"extrapolated": True} if icon_extrapolated(s, density) else {}),
+             "note": "the glyph's ink size only; its footprint is the label's cap cell, margin (cap - glyph) / 2"},
+        NS_FIGMA: {"collection": "Spacing", "mode": density, "scopes": ["WIDTH_HEIGHT"]}}} for s in ICON_SIZES}
+    return {"spacing": {"ladder": ladder, "inset": inset, "optical-padding": optical, "icon-gap": gap, "sizing-icon": sizing}}
 
 
 def css(baked=False, cap_ratio=CAP_RATIO):
@@ -167,6 +208,8 @@ def css(baked=False, cap_ratio=CAP_RATIO):
         out.append(sel + " {")
         for r in RUNGS:
             out.append(f"  --spacing-{r}: {rung(r, d)}px;" + ("  /* extrapolated */" if extrapolated(r, d) else ""))
+        for s in ICON_SIZES:
+            out.append(f"  --sizing-icon-{s}: {icon_px(s, d)}px;" + ("  /* extrapolated */" if icon_extrapolated(s, d) else ""))
         if baked:
             out.append("  /* optical padding and icon gap, resolved for this density; the expressions are in the comments */")
             for s in INSET_SIZES:
@@ -174,6 +217,9 @@ def css(baked=False, cap_ratio=CAP_RATIO):
                     c = control(s, p, s, d, cap_ratio)
                     out.append(f"  --optical-padding-{s}-{p}: {c['paddingBlock']:g}px; /* inset − (lh − round(fontSize × {cap_ratio}, 4px)) / 2 → height {c['height']:g} */")
                 out.append(f"  --icon-gap-{s}: {css_round(font_px(s, d) * GAP_RATIO, GAP_SNAP):g}px; /* round(fontSize × {GAP_RATIO}, {GAP_SNAP}px) */")
+                if s in ICON_SIZES:
+                    g = glyph(s, s, d, cap_ratio)
+                    out.append(f"  --glyph-margin-{s}: {g['margin']:g}px; /* (cap {g['footprint']:g} − glyph {g['glyph']}) / 2: the icon's footprint is the label's cap cell */")
         out.append("}")
     out.append("/* Inset proportions: the vertical rung is one below, the same, or one above the horizontal. */")
     out.append(":root {")
@@ -189,6 +235,9 @@ def css(baked=False, cap_ratio=CAP_RATIO):
             for p in PROPORTIONS:
                 out.append(f"  --optical-padding-{s}-{p}: calc(var(--inset-{s}-vertical-{p}) - var(--half-leading-{s}));")
             out.append(f"  --icon-gap-{s}: round(calc(var(--font-size-{s}) * {GAP_RATIO}), {GAP_SNAP}px);")
+        out.append("  /* glyph seat: the icon's footprint is the label's cap cell; the ink overflows it. Negative by construction. */")
+        for s in INSET_SIZES:
+            out.append(f"  --glyph-margin-{s}: calc((var(--cap-rounded-{s}) - var(--sizing-icon-{s})) / 2);")
     out.append("}")
     return "\n".join(out) + "\n"
 
@@ -203,6 +252,11 @@ FIXTURE = {
     "tooltip_xs_squared_sm": {"compact": 20, "comfortable": 24, "relaxed": 36},
     "strip": {"compact": 36, "comfortable": 52, "relaxed": 68},
     "icon_gap_md": {"compact": 8, "comfortable": 8, "relaxed": 10},
+    # eds-tokens-reworked build/css/typography.css --eds-sizing-icon-md per density
+    "sizing_icon_md": {"compact": 18, "comfortable": 20, "relaxed": 24},
+    # the md button's leading icon: (footprint = cap, glyph, margin); eds-contracts build/button.css .icon
+    "glyph_md_md": {"compact": (8, 18, -5), "comfortable": (12, 20, -4), "relaxed": (12, 24, -6)},
+    "glyph_small_button_sm_xs": {"comfortable": (8, 16, -4)},
 }
 
 
@@ -228,11 +282,19 @@ def check():
         eq(f"strip {d}", strip(control("md", "squished", "md", d)["height"], d)["height"], h)
     for d, g in FIXTURE["icon_gap_md"].items():
         eq(f"icon gap {d}", control("md", "squished", "md", d)["iconGap"], g)
+    for d, px in FIXTURE["sizing_icon_md"].items():
+        eq(f"sizing-icon md {d}", icon_px("md", d), px)
+    for d, want in FIXTURE["glyph_md_md"].items():
+        g = glyph("md", "md", d); eq(f"glyph seat md/md {d}", (g["footprint"], g["glyph"], g["margin"]), want)
+    for d, want in FIXTURE["glyph_small_button_sm_xs"].items():
+        g = glyph("sm", "xs", d); eq(f"glyph seat sm/xs {d}", (g["footprint"], g["glyph"], g["margin"]), want)
+    eq("glyph margin box equals the cap", glyph("md", "md", "comfortable")["marginBox"], cap_rounded("md", "comfortable"))
+    eq("relaxed 6xl icon is extrapolated", icon_extrapolated("6xl", "relaxed"), True)
     for f in fails:
         print("FAIL " + f, file=sys.stderr)
     if not fails:
         print("ok: ladder at three densities, button 24/36/44, chip 24, tooltip 20/24/36, strips 36/52/68, "
-              "icon gap, icon-only square, typography-scale constants")
+              "icon gap, icon-only square, icon sizes 18/20/24, glyph seat -5/-4/-6, typography-scale constants")
     return 1 if fails else 0
 
 
@@ -244,6 +306,9 @@ def main(argv):
     c.add_argument("--size", default="md", choices=INSET_SIZES); c.add_argument("--proportion", default="squished", choices=list(PROPORTIONS))
     c.add_argument("--label", default="md", choices=STEPS); c.add_argument("--density", default="all", choices=[*DENSITY_OFFSET, "all"])
     c.add_argument("--icon-only", action="store_true", help="no label: padding = inset all round, squared, a square control")
+    c.add_argument("--icon", choices=ICON_SIZES, help="add a leading icon's seat in the label's cap cell")
+    g = sub.add_parser("glyph"); g.add_argument("--label", default="md", choices=STEPS); g.add_argument("--icon", default="md", choices=ICON_SIZES)
+    g.add_argument("--density", default="all", choices=[*DENSITY_OFFSET, "all"])
     s = sub.add_parser("strip"); s.add_argument("--control", type=float, required=True, help="height of the tallest seated control")
     s.add_argument("--density", default="comfortable", choices=[*DENSITY_OFFSET, "all"])
     k = sub.add_parser("tokens"); k.add_argument("--out", required=True)
@@ -257,7 +322,9 @@ def main(argv):
     if a.cmd == "table":
         for d in dens: sys.stdout.write(table(d) + "\n")
     elif a.cmd == "control":
-        print(json.dumps([control(a.size, a.proportion, a.label, d, a.cap_ratio, a.icon_only) for d in dens], indent=2))
+        print(json.dumps([control(a.size, a.proportion, a.label, d, a.cap_ratio, a.icon_only, a.icon) for d in dens], indent=2))
+    elif a.cmd == "glyph":
+        print(json.dumps([glyph(a.label, a.icon, d, a.cap_ratio) for d in dens], indent=2))
     elif a.cmd == "strip":
         print(json.dumps([strip(a.control, d) for d in dens], indent=2))
     elif a.cmd == "tokens":

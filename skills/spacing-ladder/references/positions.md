@@ -43,3 +43,22 @@ compose better; the 32 cells where the two snaps disagree are pinned in the
 rework's deviation tests. Comfortable `md` lands on 8px, coincidentally the flat
 gap the earlier button used — the derivation reaches the same place and keeps
 working at the sizes the flat value did not.
+
+## 5. The glyph is one element in the label's cap cell, not a wrapped box
+
+Two ways to place an icon beside a label: give the icon its own box and centre
+it with layout (a cap-sized wrapper, `display: grid; place-items: center`), or
+make the svg its own cell with the cap as its footprint and
+`margin: (cap − glyph) / 2` — negative — on every side. The second is what the
+contracts emit for every component with a glyph part, and the reason is
+measured. In the "building the button" run of 2026-09-06 the agent was given
+the icon gap but not the seat, invented the wrapper, and its buttons rendered
+with the label's centre true (−0.5px) and the icon's centre 4px below the
+button's; the inline svg sat on the wrapper's baseline instead of centring, and
+a −1px hand-fudge appeared elsewhere to compensate. With the margin recipe the
+glyph's margin box *is* the cap, so the same `align-items: center` that centres
+the label centres the glyph, and there is nothing left to nudge. The wrapper is
+a Figma artefact — mask and tint-swap machinery — and has no job in CSS.
+The icon sizes are a second sequence, `14 16 18 20 24 28 32 37 42 48 56 64`,
+read with the ladder's density offset, so a glyph steps with its density; a
+size held flat across densities is the other half of the same finding.

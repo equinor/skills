@@ -15,6 +15,7 @@ skill by using it found things no amount of re-reading did.
 | [2026-08-30-typography-scale.md](2026-08-30-typography-scale.md) | `typography-scale` | Building the EDS-preset scale for that pair, Figma/RN target |
 | [2026-09-03-typography-round-2.md](2026-09-03-typography-round-2.md) | both | Second round against Literata + Work Sans; the fixture still held the first round's output, so both tasks became audits |
 | [2026-09-04-typography-scale-figma-live-run.md](2026-09-04-typography-scale-figma-live-run.md) | `typography-scale` | Pushing the two-family EDS scale into a real Figma file through the MCP |
+| [2026-09-06-spacing-ladder-glyph-seat.md](2026-09-06-spacing-ladder-glyph-seat.md) | `spacing-ladder` | The meetup's "building the button" attempt 2; the icon sat 4px below the button's centre |
 
 ## Where the findings went
 
@@ -68,6 +69,13 @@ neither skill described it.
 | --- | --- |
 | The collection's default mode was `compact`; every style resolved to compact values | Fixed in #28 — comfortable is created first; the selftest pins the order and the wiring |
 | A re-run could not repair a collection built before the fix, while `figma.md` promised idempotence | Fixed in #28 — the script reads `defaultModeId` and refuses with a remedy; `figma.md` says to delete and re-run |
+
+### Glyph seat, 2026-09-06
+
+| Finding | Outcome |
+| --- | --- |
+| The skill taught the icon gap but not the seat; the agent wrapped the svg and its centre sat 4px low | Fixed — `SKILL.md` §5, `spacing.py glyph`, fixtures in `check` and the selftest, positions §5 |
+| Icon sizes held flat across densities | Fixed — `sizing-icon` sequence with the density offset, in tokens and CSS |
 
 ## Why these are worth keeping
 

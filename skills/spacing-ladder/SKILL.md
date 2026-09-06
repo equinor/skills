@@ -1,6 +1,6 @@
 ---
 name: spacing-ladder
-description: 'Applies the Equinor Design System spacing ladder: one sequence of rungs, the relationship each rung expresses (page, container, cluster, selectable, seat), inset proportions for controls (squished, squared, stretched), optical padding that makes a control''s height emerge from its label, and the icon gap. USE FOR: choosing a gap or padding, sizing a button, chip, input, tab or toolbar without authoring its height, porting the ladder to another density, emitting spacing tokens or CSS. DO NOT USE FOR: the type scale or line-heights (typography-scale), aligning running text to the baseline grid (a spacing-baseline-grid skill), colours of the controls (colour-fill-tiers).'
+description: 'Applies the Equinor Design System spacing ladder: one sequence of rungs, the relationship each rung expresses (page, container, cluster, selectable, seat), inset proportions for controls (squished, squared, stretched), optical padding that makes a control''s height emerge from its label, the seat an icon takes in the label''s cap cell, and the icon gap. USE FOR: choosing a gap or padding, sizing a button, chip, input, tab or toolbar without authoring its height, placing or sizing an icon inside a control, porting the ladder to another density, emitting spacing tokens or CSS. DO NOT USE FOR: the type scale or line-heights (typography-scale), aligning running text to the baseline grid (a spacing-baseline-grid skill), colours of the controls (colour-fill-tiers).'
 ---
 
 # The spacing ladder
@@ -140,16 +140,58 @@ Across densities the same recipe gives 24 / 36 / 44 for the button, 24 for the
 small chip, 20 / 24 / 36 for the tooltip; every one of them emerges.
 
 Icon-only controls carry no half-leading, so the correction drops out, and
-the horizontal inset collapses to the vertical one: padding equals that inset
-on all sides and the control is a square with the labelled control's height —
-`spacing.py control --size md --icon-only` gives 36 × 36 at comfortable — so
-the round icon button is a circle by construction. Use the
-control's cap-rounded height as the glyph's *footprint* and let the icon's ink
-overflow it like ascenders and descenders: the icon is
-`margin: calc((cap − glyph) / 2)`, negative by construction, which is what
-puts a round glyph optically level with the text's edge.
+the horizontal inset collapses to the vertical one: padding equals the raw
+inset on all sides and the control is a square with the labelled control's
+height — `spacing.py control --size md --icon-only` gives 36 × 36 at
+comfortable — so the round icon button is a circle by construction, with no
+pixel to fudge. The glyph inside it takes the seat described next.
 
-## 5. Inside an atom: the icon gap
+## 5. The glyph seat: an icon sits in the label's cap cell
+
+An icon beside a label is a glyph, and it is laid out like one. Its layout
+**footprint is the label's cap cell** — the cap-rounded height from the recipe
+above, 12px for a comfortable `md` label — never the icon's own box. The ink
+overflows that footprint the way ascenders and descenders overflow the cap,
+by the same amount on every side:
+
+```
+glyph   = sizing-icon step, the ink size                     md: 18 / 20 / 24 across densities
+margin  = (cap − glyph) / 2                                  comfortable md: (12 − 20) / 2 = −4px
+```
+
+The margin is negative by construction. Because the margin box is then exactly
+the cap, the control's `align-items: center` puts the glyph's centre where the
+label's cap centre sits, which is the control's centre: nothing to nudge. (The
+cap is centred in Inter's line box to within half a pixel; measure it for
+another label face.) The icon
+sizes are a second sequence read with the same density offset as the ladder
+(`14 16 18 20 24 28 32 37 42 48 56 64`), so a glyph steps with its density
+like everything else.
+
+**The glyph is one element.** The `<svg class="icon">` is its own cell: it
+carries the size and the margin itself, and the flex or inline layout of the
+control does the centring. Everything a wrapper would do, the margin already
+does; a wrapper belongs to Figma, where it is mask-and-tint machinery, and has
+no counterpart in CSS.
+
+```css
+.button .icon {
+  inline-size: var(--sizing-icon-md);
+  block-size: var(--sizing-icon-md);
+  margin: calc((var(--cap-rounded-md) - var(--sizing-icon-md)) / 2);
+}
+```
+
+```bash
+python3 $skill/scripts/spacing.py glyph --label md --icon md
+python3 $skill/scripts/spacing.py control --size md --proportion squished --label md --icon md
+```
+
+The component chooses the icon step for its label — the `md` button pairs `md`
+with `md`, the small button pairs an `sm` label with an `xs` glyph (cap 8,
+glyph 16, margin −4) — and the recipe gives the seat for any pairing.
+
+## 6. Inside an atom: the icon gap
 
 One rung lives below all of these, inside components themselves: the gap
 between a glyph and its label. It is derived from the label, not from the
@@ -159,18 +201,19 @@ between siblings, and never use the ladder rungs inside an atom. The
 `icon-gap` tokens this skill emits are the ones `typography-scale` mentions
 in passing; this is where they are defined.
 
-## 6. Emit: tokens first, then CSS
+## 7. Emit: tokens first, then CSS
 
 ```bash
 python3 $skill/scripts/spacing.py tokens --out tokens    # one DTCG file per density
 python3 $skill/scripts/spacing.py css                     # expressions (or --css baked)
+python3 $skill/scripts/spacing.py glyph --label md --icon md  # an icon's seat, per density
 python3 $skill/scripts/spacing.py check                   # the fixtures still hold
 python3 $skill/scripts/spacing.py --cap-ratio 0.70 tokens --out tokens   # another label face
 ```
 
 The ladder, the insets as aliases of ladder rungs, the optical paddings with
 their derivation — the inset, the label's size and line-height, the cap ratio
-— and the height they produce, and the icon gaps:
+— and the height they produce, the icon gaps, and the icon sizes:
 [`references/token-shape.md`](references/token-shape.md). The emitted
 paddings assume the label step equals the inset size; another pairing comes
 from `control --size … --label …`. The cap ratio is the label face's and is a
@@ -179,7 +222,7 @@ gets the resolved padding per density mode as `spacing/optical-padding/<size>-<p
 and the control's `min-height` bound to `inset × 2 + cap`; it cannot evaluate
 the expression, so the tokens carry the number and the derivation both.
 
-## 7. Verify
+## 8. Verify
 
 - **Read heights back, never author them.** A control whose height is a literal
   has lost the recipe; the next density breaks it.
@@ -187,20 +230,24 @@ the expression, so the tokens carry the number and the derivation both.
   of 16 between two buttons in a cluster is the container's rung on the wrong
   relationship, and reads too far apart even though it is on the ladder.
 - **Re-derive on font changes.** The cap ratio is the label face's; a different
-  face, or a corrected display size, moves every padding.
+  face, or a corrected display size, moves every padding and every glyph seat.
+- **Measure the glyph's centre against the label's cap centre.** Read both back
+  from the rendered control; they coincide when the icon is one element with
+  the cap-cell margin, and the difference is the finding when they do not.
 
 ## Representative requests
 
-Five acceptance criteria — the button that emerges at 36, the cluster gap, the
-seated strip, the density port, and auditing spacing already committed — plus
-a routing check:
+Six acceptance criteria — the button that emerges at 36, the cluster gap, the
+seated strip, the density port, auditing spacing already committed, and the
+button's leading icon — plus a routing check:
 [`references/representative-requests.md`](references/representative-requests.md).
 
 ## Positions this skill takes
 
-Four, each with the measurement behind it: one sequence rather than per-density
+Five, each with the measurement behind it: one sequence rather than per-density
 tables, the seat rung raw rather than half the container gap, padding off the
-4px grid on purpose, and the icon gap derived from the label:
+4px grid on purpose, the icon gap derived from the label, and the glyph as one
+element in the label's cap cell:
 [`references/positions.md`](references/positions.md).
 
 ## Related
@@ -218,4 +265,7 @@ The ladder text and the cluster and seat rungs are from the EDS token rework in
 `equinor/ids-meetup-oslo-26` (Equinor-internal): `eds-cli/principles/spacing.md`,
 `eds-tokens-reworked/DECISIONS.md` ("Two spacing rungs", 2026-09-04; "Gap snap",
 2026-08-28; the optical-padding recipe) and its internal optical-padding skill,
-generated from the tokens' `$extensions`.
+generated from the tokens' `$extensions`. The glyph seat is the `.icon` rule
+in `eds-contracts/build/*.css` and the one-element glyph rule in its
+`AGENTS.md`; the icon sizes are `sizing-icon-*` in
+`eds-tokens-reworked/build/css/typography.css`.
