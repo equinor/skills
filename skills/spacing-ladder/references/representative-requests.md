@@ -34,6 +34,17 @@ densities from the one source. Check that `3xl` at relaxed is flagged
 extrapolated.
 *Prevents:* a second hand-made table that drifts from the first.
 
-A fifth, for routing: **"what line-height goes with 14px?"** is
+**5. "Here is our button CSS — `padding: 12px 16px; height: 40px`. Is it on
+the ladder?"** — the audit case. Reproduce the fixtures with `spacing.py
+check`; compare each committed value against what the recipe gives for its
+inset, label and cap (`control --size md --proportion squished --label md`:
+padding 10, height 36); regenerate the tokens and diff them byte for byte
+against what is committed; then read heights back from the browser. The
+finding here is the one this skill exists for: a 10 someone rounded to 12,
+which pushed the control to 40 and off the grid.
+*Prevents:* approving spacing that is on the ladder but on the wrong
+relationship, or off the grid by a rounding that looked like tidying.
+
+A sixth, for routing: **"what line-height goes with 14px?"** is
 `typography-scale`, and **"align the paragraphs to the baseline grid"** is the
 baseline-grid skill; this skill spaces boxes, not text.

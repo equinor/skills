@@ -44,7 +44,7 @@ python3 $skill/scripts/spacing.py table --density all
 
 | relationship               | rung  | compact / comfortable / relaxed |
 | -------------------------- | ----- | ------------------------------- |
-| page → sections            | xl    | 16 / 24 / 32                    |
+| page → sections            | xl    | 20 / 24 / 28                    |
 | container → children       | md    | 12 / 16 / 20 (containers also gap `md`) |
 | cluster → siblings         | sm    | 8 / 12 / 16                     |
 | selectable → its label     | inset | per component, optically corrected (section 4) |
@@ -63,8 +63,9 @@ selectable's spacing relationship is its **inset**, box edge to label, and it
 is the one place optical compensation applies: the padding subtracts the
 label's half-leading so the height lands on `inset × 2 + cap` (section 4). Its
 heights are the selectable ladder, `sizing/selectable-*` — 20 / 24 / 36 / 44 /
-52 at comfortable for `sm` to `2xl` — a target-size floor, never a menu to
-pick a height from.
+52 / 60 at comfortable for `xs` to `2xl`, each what the recipe in section 4
+produces for that size — a target-size floor, never a menu to pick a height
+from.
 
 **Seat.** A chrome strip that seats controls — a top bar, a toolbar — pads its
 cross axis with the seat rung, and pads it **raw**: no optical compensation.
@@ -96,10 +97,16 @@ rungs, density moves them together with everything else.
 **Ask before emitting anything:**
 
 > Will this run in CSS only, or also in Figma or React Native?
+> And does it need to support older browsers, or only evergreen ones?
 
 CSS gets the expression and recomputes at every density; Figma and React
 Native get the resolved value per density from the same source, never a typed
-number. The answer changes the artefact, not its packaging.
+number. The expressions use CSS `round()`, Baseline *newly* since 2024-05-17
+(checked 2026-09-06 at `https://api.webstatus.dev/v1/features/round-mod-rem`);
+where an older matrix is in scope, `spacing.py css --css baked` writes every
+optical value as a literal per density with the expression in a comment. Both
+answers change the artefact, not its packaging, and the default is the
+expression: this is a question for the project's `browserslist`, not a hedge.
 
 The vertical inset is what the eye should see between the control's edge and
 the label's cap height. But a text box is taller than its letters: its line
@@ -132,10 +139,13 @@ always sit on a 2px ladder, because line-height and cap are both snapped to 4.
 Across densities the same recipe gives 24 / 36 / 44 for the button, 24 for the
 small chip, 20 / 24 / 36 for the tooltip; every one of them emerges.
 
-Icon-only controls carry no half-leading, so the correction drops out: padding
-equals inset on all sides, and the round icon button is a circle by
-construction. Use the control's cap-rounded height as the glyph's *footprint*
-and let the icon's ink overflow it like ascenders and descenders: the icon is
+Icon-only controls carry no half-leading, so the correction drops out, and
+the horizontal inset collapses to the vertical one: padding equals that inset
+on all sides and the control is a square with the labelled control's height —
+`spacing.py control --size md --icon-only` gives 36 × 36 at comfortable — so
+the round icon button is a circle by construction. Use the
+control's cap-rounded height as the glyph's *footprint* and let the icon's ink
+overflow it like ascenders and descenders: the icon is
 `margin: calc((cap − glyph) / 2)`, negative by construction, which is what
 puts a round glyph optically level with the text's edge.
 
@@ -145,23 +155,29 @@ One rung lives below all of these, inside components themselves: the gap
 between a glyph and its label. It is derived from the label, not from the
 ladder — `round(fontSize × 0.618, 2px)`, 8px at comfortable `md` — and it
 belongs to the atom's anatomy, not to layout. Never use icon-gap tokens
-between siblings, and never use the ladder rungs inside an atom.
+between siblings, and never use the ladder rungs inside an atom. The
+`icon-gap` tokens this skill emits are the ones `typography-scale` mentions
+in passing; this is where they are defined.
 
 ## 6. Emit: tokens first, then CSS
 
 ```bash
 python3 $skill/scripts/spacing.py tokens --out tokens    # one DTCG file per density
-python3 $skill/scripts/spacing.py css                     # expressions
+python3 $skill/scripts/spacing.py css                     # expressions (or --css baked)
 python3 $skill/scripts/spacing.py check                   # the fixtures still hold
+python3 $skill/scripts/spacing.py --cap-ratio 0.70 tokens --out tokens   # another label face
 ```
 
-The ladder, the insets as aliases of ladder rungs, and the optical paddings
-with their derivation — the inset, the label's size and line-height, the cap
-ratio — and the height they produce:
-[`references/token-shape.md`](references/token-shape.md). Figma gets the
-resolved padding per density mode (`recipe/optical-padding-md-squished`) and
-the control's `min-height` bound to `inset × 2 + cap`; it cannot evaluate the
-expression, so the tokens carry the number and the derivation both.
+The ladder, the insets as aliases of ladder rungs, the optical paddings with
+their derivation — the inset, the label's size and line-height, the cap ratio
+— and the height they produce, and the icon gaps:
+[`references/token-shape.md`](references/token-shape.md). The emitted
+paddings assume the label step equals the inset size; another pairing comes
+from `control --size … --label …`. The cap ratio is the label face's and is a
+global option, so a different face re-derives every padding in one run. Figma
+gets the resolved padding per density mode as `spacing/optical-padding/<size>-<proportion>`
+and the control's `min-height` bound to `inset × 2 + cap`; it cannot evaluate
+the expression, so the tokens carry the number and the derivation both.
 
 ## 7. Verify
 
@@ -175,8 +191,9 @@ expression, so the tokens carry the number and the derivation both.
 
 ## Representative requests
 
-Four acceptance criteria — the button that emerges at 36, the cluster gap, the
-seated strip, the density port — plus a routing check:
+Five acceptance criteria — the button that emerges at 36, the cluster gap, the
+seated strip, the density port, and auditing spacing already committed — plus
+a routing check:
 [`references/representative-requests.md`](references/representative-requests.md).
 
 ## Positions this skill takes

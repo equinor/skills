@@ -6,7 +6,8 @@ Usage:
   python spacing.py control --size md --proportion squished --label md [--density all]
   python spacing.py strip --control 36 [--density comfortable]   # a seated strip's height
   python spacing.py tokens --out DIR                      # DTCG, one file per density
-  python spacing.py css                                   # expressions
+  python spacing.py css [--css baked]                     # expressions, or literals per density
+  python spacing.py --cap-ratio 0.70 tokens --out DIR      # another label face
   python spacing.py check                                 # reproduce the documented fixtures
 
 One sequence of values; density picks where the rung names land on it. A
@@ -30,6 +31,9 @@ INSET_SIZES = ["xs", "sm", "md", "lg", "xl"]
 PROPORTIONS = {"squished": -1, "squared": 0, "stretched": +1}      # vertical rung relative to horizontal
 
 # ---- type, as typography-scale defines it ------------------------------------------
+# These mirror typography-scale/scripts/scale.py (STEPS, BASE_REM, the compressed
+# curve, the snaps). Installed skills cannot import each other, so check() asserts
+# that skill's published numbers (md 14px on a 16px compressed box) to catch drift.
 STEPS = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl"]
 BASE_REM = {"compact": 0.875, "comfortable": 1.0, "relaxed": 1.15625}
 COMPRESSED = (1.13, 0.13)
@@ -44,6 +48,11 @@ def css_round(v, step):
 
 def rung(name, density):
     return SEQUENCE[RUNGS.index(name) + DENSITY_OFFSET[density]]
+
+
+def extrapolated(name, density):
+    """The top of the sequence is a continuation (+4), not a legacy value."""
+    return RUNGS.index(name) + DENSITY_OFFSET[density] == len(SEQUENCE) - 1
 
 
 def shifted(name, by):
@@ -65,19 +74,28 @@ def cap_rounded(step, density, cap_ratio=CAP_RATIO):
     return css_round(font_px(step, density) * cap_ratio, 4)
 
 
-def control(size, proportion, label, density, cap_ratio=CAP_RATIO):
-    """Optical padding and emergent height of a control with a single-line label."""
+def control(size, proportion, label, density, cap_ratio=CAP_RATIO, icon_only=False):
+    """Optical padding and emergent height of a control with a single-line label.
+
+    icon_only: no text, so no half-leading to take off, and the horizontal inset
+    collapses to the vertical one — padding equals that inset on all sides and the
+    control is a square whose side is the labelled control's height."""
     h_rung = size
     v_rung = shifted(size, PROPORTIONS[proportion])
     inset_h, inset_v = rung(h_rung, density), rung(v_rung, density)
+    if icon_only:
+        inset_h = inset_v
     lh = line_height_compressed(label, density)
     cap = cap_rounded(label, density, cap_ratio)
-    half = (lh - cap) / 2
-    return {"density": density, "size": size, "proportion": proportion, "label": label,
-            "labelPx": font_px(label, density), "lineHeight": lh, "capRounded": cap,
-            "insetHorizontal": inset_h, "insetVertical": inset_v, "halfLeading": half,
-            "paddingBlock": inset_v - half, "paddingInline": inset_h,
-            "height": 2 * inset_v + cap, "iconGap": css_round(font_px(label, density) * GAP_RATIO, GAP_SNAP)}
+    half = 0.0 if icon_only else (lh - cap) / 2
+    out = {"density": density, "size": size, "proportion": proportion, "label": label, "iconOnly": icon_only,
+           "labelPx": font_px(label, density), "lineHeight": lh, "capRounded": cap,
+           "insetHorizontal": inset_h, "insetVertical": inset_v, "halfLeading": half,
+           "paddingBlock": inset_v - half, "paddingInline": inset_h,
+           "height": 2 * inset_v + cap, "iconGap": css_round(font_px(label, density) * GAP_RATIO, GAP_SNAP)}
+    if icon_only:
+        out["width"] = 2 * inset_h + cap
+    return out
 
 
 def strip(control_height, density):
@@ -104,38 +122,58 @@ def dim(v):
     return {"value": int(v) if float(v).is_integer() else v, "unit": "px"}
 
 
-def tokens(density):
+def tokens(density, cap_ratio=CAP_RATIO):
     ladder = {r: {"$type": "dimension", "$value": dim(rung(r, density)), "$extensions": {
         NS: {"derived": {"expression": "SEQUENCE[index(rung) + offset(density)]",
                          "inputs": {"sequence": SEQUENCE, "rung": r, "offset": DENSITY_OFFSET[density]}},
-             "density": density, **({"extrapolated": True} if rung(r, density) == 36 else {})},
+             "density": density, **({"extrapolated": True} if extrapolated(r, density) else {})},
         NS_FIGMA: {"collection": "Spacing", "mode": density, "scopes": ["GAP", "WIDTH_HEIGHT"]}}} for r in RUNGS}
     inset = {}
     for s in INSET_SIZES:
         inset[s] = {"horizontal": {"$type": "dimension", "$value": f"{{spacing.ladder.{s}}}"}}
         for p, k in PROPORTIONS.items():
             inset[s][f"vertical-{p}"] = {"$type": "dimension", "$value": f"{{spacing.ladder.{shifted(s, k)}}}"}
+    # Optical paddings assume the label step equals the inset size (the common
+    # case: an md button has an md label). Other pairings come from `control`.
     optical = {}
     for s in INSET_SIZES:
         for p in PROPORTIONS:
-            c = control(s, p, s if s in STEPS else "md", density)
+            c = control(s, p, s, density, cap_ratio)
             optical[f"{s}-{p}"] = {"$type": "dimension", "$value": dim(c["paddingBlock"]), "$extensions": {
                 NS: {"derived": {"expression": "inset - (lineHeight - round(fontSize * capRatio, 4px)) / 2",
                                  "inputs": {"inset": f"{{spacing.inset.{s}.vertical-{p}}}", "label": c["label"],
-                                            "lineHeight": c["lineHeight"], "fontSize": c["labelPx"], "capRatio": CAP_RATIO}},
+                                            "lineHeight": c["lineHeight"], "fontSize": c["labelPx"], "capRatio": cap_ratio}},
                      "height": c["height"], "density": density,
                      "note": "deliberately off the 4px grid; never round it — the height is what lands"},
                 NS_FIGMA: {"collection": "Spacing", "mode": density, "scopes": ["GAP"]}}}
-    return {"spacing": {"ladder": ladder, "inset": inset, "optical-padding": optical}}
+    gap = {}
+    for s in INSET_SIZES:
+        px = font_px(s, density)
+        gap[s] = {"$type": "dimension", "$value": dim(css_round(px * GAP_RATIO, GAP_SNAP)), "$extensions": {
+            NS: {"derived": {"expression": f"round(fontSize * {GAP_RATIO}, {GAP_SNAP}px)",
+                             "inputs": {"fontSize": px, "label": s}}, "density": density,
+                 "note": "inside the atom only: glyph to label, never between siblings"},
+            NS_FIGMA: {"collection": "Spacing", "mode": density, "scopes": ["GAP"]}}}
+    return {"spacing": {"ladder": ladder, "inset": inset, "optical-padding": optical, "icon-gap": gap}}
 
 
-def css():
+def css(baked=False, cap_ratio=CAP_RATIO):
+    """Expressions by default. Baked: every optical value is a literal per density, with
+    the expression kept in a comment, for a browser matrix without CSS round()."""
     out = ["/* One sequence; density moves the rung names along it. */"]
-    for d in DENSITY_OFFSET:
+    # comfortable first: :root and [data-density] have equal specificity, so source order decides
+    for d in sorted(DENSITY_OFFSET, key=lambda x: x != "comfortable"):
         sel = ":root" if d == "comfortable" else f"[data-density='{d}']"
         out.append(sel + " {")
         for r in RUNGS:
-            out.append(f"  --spacing-{r}: {rung(r, d)}px;" + ("  /* extrapolated */" if rung(r, d) == 36 else ""))
+            out.append(f"  --spacing-{r}: {rung(r, d)}px;" + ("  /* extrapolated */" if extrapolated(r, d) else ""))
+        if baked:
+            out.append("  /* optical padding and icon gap, resolved for this density; the expressions are in the comments */")
+            for s in INSET_SIZES:
+                for p in PROPORTIONS:
+                    c = control(s, p, s, d, cap_ratio)
+                    out.append(f"  --optical-padding-{s}-{p}: {c['paddingBlock']:g}px; /* inset − (lh − round(fontSize × {cap_ratio}, 4px)) / 2 → height {c['height']:g} */")
+                out.append(f"  --icon-gap-{s}: {css_round(font_px(s, d) * GAP_RATIO, GAP_SNAP):g}px; /* round(fontSize × {GAP_RATIO}, {GAP_SNAP}px) */")
         out.append("}")
     out.append("/* Inset proportions: the vertical rung is one below, the same, or one above the horizontal. */")
     out.append(":root {")
@@ -143,12 +181,14 @@ def css():
         out.append(f"  --inset-{s}-horizontal: var(--spacing-{s});")
         for p, k in PROPORTIONS.items():
             out.append(f"  --inset-{s}-vertical-{p}: var(--spacing-{shifted(s, k)});")
-    out.append("  /* optical padding: the label's half-leading comes off; height = inset × 2 + cap */")
-    out.append(f"  --cap-rounded-md: round(calc(var(--font-size-md) * {CAP_RATIO}), 4px);")
-    out.append("  --half-leading-md: calc((var(--line-height-md-compressed) - var(--cap-rounded-md)) / 2);")
-    for p in PROPORTIONS:
-        out.append(f"  --optical-padding-md-{p}: calc(var(--inset-md-vertical-{p}) - var(--half-leading-md));")
-    out.append(f"  --icon-gap-md: round(calc(var(--font-size-md) * {GAP_RATIO}), {GAP_SNAP}px);")
+    if not baked:
+        out.append("  /* optical padding: the label's half-leading comes off; height = inset × 2 + cap */")
+        for s in INSET_SIZES:
+            out.append(f"  --cap-rounded-{s}: round(calc(var(--font-size-{s}) * {cap_ratio}), 4px);")
+            out.append(f"  --half-leading-{s}: calc((var(--line-height-{s}-compressed) - var(--cap-rounded-{s})) / 2);")
+            for p in PROPORTIONS:
+                out.append(f"  --optical-padding-{s}-{p}: calc(var(--inset-{s}-vertical-{p}) - var(--half-leading-{s}));")
+            out.append(f"  --icon-gap-{s}: round(calc(var(--font-size-{s}) * {GAP_RATIO}), {GAP_SNAP}px);")
     out.append("}")
     return "\n".join(out) + "\n"
 
@@ -171,6 +211,11 @@ def check():
     def eq(name, got, want):
         if got != want:
             fails.append(f"{name}: got {got}, documented {want}")
+    # typography-scale's published numbers, mirrored here: catch drift between the skills
+    eq("typography-scale md size", font_px("md", "comfortable"), 14.0)
+    eq("typography-scale md compressed line-height", line_height_compressed("md", "comfortable"), 16)
+    c = control("md", "squished", "md", "comfortable", icon_only=True)
+    eq("icon-only md is a 36 square", (c["width"], c["height"], c["paddingBlock"]), (36, 36, 12))
     for d, want in FIXTURE["ladder"].items():
         eq(f"ladder {d}", [rung(r, d) for r in RUNGS], want)
     for d, (pad, h) in FIXTURE["button"].items():
@@ -186,7 +231,8 @@ def check():
     for f in fails:
         print("FAIL " + f, file=sys.stderr)
     if not fails:
-        print("ok: ladder at three densities, button 24/36/44, chip 24, tooltip 20/24/36, strips 36/52/68, icon gap")
+        print("ok: ladder at three densities, button 24/36/44, chip 24, tooltip 20/24/36, strips 36/52/68, "
+              "icon gap, icon-only square, typography-scale constants")
     return 1 if fails else 0
 
 
@@ -197,25 +243,29 @@ def main(argv):
     c = sub.add_parser("control")
     c.add_argument("--size", default="md", choices=INSET_SIZES); c.add_argument("--proportion", default="squished", choices=list(PROPORTIONS))
     c.add_argument("--label", default="md", choices=STEPS); c.add_argument("--density", default="all", choices=[*DENSITY_OFFSET, "all"])
-    c.add_argument("--cap-ratio", type=float, default=CAP_RATIO, help="label face's capHeight / unitsPerEm (Inter 0.727539)")
+    c.add_argument("--icon-only", action="store_true", help="no label: padding = inset all round, squared, a square control")
     s = sub.add_parser("strip"); s.add_argument("--control", type=float, required=True, help="height of the tallest seated control")
     s.add_argument("--density", default="comfortable", choices=[*DENSITY_OFFSET, "all"])
     k = sub.add_parser("tokens"); k.add_argument("--out", required=True)
-    sub.add_parser("css"); sub.add_parser("check")
+    x = sub.add_parser("css"); x.add_argument("--css", choices=["expressions", "baked"], default="expressions",
+                                              help="baked: literals per density for a matrix without CSS round()")
+    sub.add_parser("check")
+    p.add_argument("--cap-ratio", type=float, default=CAP_RATIO,
+                   help="the label face's capHeight / unitsPerEm; Inter 0.727539 by default")
     a = p.parse_args(argv)
     dens = list(DENSITY_OFFSET) if getattr(a, "density", None) in (None, "all") else [a.density]
     if a.cmd == "table":
         for d in dens: sys.stdout.write(table(d) + "\n")
     elif a.cmd == "control":
-        print(json.dumps([control(a.size, a.proportion, a.label, d, a.cap_ratio) for d in dens], indent=2))
+        print(json.dumps([control(a.size, a.proportion, a.label, d, a.cap_ratio, a.icon_only) for d in dens], indent=2))
     elif a.cmd == "strip":
         print(json.dumps([strip(a.control, d) for d in dens], indent=2))
     elif a.cmd == "tokens":
         out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
         for d in DENSITY_OFFSET:
-            (out / f"spacing.{d}.tokens.json").write_text(json.dumps(tokens(d), indent=2) + "\n"); print(out / f"spacing.{d}.tokens.json", file=sys.stderr)
+            (out / f"spacing.{d}.tokens.json").write_text(json.dumps(tokens(d, a.cap_ratio), indent=2) + "\n"); print(out / f"spacing.{d}.tokens.json", file=sys.stderr)
     elif a.cmd == "css":
-        sys.stdout.write(css())
+        sys.stdout.write(css(a.css == "baked", a.cap_ratio))
     elif a.cmd == "check":
         return check()
     return 0

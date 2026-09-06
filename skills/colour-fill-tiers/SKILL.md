@@ -8,8 +8,10 @@ description: 'Chooses the right fill rung for an interface element in the Equino
 The EDS colour ladder gives every family — accent, neutral, info, success,
 warning, danger — fifteen steps in stacking order: canvas, surface, three
 muted fills, three borders, three emphasis fills, two texts, two texts on
-emphasis. This skill answers one question about it: **when an element needs a
-background, which rung is it?** The answer turns on a single test.
+emphasis (the public palette generator's `PALETTE_OVERVIEW.md` in
+`equinor/design-system` lists them; checked 2026-09-06). This skill answers
+one question about it: **when an element needs a background, which rung is
+it?** The answer turns on a single test.
 
 > **The fill rungs are for things you can press.** Static areas sit on the
 > canvas and surface tiers.
@@ -25,7 +27,8 @@ rule for binding them.
 > content?
 
 The answer decides the tier family, not a shade within it. A button, a chip, a
-menu row, a tab, an icon button, a switch: interactive, so a **fill** tier. A banner strip, a card, a
+menu row, a tab, an icon button, a switch: interactive, so a **fill** tier. A
+banner strip, a card, a
 table body, a dialog body, a page region: static, so **canvas** (the page's
 floor) or **surface** (a tinted or raised area on it). This is the test that
 resolves the one collision the system had: a tinted static strip that looked
@@ -49,15 +52,27 @@ Each tier is a **ladder of states**: `default`, `hover`, `active`, and
 `selected` where the component has a selected state. Ghost's ladder starts at
 transparent and gains a step on hover (step 3) and active (step 4), which is
 what makes a row feel pressable without looking like a button at rest.
-`selected` is the tier's step 4 (ghost) or step 5 / 11 (muted / emphasis):
-the accent ghost-selected rung is what a selected tab or menu item wears.
+`selected` is the tier's top step by design — the same step as `active`: 4 for
+ghost, 5 for muted, 11 for emphasis — and a selected element stays there on
+hover; there is nothing above it to move to. The accent ghost-selected rung is
+what a selected tab or menu item wears.
 
-Token shape, per family and tier: `bg-{tone}-fill-{emphasis|muted|ghost}-{default|hover|active|selected}`,
-with the neutral family also unprefixed as `bg-fill-*`. Ink follows the tier:
-on an emphasis fill, `text-{tone}-strong-on-emphasis` and
-`icon-{tone}-on-emphasis`; on muted and ghost, the ordinary strong text and
-icon inks. Never pick a text colour by eye against a fill; the pair is
-predetermined by the tier.
+Token shape, per family and tier:
+`bg-{tone}-fill-{emphasis|muted|ghost}-{default|hover|active|selected}`, with
+the neutral family also unprefixed as `bg-fill-*`. Ink follows the tier: on an
+emphasis fill, `text-{tone}-strong-on-emphasis` and `icon-{tone}-on-emphasis`;
+on muted and ghost, the ordinary strong text and icon inks. Never pick a text
+colour by eye against a fill; the pair is predetermined by the tier. The rule
+applied once, the ghost icon button of request 1 in the neutral family:
+
+```css
+/* ghost: transparent at rest, one step on hover, two on active; ink is the
+   ordinary icon ink; disabled keeps transparent and takes the disabled ink */
+.icon-button          { background: transparent;                    color: var(--eds-color-icon); }
+.icon-button:hover    { background: var(--eds-color-bg-fill-ghost-hover); }
+.icon-button:active   { background: var(--eds-color-bg-fill-ghost-active); }
+.icon-button:disabled { background: transparent;                    color: var(--eds-color-text-disabled); }
+```
 
 ## 3. Disabled, and what a state may change
 
@@ -66,7 +81,8 @@ only, a grey plate: `bg-fill-emphasis-disabled` with `text-disabled`, which is
 also the disabled icon's ink — there is no separate `icon-disabled` token, the
 disabled concepts are `bg-`, `text-` and `border-disabled` only. A muted fill
 has `bg-fill-muted-disabled` and keeps its structure with `border-disabled`;
-ghost stays transparent with disabled inks. States state what changes and nothing else — a
+ghost stays transparent with disabled inks. States state what changes and
+nothing else — a
 hover that also changes the border, or a disabled that changes the size, is a
 second component wearing the first one's name.
 
@@ -93,12 +109,17 @@ is recorded, and deliberately not carried into this context.
   palette guarantees; anything off the tier — a custom fill, an ink from
   another family — is outside the guarantee and needs checking with a
   contrast tool.
+- **The steps are still where this skill says they are.** The tier-to-step
+  mapping (3–5, 9–11, hover 3 / active 4 for ghost) is read off the palette
+  generator's step table; re-read it when the palette is regenerated, and
+  re-date the line in section 1.
 
 ## Representative requests
 
-Three acceptance criteria — a component's background at rest and in states,
-the static-versus-interactive call for a strip, the red primary button — plus
-a routing check: [`references/representative-requests.md`](references/representative-requests.md).
+Four acceptance criteria — a component's background at rest and in states,
+the static-versus-interactive call for a strip, the red primary button, and
+auditing a component's existing bindings — plus a routing check:
+[`references/representative-requests.md`](references/representative-requests.md).
 
 ## Positions this skill takes
 

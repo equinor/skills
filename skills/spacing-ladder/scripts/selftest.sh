@@ -26,4 +26,22 @@ PY
 grep -q -- '--spacing-md: 16px;' "$tmp/spacing.css"
 grep -q -- '--inset-md-vertical-squished: var(--spacing-sm);' "$tmp/spacing.css"
 grep -q -- '--optical-padding-md-squished: calc(var(--inset-md-vertical-squished) - var(--half-leading-md));' "$tmp/spacing.css"
-echo "  css carries the ladder per density, the inset aliases and the optical-padding expression"
+grep -q -- '--optical-padding-sm-squished:' "$tmp/spacing.css"      # every size, not only md
+grep -q -- '--icon-gap-md: round(' "$tmp/spacing.css"
+# :root must precede the [data-density] blocks: equal specificity, source order decides
+test "$(grep -E "^(:root|\[data-density=)" "$tmp/spacing.css" | head -1)" = ":root {"
+echo "  css carries the ladder per density with :root first, every size's optical padding, and the icon gap"
+
+"$py" "$here/scripts/spacing.py" css --css baked > "$tmp/baked.css"
+grep -q -- '--optical-padding-md-squished: 10px; /\* inset' "$tmp/baked.css"
+grep -q -- "^\[data-density='compact'\] {" "$tmp/baked.css"
+grep -q -- '--optical-padding-md-squished: 6px;' "$tmp/baked.css"
+echo "  baked css resolves the optical values per density with the expression in comments"
+
+"$py" - "$tmp/tokens" <<'PY'
+import json, sys, pathlib
+tok = pathlib.Path(sys.argv[1])
+g = json.load(open(tok/"spacing.comfortable.tokens.json"))["spacing"]["icon-gap"]
+assert g["md"]["$value"]["value"] == 8, g["md"]
+print("  icon-gap tokens exist and md is 8")
+PY

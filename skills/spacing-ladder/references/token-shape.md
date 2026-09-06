@@ -5,12 +5,14 @@ The DTCG output of `scripts/spacing.py tokens`, referenced from section 6 of
 `spacing.comfortable.tokens.json`, `spacing.relaxed.tokens.json` — with the
 same paths in each, so density is a mode and nothing else changes.
 
-Three groups: the **ladder** (a value per rung, with the sequence and the
+Four groups: the **ladder** (a value per rung, with the sequence and the
 density's offset as inputs), the **insets** (aliases of ladder rungs: the
-vertical rung is one below, the same as, or one above the horizontal), and the
-**optical paddings** (a value with its derivation and the height it produces).
-The `md` rung, the `md` inset and the `md` squished padding at comfortable
-density, exactly as emitted:
+vertical rung is one below, the same as, or one above the horizontal), the
+**optical paddings** (a value with its derivation and the height it produces,
+for a label whose step equals the inset size — other pairings come from
+`spacing.py control`), and the **icon gaps** (derived from the label's size).
+The `md` rung, the `md` inset, the `md` squished padding and the `md` icon gap at
+comfortable density, exactly as emitted:
 
 ```json
 {
@@ -110,6 +112,35 @@ density, exactly as emitted:
           }
         }
       }
+    },
+    "icon-gap": {
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        },
+        "$extensions": {
+          "com.equinor.spacing": {
+            "derived": {
+              "expression": "round(fontSize * 0.618, 2px)",
+              "inputs": {
+                "fontSize": 14.0,
+                "label": "md"
+              }
+            },
+            "density": "comfortable",
+            "note": "inside the atom only: glyph to label, never between siblings"
+          },
+          "com.equinor.figma": {
+            "collection": "Spacing",
+            "mode": "comfortable",
+            "scopes": [
+              "GAP"
+            ]
+          }
+        }
+      }
     }
   }
 }
@@ -134,10 +165,11 @@ the resolved pixels, `capRatio` is the label face's `capHeight / unitsPerEm`
 control is allowed to be checked against; the padding itself is deliberately
 off the 4px grid, and `note` says so where the number is.
 
-**Figma** gets `optical-padding` per density mode as `recipe/optical-padding-<size>-<proportion>`
-and binds it to `paddingTop` / `paddingBottom`; the control's `min-height` is a
-second variable, `inset × 2 + cap`. It cannot evaluate the expression, so it
-carries the resolved number and the tokens carry the derivation.
+**Figma** gets `optical-padding` per density mode, named from the token path
+(`spacing/optical-padding/<size>-<proportion>`), bound to `paddingTop` /
+`paddingBottom`; the control's `min-height` is a second variable,
+`inset × 2 + cap`. It cannot evaluate the expression, so it carries the
+resolved number and the tokens carry the derivation.
 
 **Namespace.** Reverse-DNS, in code spelling — `com.equinor.spacing` here. Use
 the project's existing namespace if it has one.
