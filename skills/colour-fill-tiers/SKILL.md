@@ -62,9 +62,11 @@ predetermined by the tier.
 ## 3. Disabled, and what a state may change
 
 Disabled is not a fourth tier. It is a set of inks and, for the emphasis tier
-only, a grey plate: `bg-fill-emphasis-disabled` with `text-disabled` and
-`icon-disabled`. Muted keeps its structure with `border-disabled`; ghost stays
-transparent with disabled inks. States state what changes and nothing else — a
+only, a grey plate: `bg-fill-emphasis-disabled` with `text-disabled`, which is
+also the disabled icon's ink — there is no separate `icon-disabled` token, the
+disabled concepts are `bg-`, `text-` and `border-disabled` only. Muted keeps
+its structure with `border-disabled`; ghost stays transparent with disabled
+inks. States state what changes and nothing else — a
 hover that also changes the border, or a disabled that changes the size, is a
 second component wearing the first one's name.
 
