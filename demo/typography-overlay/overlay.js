@@ -74,6 +74,10 @@ function render() {
     $('scale-note').textContent = `Rendered at ${state.px}px — what the optical-size axis sees — and shown ${zoom.toFixed(1)}× larger. Reference ${FAMILY[state.ref]} ${state.tier}; ${FAMILY[t]} at ${fmt(state.scale, 3)}× the size, weight ${fmt(state.weight, 1)}.`;
   });
 
+  $('key-ref').textContent = `${FAMILY[state.ref]} — reference, stays put`;
+  $('key-target').textContent = `${FAMILY[t]} — adjusted by the sliders`;
+  $('size-label').textContent = `Size of ${FAMILY[t]}`;
+  $('weight-label').textContent = `Weight of ${FAMILY[t]}`;
   $('size-out').textContent = `× ${fmt(state.scale, 3)}`;
   $('weight-out').textContent = fmt(state.weight, 1);
   $('size-snap').innerHTML = `snaps at <b>× ${fmt(corr)}</b> = ${fmt(X[state.ref])} / ${fmt(X[t])}`;

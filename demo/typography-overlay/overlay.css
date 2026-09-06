@@ -10,8 +10,8 @@
   --color-border-subtle: oklch(0.87 0 0); --color-border-medium: oklch(0.75 0 0);
   --color-text-subtle: oklch(0.46 0 0); --color-text-strong: oklch(0.23 0 0);
   --color-accent: oklch(0.5 0.075 204.6); --color-accent-surface: oklch(0.999 0.01 184.6);
-  --color-ref: oklch(0.55 0.16 250);        /* blue */
-  --color-target: oklch(0.6 0.2 25);        /* red; multiply on white → dark purple where they overlap */
+  --color-ref: oklch(0.52 0 0);             /* the reference stays put: a quiet mid grey, readable under the red */
+  --color-target: oklch(0.58 0.21 25);      /* the adjusted face: red; multiply on white → dark where they overlap */
   --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 20px; --space-xl: 24px; --space-2xl: 32px; --space-3xl: 40px;
   --radius: 4px;
   --_base: 1rem;
@@ -43,7 +43,11 @@ h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-xl); line-height: v
 
 /* the overlay: two faces, one baseline. text-box trims each box to cap top and
    baseline, so aligning the bottoms aligns the baselines. */
-.overlay { padding: var(--space-3xl) var(--space-xl) var(--space-2xl); overflow: hidden; }
+.overlay { padding: var(--space-md) var(--space-xl) var(--space-2xl); overflow: hidden; }
+.key { margin: 0 0 var(--space-xl); display: flex; gap: var(--space-xl); font-size: var(--font-size-sm); line-height: var(--line-height-sm); color: var(--color-text-subtle); }
+.key span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.key__ref::before { background: var(--color-ref); }
+.key__target::before { background: var(--color-target); }
 /* the reference face is in flow and gives the pair its width and (trimmed)
    height; the target is absolute at the same bottom edge, i.e. the same baseline */
 .pair { position: relative; width: max-content; margin: 0 auto; transform-origin: bottom left; }

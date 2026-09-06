@@ -12,15 +12,15 @@
 <main class="stage">
   <header class="head">
     <h1>Two typefaces on one baseline</h1>
-    <p class="hint">The same sentence twice, overlaid: the reference face in blue, the other in red, the overlap dark. Drag the size until the x-heights meet, then the weight until the stems do. The snap points are the skills' numbers.</p>
+    <p class="hint">The same sentence twice, overlaid. The reference face stays put, in grey. The other face is the one you adjust, in red; where they overlap it goes dark. Drag its size until the x-heights meet, then its weight until the stems do. The snap points are the skills' numbers.</p>
   </header>
 
   <section class="controls">
     <fieldset class="control">
-      <legend class="control__label">Reference face <small>(blue)</small></legend>
-      <label><input type="radio" name="ref" value="inter" checked> <span><b>Inter</b> <small>the EDS text face · target Equinor</small></span></label>
-      <label><input type="radio" name="ref" value="barlow"> <span><b>Barlow</b> <small>the reference font of APCA's size/weight lookup table · target Equinor</small></span></label>
-      <label><input type="radio" name="ref" value="equinor"> <span><b>Equinor</b> <small>the display face · target Inter</small></span></label>
+      <legend class="control__label">Pairing <small>(grey stays put, red is adjusted)</small></legend>
+      <label><input type="radio" name="ref" value="inter" checked> <span><b>Adjust Equinor to match Inter</b> <small>Inter is the EDS text face and the reference</small></span></label>
+      <label><input type="radio" name="ref" value="barlow"> <span><b>Adjust Equinor to match Barlow</b> <small>Barlow is the reference font of APCA's size/weight lookup table</small></span></label>
+      <label><input type="radio" name="ref" value="equinor"> <span><b>Adjust Inter to match Equinor</b> <small>the other way round: the display face as the reference</small></span></label>
     </fieldset>
     <fieldset class="control">
       <legend class="control__label">Rendered size <small>(what Inter's opsz axis sees)</small></legend>
@@ -29,7 +29,7 @@
       <label><input type="radio" name="px" value="48"> <span><b>48px</b> <small>display; Inter's axis is clamped at 32</small></span></label>
     </fieldset>
     <fieldset class="control">
-      <legend class="control__label">Reference weight</legend>
+      <legend class="control__label">Weight of the reference face <small>(what the red face is matched to)</small></legend>
       <label><input type="radio" name="tier" value="400" checked> <span><b>400</b> <small>normal</small></span></label>
       <label><input type="radio" name="tier" value="500"> <span><b>500</b> <small>medium · the button label</small></span></label>
       <label><input type="radio" name="tier" value="600"> <span><b>600</b> <small>semibold</small></span></label>
@@ -37,6 +37,7 @@
   </section>
 
   <section class="surface overlay" id="overlay" data-guides="on">
+    <p class="key"><span class="key__ref" id="key-ref">Inter — reference, stays put</span> <span class="key__target" id="key-target">Equinor — adjusted by the sliders</span></p>
     <div class="pair" id="pair">
       <span class="face face--ref" id="ref">sphinx of black quartz judge my vow</span>
       <span class="face face--target" id="target">sphinx of black quartz judge my vow</span>
@@ -49,12 +50,12 @@
 
   <section class="sliders">
     <label class="slider">
-      <span class="slider__label"><b>Size</b> <output id="size-out"></output></span>
+      <span class="slider__label"><b id="size-label">Size of Equinor</b> <output id="size-out"></output></span>
       <input type="range" id="size" min="0.85" max="1.25" step="0.001" value="1">
       <span class="slider__snap" id="size-snap"></span>
     </label>
     <label class="slider">
-      <span class="slider__label"><b>Weight</b> <output id="weight-out"></output></span>
+      <span class="slider__label"><b id="weight-label">Weight of Equinor</b> <output id="weight-out"></output></span>
       <input type="range" id="weight" min="300" max="700" step="0.1" value="400">
       <span class="slider__snap" id="weight-snap"></span>
     </label>
