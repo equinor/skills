@@ -24,7 +24,8 @@ SEQUENCE = [1, 2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 36]           # px; 36 is ext
 RUNGS = ["4xs", "3xs", "2xs", "xs", "sm", "md", "lg", "xl", "2xl", "3xl"]
 DENSITY_OFFSET = {"compact": 0, "comfortable": 1, "relaxed": 2}   # where "4xs" lands on SEQUENCE
 RELATIONSHIPS = [("page → sections", "xl"), ("container → children", "md"),
-                 ("cluster → siblings", "sm"), ("strip → seated control", "xs")]
+                 ("cluster → siblings", "sm"), ("selectable → its label", None),
+                 ("strip → seated control", "xs")]
 INSET_SIZES = ["xs", "sm", "md", "lg", "xl"]
 PROPORTIONS = {"squished": -1, "squared": 0, "stretched": +1}      # vertical rung relative to horizontal
 
@@ -89,7 +90,10 @@ def strip(control_height, density):
 def table(density):
     lines = [f"{density}: the ladder", "  " + "  ".join(f"{r}={rung(r, density)}" for r in RUNGS), "", "  relationships"]
     for rel, r in RELATIONSHIPS:
-        lines.append(f"    {rel:<24} {r:>3}  {rung(r, density)}px" + ("  (raw: no optical compensation)" if r == "xs" else ""))
+        if r is None:
+            lines.append(f"    {rel:<24} inset  per component, optically corrected (see `control`)")
+        else:
+            lines.append(f"    {rel:<24} {r:>3}  {rung(r, density)}px" + ("  (raw: no optical compensation)" if r == "xs" else ""))
     lines += ["", "  inset proportions (horizontal / vertical)"]
     for s in INSET_SIZES:
         lines.append("    " + f"{s:<3}" + "  ".join(f"{p}: {rung(s, density)}/{rung(shifted(s, k), density)}" for p, k in PROPORTIONS.items()))

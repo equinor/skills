@@ -1,6 +1,8 @@
 # Positions this skill takes
 
-Each is a measurement rather than a preference, from the EDS token rework.
+Each is a measurement rather than a preference, from the EDS token rework. The
+taxonomy the positions sit in is credited: page / container / selectable is
+Eric Singhartinger's trichotomy; cluster and seat are EDS's additions.
 
 ## 1. One sequence, density as an offset — not three tables
 

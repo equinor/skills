@@ -1,15 +1,21 @@
 ---
 name: spacing-ladder
-description: 'Applies the Equinor Design System spacing ladder: one sequence of rungs, the relationship each rung expresses (page, container, cluster, seat), inset proportions for controls (squished, squared, stretched), optical padding that makes a control''s height emerge from its label, and the icon gap. USE FOR: choosing a gap or padding, sizing a button, chip, input, tab or toolbar without authoring its height, porting the ladder to another density, emitting spacing tokens or CSS. DO NOT USE FOR: the type scale or line-heights (typography-scale), aligning running text to the baseline grid (a spacing-baseline-grid skill), colours of the controls (colour-fill-tiers).'
+description: 'Applies the Equinor Design System spacing ladder: one sequence of rungs, the relationship each rung expresses (page, container, cluster, selectable, seat), inset proportions for controls (squished, squared, stretched), optical padding that makes a control''s height emerge from its label, and the icon gap. USE FOR: choosing a gap or padding, sizing a button, chip, input, tab or toolbar without authoring its height, porting the ladder to another density, emitting spacing tokens or CSS. DO NOT USE FOR: the type scale or line-heights (typography-scale), aligning running text to the baseline grid (a spacing-baseline-grid skill), colours of the controls (colour-fill-tiers).'
 ---
 
 # The spacing ladder
 
 EDS spacing is one ladder, and the rule for reading it is a single idea: **the
 closer the relationship, the smaller the space.** A page holds sections — 24. A
-container holds children — 16. A cluster holds siblings — 12. And the closest
-relationship in the whole system, a control and the bar it sits in — 8. Every
-step down the ladder, one step closer.
+container holds children — 16. A cluster holds siblings — 12. A selectable
+holds its own label — the inset. And the closest relationship in the whole
+system, a control and the bar it sits in — 8. Every step down the ladder, one
+step closer.
+
+The taxonomy has five levels: **page → container → cluster → selectable →
+seat**. The page / container / selectable trichotomy is Eric Singhartinger's —
+a selectable is the atom, the thing you can press: a button, a chip, a tab.
+Cluster and seat are EDS's additions, between and below.
 
 The second idea follows from the first: **a control's height is never
 authored.** It is the label's cap height plus an inset above and below, and the
@@ -36,12 +42,13 @@ python3 $skill/scripts/spacing.py table --density all
 
 ## 2. Relationships: which rung
 
-| relationship               | rung | compact / comfortable / relaxed |
-| -------------------------- | ---- | ------------------------------- |
-| page → sections            | xl   | 16 / 24 / 32                    |
-| container → children       | md   | 12 / 16 / 20 (containers also gap `md`) |
-| cluster → siblings         | sm   | 8 / 12 / 16                     |
-| strip → seated control     | xs   | 6 / 8 / 12, **raw**             |
+| relationship               | rung  | compact / comfortable / relaxed |
+| -------------------------- | ----- | ------------------------------- |
+| page → sections            | xl    | 16 / 24 / 32                    |
+| container → children       | md    | 12 / 16 / 20 (containers also gap `md`) |
+| cluster → siblings         | sm    | 8 / 12 / 16                     |
+| selectable → its label     | inset | per component, optically corrected (section 4) |
+| strip → seated control     | xs    | 6 / 8 / 12, **raw**             |
 
 **Cluster.** Selectables acting as one group — Save/Cancel, a top bar's action
 row — are a cluster, and their internal gap sits one rung below their
@@ -50,6 +57,14 @@ read at all; and boxes that bring their own inset need less air added — two
 buttons at gap 16 have roughly 48px between their *labels*, because each
 carries its own horizontal padding. The gap measures box to box; the eye
 measures ink to ink.
+
+**Selectable.** The atom of the taxonomy — anything you can press. A
+selectable's spacing relationship is its **inset**, box edge to label, and it
+is the one place optical compensation applies: the padding subtracts the
+label's half-leading so the height lands on `inset × 2 + cap` (section 4). Its
+heights are the selectable ladder, `sizing/selectable-*` — 20 / 24 / 36 / 44 /
+52 at comfortable for `sm` to `2xl` — a target-size floor, never a menu to
+pick a height from.
 
 **Seat.** A chrome strip that seats controls — a top bar, a toolbar — pads its
 cross axis with the seat rung, and pads it **raw**: no optical compensation.
