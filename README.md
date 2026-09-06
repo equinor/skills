@@ -13,12 +13,14 @@ Available now:
 - **[typography-scale](skills/typography-scale)** – algorithmic type scales: sizes from one base and one ratio, line-height as a curve rather than a fixed multiple, density as a single number
 - **[typography-x-height-alignment](skills/typography-x-height-alignment)** – align two paired fonts by measured x-height, and deliver the correction as a design token
 - **[typography-weight-matching](skills/typography-weight-matching)** – match weight and letter-spacing across a font pair, and compensate for a face with no optical-size axis
+- **[spacing-ladder](skills/spacing-ladder)** – one spacing sequence read by relationship, inset proportions, and optical padding that lets a control's height emerge instead of being typed
+- **[colour-fill-tiers](skills/colour-fill-tiers)** – which fill rung an element gets: emphasis, muted or ghost for things you can press, canvas or surface for things you cannot
 
 Planned areas:
 
 - **Typography** – optical padding, algorithmic tracking for prose
-- **Colour** – OKLCH palettes, contrast (APCA)
-- **Spacing** – ratio-based spacing scales, inset proportions
+- **Colour** – OKLCH palette generation, contrast (APCA), semantic roles
+- **Spacing** – the baseline grid for running text
 - **Design systems** – broader EDS-informed practices
 
 ## Demo
