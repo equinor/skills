@@ -217,9 +217,8 @@ def css(baked=False, cap_ratio=CAP_RATIO):
                     c = control(s, p, s, d, cap_ratio)
                     out.append(f"  --optical-padding-{s}-{p}: {c['paddingBlock']:g}px; /* inset − (lh − round(fontSize × {cap_ratio}, 4px)) / 2 → height {c['height']:g} */")
                 out.append(f"  --icon-gap-{s}: {css_round(font_px(s, d) * GAP_RATIO, GAP_SNAP):g}px; /* round(fontSize × {GAP_RATIO}, {GAP_SNAP}px) */")
-                if s in ICON_SIZES:
-                    g = glyph(s, s, d, cap_ratio)
-                    out.append(f"  --glyph-margin-{s}: {g['margin']:g}px; /* (cap {g['footprint']:g} − glyph {g['glyph']}) / 2: the icon's footprint is the label's cap cell */")
+                g = glyph(s, s, d, cap_ratio)   # label step == icon step; a mixed pairing comes from `glyph`
+                out.append(f"  --glyph-margin-{s}: {g['margin']:g}px; /* (cap {g['footprint']:g} − glyph {g['glyph']}) / 2, label and icon both {s}: the icon's footprint is the label's cap cell */")
         out.append("}")
     out.append("/* Inset proportions: the vertical rung is one below, the same, or one above the horizontal. */")
     out.append(":root {")
@@ -235,7 +234,7 @@ def css(baked=False, cap_ratio=CAP_RATIO):
             for p in PROPORTIONS:
                 out.append(f"  --optical-padding-{s}-{p}: calc(var(--inset-{s}-vertical-{p}) - var(--half-leading-{s}));")
             out.append(f"  --icon-gap-{s}: round(calc(var(--font-size-{s}) * {GAP_RATIO}), {GAP_SNAP}px);")
-        out.append("  /* glyph seat: the icon's footprint is the label's cap cell; the ink overflows it. Negative by construction. */")
+        out.append("  /* glyph seat for a label and icon of the same step: the icon's footprint is the label's cap cell; the ink overflows it. Negative by construction. A mixed pairing comes from `spacing.py glyph`. */")
         for s in INSET_SIZES:
             out.append(f"  --glyph-margin-{s}: calc((var(--cap-rounded-{s}) - var(--sizing-icon-{s})) / 2);")
     out.append("}")

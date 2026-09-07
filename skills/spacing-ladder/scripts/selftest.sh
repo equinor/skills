@@ -17,6 +17,7 @@ dump = lambda o: json.dumps(o, sort_keys=True)
 assert dump(doc["ladder"]["md"]) == dump(got["ladder"]["md"]), "ladder.md drifted from token-shape.md"
 assert dump(doc["inset"]["md"]) == dump(got["inset"]["md"]), "inset.md drifted"
 assert dump(doc["optical-padding"]["md-squished"]) == dump(got["optical-padding"]["md-squished"]), "optical-padding.md-squished drifted"
+assert dump(doc["sizing-icon"]["md"]) == dump(got["sizing-icon"]["md"]), "sizing-icon.md drifted from token-shape.md"
 rel = json.load(open(tok/"spacing.relaxed.tokens.json"))["spacing"]["ladder"]["3xl"]
 assert rel["$extensions"]["com.equinor.spacing"].get("extrapolated") is True, "relaxed 3xl not flagged extrapolated"
 print("  token-shape.md matches the emitted comfortable tokens; relaxed 3xl is flagged extrapolated")
@@ -38,7 +39,7 @@ echo "  css carries the ladder per density with :root first, every size's optica
 grep -q -- '--optical-padding-md-squished: 10px; /\* inset' "$tmp/baked.css"
 grep -q -- "^\[data-density='compact'\] {" "$tmp/baked.css"
 grep -q -- '--optical-padding-md-squished: 6px;' "$tmp/baked.css"
-grep -q -- '--glyph-margin-md: -4px; /\* (cap 12 − glyph 20) / 2' "$tmp/baked.css"
+grep -q -- '--glyph-margin-md: -4px; /\* (cap 12 − glyph 20) / 2, label and icon both md' "$tmp/baked.css"
 echo "  baked css resolves the optical values per density with the expression in comments"
 
 "$py" - "$tmp/tokens" <<'PY'

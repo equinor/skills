@@ -144,7 +144,9 @@ the horizontal inset collapses to the vertical one: padding equals the raw
 inset on all sides and the control is a square with the labelled control's
 height — `spacing.py control --size md --icon-only` gives 36 × 36 at
 comfortable — so the round icon button is a circle by construction, with no
-pixel to fudge. The glyph inside it takes the seat described next.
+pixel to fudge. The glyph inside it takes the seat described next, read from
+the step the control *would* have labelled:
+`control --size md --icon-only --label md --icon md`.
 
 ## 5. The glyph seat: an icon sits in the label's cap cell
 
@@ -163,10 +165,17 @@ The margin is negative by construction. Because the margin box is then exactly
 the cap, the control's `align-items: center` puts the glyph's centre where the
 label's cap centre sits, which is the control's centre: nothing to nudge. (The
 cap is centred in Inter's line box to within half a pixel; measure it for
-another label face.) The icon
-sizes are a second sequence read with the same density offset as the ladder
-(`14 16 18 20 24 28 32 37 42 48 56 64`), so a glyph steps with its density
-like everything else.
+another label face.) The icon sizes are a second sequence read with the same
+density offset as the ladder (`14 16 18 20 24 28 32 37 42 48 56 64`), so a
+glyph steps with its density like everything else.
+
+The seat is on every side, so the same overhang applies on the inline axis:
+**the icon gap and the leading inset are measured to the cap cell, not to the
+ink.** At comfortable `md` the 8px gap and the 16px inset leave 4px and 12px
+of visible space beside the glyph, and that is the intended optical result —
+a round glyph wants to overhang, as the label's own side bearings do. Measure
+the gap between the cap cell and the label; a measurement to the ink that
+comes up short is the seat working, not a gap to widen.
 
 **The glyph is one element.** The `<svg class="icon">` is its own cell: it
 carries the size and the margin itself, and the flex or inline layout of the
@@ -178,9 +187,13 @@ no counterpart in CSS.
 .button .icon {
   inline-size: var(--sizing-icon-md);
   block-size: var(--sizing-icon-md);
-  margin: calc((var(--cap-rounded-md) - var(--sizing-icon-md)) / 2);
+  margin: var(--glyph-margin-md);   /* (cap-rounded-md − sizing-icon-md) / 2 */
 }
 ```
+
+The emitted `--glyph-margin-<step>` pairs a label step with the icon step of
+the same name. A mixed pairing takes its seat from `spacing.py glyph` and
+writes the `calc()` out with both steps named.
 
 ```bash
 python3 $skill/scripts/spacing.py glyph --label md --icon md
@@ -189,14 +202,18 @@ python3 $skill/scripts/spacing.py control --size md --proportion squished --labe
 
 The component chooses the icon step for its label — the `md` button pairs `md`
 with `md`, the small button pairs an `sm` label with an `xs` glyph (cap 8,
-glyph 16, margin −4) — and the recipe gives the seat for any pairing.
+glyph 16, margin −4, where `--glyph-margin-sm` would give −5) — and the recipe
+gives the seat for any pairing.
 
 ## 6. Inside an atom: the icon gap
 
 One rung lives below all of these, inside components themselves: the gap
 between a glyph and its label. It is derived from the label, not from the
 ladder — `round(fontSize × 0.618, 2px)`, 8px at comfortable `md` — and it
-belongs to the atom's anatomy, not to layout. Never use icon-gap tokens
+belongs to the atom's anatomy, not to layout. It separates the glyph's cap
+cell from the label, so with the seat of §5 the visible ink-to-text distance is
+`gap + margin`, 4px at comfortable `md`; do not add the margin back. Never use
+icon-gap tokens
 between siblings, and never use the ladder rungs inside an atom. The
 `icon-gap` tokens this skill emits are the ones `typography-scale` mentions
 in passing; this is where they are defined.

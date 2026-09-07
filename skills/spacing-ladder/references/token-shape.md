@@ -214,7 +214,10 @@ nothing else; the `note` says so where the number is. The glyph's footprint is
 the label's cap cell, and the seat — `margin: (cap − glyph) / 2`, negative by
 construction — is a component-level pairing of a label step with an icon step,
 so it is not a token. `spacing.py glyph --label md --icon md` gives it, and the
-CSS output carries `--glyph-margin-<step>` for the label-equals-icon pairing.
+CSS output carries `--glyph-margin-<step>` for the label-equals-icon pairing
+only; `--glyph-margin-sm` is −5 and the small button's `sm`/`xs` seat is −4.
+The `icon-gap` is measured to the cap cell, so the visible ink-to-text distance
+is `gap + margin`.
 Relaxed `6xl` is flagged `extrapolated` like the ladder's top rung.
 
 **Figma** gets `optical-padding` per density mode, named from the token path
