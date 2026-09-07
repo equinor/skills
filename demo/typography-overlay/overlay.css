@@ -44,6 +44,12 @@ h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-xl); line-height: v
 /* the overlay: two faces, one baseline. text-box trims each box to cap top and
    baseline, so aligning the bottoms aligns the baselines. */
 .overlay { padding: var(--space-md) var(--space-xl) var(--space-2xl); overflow: hidden; }
+/* text-box is the mechanism, not a refinement: without it the two boxes meet on
+   their content-box bottoms, which are not baselines. Chrome 133, Safari 18.2 and
+   Firefox 154 trim; anything older is told so instead of shown a wrong lesson. */
+@supports not (text-box: trim-both cap alphabetic) {
+  .overlay::before { content: "This browser cannot trim text boxes to the baseline (text-box), so the two faces below are not on one baseline and the snap points do not describe what you see."; display: block; margin: 0 0 var(--space-md); padding: var(--space-sm) var(--space-md); border-radius: var(--radius); background: oklch(0.96 0.05 60); color: oklch(0.35 0.08 60); }
+}
 .key { margin: 0 0 var(--space-xl); display: flex; gap: var(--space-xl); font-size: var(--font-size-sm); line-height: var(--line-height-sm); color: var(--color-text-subtle); }
 .key span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
 .key__ref::before { background: var(--color-ref); }

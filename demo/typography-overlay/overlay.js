@@ -1,31 +1,42 @@
 // Overlay demo — behaviour. Every snap value below was measured by the skills
-// on 2026-09-06 from the font files; the derivation is quoted in the readout.
+// from the font files (6–7 September 2026); INTENT.md records the commands.
 
-// x-height ratios (OS/2.sxHeight / unitsPerEm, wght 400) — typography-x-height-alignment
-const X = { inter: 0.545898, equinor: 0.48, barlow: 0.506 };
-// Equinor's target weight for a reference weight, by the px the browser gives
-// Inter's opsz axis (clamped 14–32; Barlow has no optical axis) — typography-weight-matching,
-// stems at the same perceived size (the x-height correction applied).
+// x-height ratios (OS/2.sxHeight / unitsPerEm, confirmed against the outlines of
+// x v w z). Flat along wght for all three faces; Inter's opsz axis lowers it, so
+// Inter carries one ratio per optical size the browser can render — 14 up to 32,
+// where the axis clamps. typography-x-height-alignment.
+const X = { inter: { 14: 0.545898, 32: 0.515625 }, equinor: 0.48, barlow: 0.506 };
+// Matched target weight for a reference tier, by the opsz the browser gives Inter
+// at the rendered px (Barlow and Equinor have no optical axis). Stems compared at
+// the same perceived size, i.e. with that size's x-height correction applied.
+// typography-weight-matching.
 const MATCH = {
-  inter:   { 400: { 14: 458.5, 32: 438.0 }, 500: { 14: 552.7, 32: 529.8 }, 600: { 14: 660.0, 32: 640.8 } },
+  inter:   { 400: { 14: 458.5, 32: 458.4 }, 500: { 14: 552.7, 32: 563.1 }, 600: { 14: 660.0, 32: 680.7 } },
   barlow:  { 400: { 14: 411.4, 32: 411.4 }, 500: { 14: 531.7, 32: 531.7 }, 600: { 14: 650.3, 32: 650.3 } },
-  // reference Equinor → target Inter (Inter measured at its default opsz 14)
-  equinor: { 400: { 14: 336.0, 32: 336.0 }, 500: { 14: 450.8, 32: 450.8 } },
+  // reference Equinor → target Inter, Inter's opsz pinned to the rendered size
+  equinor: { 400: { 14: 336.0, 32: 334.7 }, 500: { 14: 450.8, 32: 446.4 } },
 };
 const FAMILY = { inter: 'Inter', equinor: 'Equinor', barlow: 'Barlow' };
 const AXIS = { equinor: [300, 700], inter: [100, 900] };
+const SIZE_RANGE = [0.85, 1.25], SIZE_TOL = 0.004, WEIGHT_TOL = 2.5;
 
 const $ = (id) => document.getElementById(id);
 const overlay = $('overlay'), pair = $('pair'), refEl = $('ref'), targetEl = $('target');
 const size = $('size'), weight = $('weight');
-const state = { ref: 'inter', px: 14, tier: 400, scale: 1, weight: 400, snappedSize: false, snappedWeight: false };
+// rawScale / rawWeight are the slider positions; scale / weight are what is applied.
+// The detent snaps the applied value only, so arrow keys can still leave it.
+const state = { ref: 'inter', px: 14, tier: 400, rawScale: 1, rawWeight: 400, scale: 1, weight: 400, snappedSize: false, snappedWeight: false };
 
 const targetOf = (ref) => (ref === 'equinor' ? 'inter' : 'equinor');
-const correction = () => X[state.ref] / X[targetOf(state.ref)];
 const opszKey = () => (state.px >= 32 ? 32 : 14);
+const xr = (face) => (typeof X[face] === 'number' ? X[face] : X[face][opszKey()]);
+const correction = () => xr(state.ref) / xr(targetOf(state.ref));
 const matched = () => (MATCH[state.ref][state.tier] || {})[opszKey()];
+const hasOpsz = () => state.ref !== 'barlow';                 // Inter is in the pair
+const opszNote = () => (hasOpsz() ? `Inter @ opsz ${opszKey()}` : 'any size');
 
 function fmt(n, d = 6) { return Number.isInteger(n) ? String(n) : n.toFixed(d).replace(/\.?0+$/, ''); }
+const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
 function snap(value, target, tolerance) {
   return target != null && Math.abs(value - target) <= tolerance ? target : value;
@@ -44,11 +55,15 @@ function render() {
 
   const corr = correction();
   const m = matched();
-  state.scale = snap(state.scale, corr, 0.004);
-  state.weight = Math.min(hi, Math.max(lo, snap(state.weight, m, 2.5)));
+  state.rawScale = clamp(state.rawScale, ...SIZE_RANGE);
+  state.rawWeight = clamp(state.rawWeight, lo, hi);
+  state.scale = snap(state.rawScale, corr, SIZE_TOL);
+  state.weight = snap(state.rawWeight, m, WEIGHT_TOL);
   state.snappedSize = state.scale === corr;
   state.snappedWeight = m != null && state.weight === m;
-  size.value = state.scale; weight.value = state.weight;
+  // the sliders keep their raw position; only a clamp (axis change) moves them
+  if (Number(size.value) !== state.rawScale) size.value = state.rawScale;
+  if (Number(weight.value) !== state.rawWeight) weight.value = state.rawWeight;
   size.classList.toggle('snapped', state.snappedSize);
   weight.classList.toggle('snapped', state.snappedWeight);
 
@@ -59,8 +74,8 @@ function render() {
   pair.style.setProperty('--_weight', state.tier);
   pair.style.setProperty('--_scale', state.scale);
   pair.style.setProperty('--_target-weight', state.weight);
-  pair.style.setProperty('--_x-ref', `${X[state.ref]}em`);
-  pair.style.setProperty('--_x-target', `${X[t] * state.scale}em`);
+  pair.style.setProperty('--_x-ref', `${xr(state.ref)}em`);
+  pair.style.setProperty('--_x-target', `${xr(t) * state.scale}em`);
   requestAnimationFrame(() => {
     const avail = overlay.clientWidth - 2 * 24 - 40;
     const prev = Number(pair.dataset.zoom) || 1;
@@ -80,20 +95,21 @@ function render() {
   $('weight-label').textContent = `Weight of ${FAMILY[t]}`;
   $('size-out').textContent = `× ${fmt(state.scale, 3)}`;
   $('weight-out').textContent = fmt(state.weight, 1);
-  $('size-snap').innerHTML = `snaps at <b>× ${fmt(corr)}</b> = ${fmt(X[state.ref])} / ${fmt(X[t])}`;
-  $('weight-snap').innerHTML = m != null ? `snaps at <b>${fmt(m, 1)}</b> for ${FAMILY[state.ref]} ${state.tier} @ opsz ${opszKey()}` : 'no measured match for this pairing';
+  $('size-snap').innerHTML = `snaps at <b>× ${fmt(corr)}</b> = ${fmt(xr(state.ref))} / ${fmt(xr(t))} (${opszNote()})`;
+  $('weight-snap').innerHTML = m != null ? `snaps at <b>${fmt(m, 1)}</b> for ${FAMILY[state.ref]} ${state.tier} (${opszNote()})` : 'no measured match for this pairing';
 
+  const instance = hasOpsz() ? `wght 400, Inter opsz ${opszKey()}` : 'wght 400';
   const rows = [
-    ['x-height', `${FAMILY[state.ref]} ${fmt(X[state.ref])} · ${FAMILY[t]} ${fmt(X[t])} — OS/2.sxHeight / unitsPerEm, read from the files`],
-    ['correction', `${fmt(X[state.ref])} / ${fmt(X[t])} = <b>× ${fmt(corr)}</b> — size the ${FAMILY[t]} text by this and the x-heights coincide${state.snappedSize ? ' ✓' : ''}`],
+    ['x-height', `${FAMILY[state.ref]} ${fmt(xr(state.ref))} · ${FAMILY[t]} ${fmt(xr(t))} — OS/2.sxHeight / unitsPerEm at ${instance}, read from the files; flat along wght for Inter and Equinor and within 1% for Barlow, so one ratio serves every tier`],
+    ['correction', `${fmt(xr(state.ref))} / ${fmt(xr(t))} = <b>× ${fmt(corr)}</b> — size the ${FAMILY[t]} text by this and the x-heights coincide${state.snappedSize ? ' ✓' : ''}`],
     ['stem match', m != null
-      ? `${FAMILY[state.ref]} ${state.tier} at opsz ${opszKey()} → ${FAMILY[t]} <b>${fmt(m, 1)}</b>, measured at the glyph midpoint at the same perceived size${state.snappedWeight ? ' ✓' : ''}`
+      ? `${FAMILY[state.ref]} ${state.tier} → ${FAMILY[t]} <b>${fmt(m, 1)}</b> (${opszNote()}), measured at the glyph midpoint at the same perceived size${state.snappedWeight ? ' ✓' : ''}`
       : `not measured for this pairing`],
     ['why it moves', state.ref === 'inter'
-      ? `Inter's opsz axis thins its stems above 14px; Equinor has no such axis, so the match falls from ${MATCH.inter[state.tier][14]} to ${MATCH.inter[state.tier][32]} between 14px and 32px`
+      ? `Inter's opsz axis lowers its x-height (${fmt(X.inter[14])} → ${fmt(X.inter[32])}) and thins its stems above 14px. The correction falls from × ${fmt(X.inter[14] / X.equinor)} to × ${fmt(X.inter[32] / X.equinor)}, so Equinor is set smaller at 32px and needs more weight to keep up: the match goes ${MATCH.inter[state.tier][14]} → ${MATCH.inter[state.tier][32]} between 14px and 32px`
       : state.ref === 'barlow'
         ? `Barlow has no optical axis, so one match holds at every size. Equinor 500 (stem 0.086em) sits below Barlow Medium (0.096em); Inter 500 (0.107em) sits above it — Equinor needs 531.7 and Inter only 480.4 to match Barlow Medium, measured here from the outlines`
-        : `Equinor as the reference: Inter is set smaller (× ${fmt(corr, 4)}) and needs less weight than its name says`],
+        : `Equinor as the reference: Inter is set smaller and needs less weight than its name says. At 14px the factor is × ${fmt(X.equinor / X.inter[14])}; above it Inter's opsz axis lowers its own x-height, so the factor rises to × ${fmt(X.equinor / X.inter[32])} and the match moves ${MATCH.equinor[state.tier][14]} → ${MATCH.equinor[state.tier][32]}`],
   ];
   if (state.ref === 'barlow') {
     rows.push(['about Barlow', `The Lc contrast number is colour math with no font in it. The lookup table that turns an Lc target into a minimum size and weight — shipped in apca-w3 (src/apca-w3.js, data/LUT-GseriesMay28-2022.js) — says in its source: "reference font is Barlow". By APCA's own x-height-ratio method, 14px Barlow (x-height 7.08px) is 13px Inter. Its docs call weight matching "ongoing research"; the weight slider is a measured answer.`]);
@@ -104,17 +120,21 @@ function render() {
 document.querySelectorAll('input[name="ref"]').forEach((r) => r.addEventListener('change', () => { state.ref = r.value; render(); }));
 document.querySelectorAll('input[name="px"]').forEach((r) => r.addEventListener('change', () => { state.px = Number(r.value); render(); }));
 document.querySelectorAll('input[name="tier"]').forEach((r) => r.addEventListener('change', () => { state.tier = Number(r.value); render(); }));
-size.addEventListener('input', () => { state.scale = Number(size.value); render(); });
-weight.addEventListener('input', () => { state.weight = Number(weight.value); render(); });
+size.addEventListener('input', () => { state.rawScale = Number(size.value); render(); });
+weight.addEventListener('input', () => { state.rawWeight = Number(weight.value); render(); });
 $('guides').addEventListener('change', (e) => { overlay.dataset.guides = e.target.checked ? 'on' : 'off'; });
 window.addEventListener('resize', render);
 
 // Deep links: ?ref=inter&px=14&tier=400&size=1.137288&weight=458.5 (or size=snap&weight=snap)
 const q = new URLSearchParams(location.search);
+const num = (v) => (v != null && v !== '' && Number.isFinite(Number(v)) ? Number(v) : null);
 if (FAMILY[q.get('ref')]) { state.ref = q.get('ref'); document.querySelector(`input[name="ref"][value="${state.ref}"]`).checked = true; }
 if ([14, 32, 48].includes(Number(q.get('px')))) { state.px = Number(q.get('px')); document.querySelector(`input[name="px"][value="${state.px}"]`).checked = true; }
 if ([400, 500, 600].includes(Number(q.get('tier')))) { state.tier = Number(q.get('tier')); document.querySelector(`input[name="tier"][value="${state.tier}"]`).checked = true; }
-if (q.get('size') === 'snap') state.scale = correction(); else if (q.has('size')) state.scale = Number(q.get('size'));
-if (q.get('weight') === 'snap') state.weight = matched() ?? state.weight; else if (q.has('weight')) state.weight = Number(q.get('weight'));
+if (q.get('size') === 'snap') state.rawScale = correction();
+else if (num(q.get('size')) != null) state.rawScale = clamp(num(q.get('size')), ...SIZE_RANGE);
+if (q.get('weight') === 'snap') state.rawWeight = matched() ?? state.rawWeight;
+else if (num(q.get('weight')) != null) state.rawWeight = clamp(num(q.get('weight')), ...AXIS[targetOf(state.ref)]);
+size.value = state.rawScale; weight.value = state.rawWeight;
 document.fonts.ready.then(render);
 render();
