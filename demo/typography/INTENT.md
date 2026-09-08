@@ -52,9 +52,10 @@ meaningless.
 | 3 | Use Equinor for headings                  | always                    |
 | 4 | Align the x-height of Equinor to Inter    | 3 has been on once        |
 | 5 | Match Equinor's weight to Inter           | 3 has been on once        |
+| 6 | Match Equinor's letter-spacing to Inter   | 3 has been on once        |
 
 Revised 5 September after seeing the page: this is the telling order (grid,
-scale, baseline, then the problem and its two fixes). Controls 4 and 5 unlock
+scale, baseline, then the problem and its three fixes). Controls 4 to 6 unlock
 the first time the headings are set in Equinor and *keep their state* when
 Equinor is toggled off again; their effect is gated in the CSS on the swap,
 and the code panel says "on, but the headings are in Inter" meanwhile, so the
@@ -94,7 +95,7 @@ choice; the skill reports null. The bolder values rise with size: Inter's
 optical axis thins its stems, but it also lowers its x-height, so Equinor is
 set smaller at the large steps and needs more weight to keep up; at the normal
 tier the two effects cancel and 458.5 holds at every step. Deep links apply
-controls in order: `index.html?on=guides,scale,baseline,swap,xheight,weight`.
+controls in order: `index.html?on=guides,scale,baseline,swap,xheight,weight,tracking`.
 
 **The x-height correction is one number per step, not per family** (8
 September, from the bot's review of the overlay demo, #33). Inter's `opsz`
@@ -109,6 +110,20 @@ each display step is baked with the correction measured at its own px —
 headings get theirs at 32 / 24 / 18.72px. Until 7 September every heading
 used the text step's × 1.137288 and was about 6% too large by x-height
 parity.
+
+**Letter-spacing is matched per heading too** (8 September, Victor: at 32px
+"Inter has tighter letter-spacing compared to Equinor"). Inter's `opsz` axis
+cuts its side space — advance minus ink, mean over a–z — by a quarter between
+opsz 14 and 32, and Equinor has no axis, so at heading sizes Equinor reads
+about 20% looser at the matched weight. Control 6 gives each heading
+`sideSpace(Inter @ opsz) / correction − sideSpace(Equinor @ matched)` in
+Equinor's em: `h1` 5xl −0.0142em (−0.49px), `h2` 3xl −0.0077em, `h3` 2xl
+−0.0046em with the scale on; −0.0183 / −0.0117 / −0.0075em for the browser's
+700 against Equinor's clamped 700 without it. The text steps need none: the
+faces agree within a tenth of a pixel at 14px. Measured with
+`stem.py Inter.woff2 EquinorVariable-VF.woff2 --letter-spacing --at <tier>,<matched>
+--opsz <px> --correction <that step's> --px <px>`, per step; the table is in
+`demo.js`.
 
 Each control's label is the request itself, in the wording of the skill's
 representative requests, for example "Align the x-height of Equinor and

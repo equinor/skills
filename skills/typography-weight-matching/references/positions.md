@@ -75,6 +75,19 @@ reference is no longer corrected either, so a face without the axis should be
 held flat there rather than extrapolated — an earlier draft extrapolated and
 made 37px tighter than the value already flagged as too tight.
 
+**The axis moves spacing as much as weight** (measured 2026-09-08). Inter's
+mean side space over a–z at 500 is 0.0967em at opsz 14 and 0.0718em at opsz
+32 — a 26% cut the browser applies for free — while Equinor at its matched
+weight holds 0.081em. At 32px, with Equinor set at × 1.074219, Inter's gap is
+2.30px and Equinor's 2.78px: Equinor reads 20% looser at the same weight and
+perceived size, which is what a viewer of the overlay demo saw before any
+number was taken. The compensation, `sideSpace(ref, opsz) / correction −
+sideSpace(target)`, is −0.0139 / −0.0141 / −0.0142em at tiers 400 / 500 / 600,
+so one value per step serves every tier, and it is within +0.006em of zero at
+14px, so the text steps need none. The alternative — one flat tracking value
+for headings — is what section 5's port factor scales, and it cannot produce
+a value that is zero at 14px and −0.014em at 32px from the same face.
+
 ## 5. Generate the table; commit the generated values
 
 A weight or a factor stored as a literal, away from the metrics, goes stale

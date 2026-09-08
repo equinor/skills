@@ -1,4 +1,4 @@
-// Typography demo — behaviour. Six controls, three of them gated on another,
+// Typography demo — behaviour. Seven controls, four of them gated on another,
 // one code panel showing the CSS the last request produced. Nothing here
 // computes a typographic value: the numbers were emitted by the skills and
 // are quoted, with the request that produced them.
@@ -10,9 +10,9 @@ const stateEl = document.getElementById('code-state');
 const inputs = Object.fromEntries(
   [...document.querySelectorAll('[data-control]')].map((el) => [el.dataset.control, el]),
 );
-const state = { guides: false, scale: false, baseline: false, swap: false, xheight: false, weight: false };
+const state = { guides: false, scale: false, baseline: false, swap: false, xheight: false, weight: false, tracking: false };
 const seen = { swap: false };
-const ORDER = ['guides', 'scale', 'baseline', 'swap', 'xheight', 'weight'];   // the telling order
+const ORDER = ['guides', 'scale', 'baseline', 'swap', 'xheight', 'weight', 'tracking'];   // the telling order
 // Honesty rule 1: the panel shows what is running. When a control goes off, fall
 // back to the last control in the telling order that is still on — 'before' only
 // when nothing is.
@@ -36,6 +36,18 @@ const needs = { baseline: ['scale'] };
 const matched = {
   scaleOn: { h1: 680.7, h2: 671.6, h3: 667.7 },
   scaleOff: { h1: 700, h2: 700, h3: 700 },
+};
+// typography-weight-matching §4, the spacing half: Inter's opsz axis tightens its
+// side space (advance − ink, a–z) as the size grows; Equinor has no axis. The
+// letter-spacing Equinor needs, in its own em, to leave Inter's gap at the same
+// perceived size: sideSpace(Inter @ opsz) / correction − sideSpace(Equinor @ matched).
+// Measured 2026-09-08 with, per step:
+//   stem.py Inter.woff2 EquinorVariable-VF.woff2 --letter-spacing --at <tier>,<matched> --opsz <px> --correction <that step's> --px <px>
+// Bolder tier: 5xl −0.0142em (−0.49px), 3xl −0.0077em (−0.21px), 2xl −0.0046em (−0.11px).
+// Browser defaults (700 vs Equinor 700 clamped): 32px −0.0183em, 24px −0.0117em, 18.72px −0.0075em.
+const tracked = {
+  scaleOn: { h1: -0.0142, h2: -0.0077, h3: -0.0046 },
+  scaleOff: { h1: -0.0183, h2: -0.0117, h3: -0.0075 },
 };
 
 const CODE = {
@@ -185,15 +197,41 @@ h3 { font-weight: <span class="n">667.7</span>; }  <span class="c">/* 2xl · Int
    600, which Equinor can match. */</span>
 h1, h2, h3 { font-weight: <span class="n">700</span>; } <span class="c">/* clamped — nothing changes */</span>`,
   },
+  tracking: {
+    title: "Inter tightens its letter-spacing at heading sizes. Equinor doesn't — match it.",
+    state: 'typography-weight-matching · spacing',
+    css: `<span class="c">/* Side space — advance minus ink, mean over a–z — at the same
+   perceived size. Inter's opsz axis cuts its own by a quarter
+   between 14px and 32px; Equinor has no axis, so at heading
+   sizes it reads looser at the matched weight. In Equinor's em:
+   sideSpace(Inter @ opsz) / correction − sideSpace(Equinor).
+   Bolder tier, Inter 600 → Equinor at its matched weight: */</span>
+<span class="k">"letter-spacing"</span>: { <span class="k">"Equinor"</span>: { <span class="k">"bolder"</span>: {
+  <span class="k">"xs"</span>–<span class="k">"md"</span>: <span class="n">+0.0013</span>, <span class="k">"lg"</span>: <span class="n">−0.0003</span>, <span class="k">"xl"</span>: <span class="n">−0.0024</span>, <span class="k">"2xl"</span>: <span class="n">−0.0046</span>,
+  <span class="k">"3xl"</span>: <span class="n">−0.0077</span>, <span class="k">"4xl"</span>: <span class="n">−0.0110</span>, <span class="k">"5xl"</span>–<span class="k">"6xl"</span>: <span class="n">−0.0142</span> } } }  <span class="c">/* em */</span>
+h1 { letter-spacing: <span class="n">-0.0142em</span>; }  <span class="c">/* 5xl · 0.0667 / 1.074219 − 0.0763 · −0.49px at 34.5px */</span>
+h2 { letter-spacing: <span class="n">-0.0077em</span>; }  <span class="c">/* 3xl · Inter 600 @ opsz 24.5 · −0.21px at 27px    */</span>
+h3 { letter-spacing: <span class="n">-0.0046em</span>; }  <span class="c">/* 2xl · Inter 600 @ opsz 21   · −0.11px at 23.5px  */</span>
+<span class="c">/* The text steps need none: the two faces agree within a tenth of
+   a pixel at 14px. Normal tier: +0.0061 at md, −0.0139 at 5xl. */</span>`,
+    cssClamped: `<span class="c">/* Side space — advance minus ink, mean over a–z — at the same
+   perceived size. The headings are at the browser's bold, 700, and
+   Equinor is held at its axis maximum, 700. Inter 700 at each
+   heading's own opsz against Equinor 700, in Equinor's em: */</span>
+h1 { letter-spacing: <span class="n">-0.0183em</span>; }  <span class="c">/* 32px    · opsz 32    · −0.63px */</span>
+h2 { letter-spacing: <span class="n">-0.0117em</span>; }  <span class="c">/* 24px    · opsz 24    · −0.31px */</span>
+h3 { letter-spacing: <span class="n">-0.0075em</span>; }  <span class="c">/* 18.72px · opsz 18.72 · −0.16px */</span>
+<span class="c">/* Apply the scale and the values move with the matched weights. */</span>`,
+  },
 };
 
 function render(key) {
   const entry = CODE[key];
   let css = entry.css;
   let stateText = entry.state;
-  if (key === 'weight' && !state.scale) css = entry.cssClamped;
+  if ((key === 'weight' || key === 'tracking') && !state.scale) css = entry.cssClamped;
   if (key === 'xheight' && !state.scale) css = entry.cssUnscaled;
-  if ((key === 'xheight' || key === 'weight') && !state.swap) {
+  if ((key === 'xheight' || key === 'weight' || key === 'tracking') && !state.swap) {
     // The fix is switched on but the headings are back in Inter: it has nothing
     // to act on until Equinor is on again. Say so rather than show CSS as if it ran.
     css = `<span class="c">/* Waiting. The headings are in Inter, so this correction has
@@ -208,7 +246,11 @@ function render(key) {
 
 function applyWeight() {
   const set = state.scale ? matched.scaleOn : matched.scaleOff;
-  for (const h of ['h1', 'h2', 'h3']) article.style.setProperty(`--_${h}-matched`, String(set[h]));
+  const trk = state.scale ? tracked.scaleOn : tracked.scaleOff;
+  for (const h of ['h1', 'h2', 'h3']) {
+    article.style.setProperty(`--_${h}-matched`, String(set[h]));
+    article.style.setProperty(`--_${h}-tracking`, String(trk[h]));
+  }
 }
 
 function refreshGates() {
@@ -224,13 +266,14 @@ function refreshGates() {
   if (state.swap) seen.swap = true;
   inputs.xheight.disabled = !seen.swap;   // unlocked by the first swap; state survives toggling it
   inputs.weight.disabled = !seen.swap;
+  inputs.tracking.disabled = !seen.swap;
 }
 
 for (const [key, el] of Object.entries(inputs)) {
   el.addEventListener('change', () => {
     state[key] = el.checked;
     article.dataset[key] = el.checked ? 'on' : 'off';
-    if (key === 'scale' || key === 'weight') applyWeight();
+    if (key === 'scale' || key === 'weight' || key === 'tracking') applyWeight();
     refreshGates();
     render(el.checked ? key : lastApplied());
   });
@@ -238,7 +281,7 @@ for (const [key, el] of Object.entries(inputs)) {
 applyWeight();
 render('before');
 
-// Deep links for the talk: ?on=guides,scale,baseline,swap,xheight,weight — the
+// Deep links for the talk: ?on=guides,scale,baseline,swap,xheight,weight,tracking — the
 // telling order — applies the controls in that order. A key that cannot apply
 // yet (its dependency is off) is reported rather than dropped silently.
 const params = new URLSearchParams(location.search);
@@ -254,8 +297,9 @@ if (params.has('on')) {
 }
 
 // ?measure: prove the baseline claim. Applies scale, swap, x-height and
-// weight, then reports each block's first baseline modulo 4 with the grid
-// toggle off and on. On the grid means every remainder is 0.
+// weight (not tracking: letter-spacing cannot move a baseline), then reports
+// each block's first baseline modulo 4 with the grid toggle off and on. On
+// the grid means every remainder is 0.
 if (params.has('measure')) {
   document.fonts.ready.then(() => {
     const rows = [];

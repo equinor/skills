@@ -96,9 +96,78 @@ that pair is not in the selftest; re-run the section 3 example to check it.
               },
               "glyphs": "a-z",
               "method": "outline:advance-minus-ink",
-              "extractedAt": "2026-09-04"
+              "instance": {
+                "wght": 400.0
+              },
+              "extractedAt": "2026-09-08"
             },
             "family": "Inter"
+          }
+        }
+      }
+    },
+    "letter-spacing": {
+      "Inter": {
+        "400": {
+          "$type": "number",
+          "$value": -0.027287,
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                "inputs": {
+                  "reference": {
+                    "advanceEm": 0.489709,
+                    "inkEm": 0.412842,
+                    "sideSpaceEm": 0.076867,
+                    "sideSpaceShare": 0.156964,
+                    "weight": 400.0,
+                    "opsz": 32.0
+                  },
+                  "target": {
+                    "advanceEm": 0.536339,
+                    "inkEm": 0.432185,
+                    "sideSpaceEm": 0.104154,
+                    "sideSpaceShare": 0.194194,
+                    "weight": 400.0
+                  },
+                  "correction": 1.0,
+                  "correctionValue": 1.0
+                }
+              },
+              "metrics": {
+                "reference": {
+                  "path": "assets/fonts/Inter.woff2",
+                  "sha256": "87a69aeae6290d8f4fc68e89eaca9a605defc155a3ea2bcb1f756fded1359722"
+                },
+                "target": {
+                  "path": "assets/fonts/Inter.woff2",
+                  "sha256": "87a69aeae6290d8f4fc68e89eaca9a605defc155a3ea2bcb1f756fded1359722"
+                },
+                "glyphs": "a-z",
+                "method": "outline:advance-minus-ink",
+                "instance": {
+                  "wght": 400.0,
+                  "opsz": 32.0
+                },
+                "extractedAt": "2026-09-08"
+              },
+              "family": "Inter",
+              "tier": 400,
+              "units": {
+                "em": -0.027287,
+                "percent": -2.7287
+              },
+              "note": "em of the target's own size: CSS letter-spacing: <value>em. Figma takes percent, React Native px"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "scopes": [
+                "LETTER_SPACING"
+              ],
+              "unit": "PERCENT",
+              "value": -2.7287
+            }
           }
         }
       }
@@ -155,8 +224,23 @@ not the flat one — the alias and the value agree only when both are the
 step's. With no per-step token in the project, pass the bare factor and let
 `instance.opsz` record where it holds.
 
+**The `letter-spacing` token is the missing-axis compensation** (section 4),
+one per tier, keyed by the reference tier. It is a plain `number` in the
+*target's* em — DTCG's `dimension` allows only `px` and `rem`, and this value
+is relative to the element's own size — with `units.percent` for Figma (which
+the `com.equinor.figma` block binds) and `units.px` at the `--px` size for
+React Native beside it. `reference`
+is the reference's side space at the pinned `opsz`, `target` the target's at
+its matched weight, `correction` the x-height correction at that same `opsz`
+(alias or bare factor, as for the weights). The self-pair example above pins
+Inter at opsz 32 against its own default opsz 14, which is why a face against
+itself comes out at −0.027em: that is the axis alone. Figma takes it with the
+`LETTER_SPACING` scope on the text style.
+
 **The port factor's inputs are both side-space records**, including the
-weights they were measured at. Section 5 insists these are the *matched*
+weights they were measured at, and `metrics.instance` records the reference's
+axis location: with `--opsz` pinned the factor moves (0.84 at Inter's default
+against 1.13 at opsz 32 for the EDS pair), so the token says which it is. Section 5 insists these are the *matched*
 weights; a factor computed with both faces at 400 is a different number, and
 the token shows which one you have.
 

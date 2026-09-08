@@ -27,10 +27,10 @@ Planned areas:
 ## Demo
 
 [`demo/typography/`](demo/typography/) is the page shown at the meetup: an
-article set in Inter and Equinor, six controls labelled with the request you
+article set in Inter and Equinor, seven controls labelled with the request you
 would type to an agent, and a panel showing the CSS each request produces.
 Open `index.html` over HTTP (the fonts load from the EDS CDN), or append
-`?on=guides,scale,baseline,swap,xheight,weight` to arrive with everything on.
+`?on=guides,scale,baseline,swap,xheight,weight,tracking` to arrive with everything on.
 `INTENT.md` alongside records why it is built the way it is.
 
 [`demo/typography-scale/`](demo/typography-scale/) is its companion explorer:

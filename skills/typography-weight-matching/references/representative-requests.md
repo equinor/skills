@@ -33,7 +33,17 @@ committed; only then run the test.
 *Prevents:* a weight that was right for the previous release of the font, and
 a table someone hand-edited after it was generated.
 
-A fifth, for routing: **"these two fonts look like different sizes"** must load
+**5. "The Equinor headings look loose next to Inter at 32px, even after the
+weight match."** → Section 4's spacing half: measure both faces' side space at
+that size — `stem.py Inter.woff2 Equinor.woff2 --letter-spacing --at 600,680.7
+--opsz 32 --correction 1.074219 --px 32` → −0.0142em, about −0.49px on the
+34.5px heading — and emit a `letter-spacing` token per step beside the
+weights. Say why it is zero at the text sizes: Inter's `opsz` axis tightens
+its spacing as it grows and Equinor has no axis, so the gap opens with size.
+*Prevents:* one flat heading tracking typed from taste, and tracking applied
+to the body text where the two faces already agree.
+
+A sixth, for routing: **"these two fonts look like different sizes"** must load
 `typography-x-height-alignment`, not this skill. Size and weight are different
 complaints with different fixes, and the descriptions carry `DO NOT USE FOR:`
 cues to separate them.

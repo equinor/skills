@@ -13,7 +13,7 @@
 <main class="stage">
   <header class="head">
     <h1>Two typefaces on one baseline</h1>
-    <p class="hint">The same sentence twice, overlaid. The reference face stays put, in grey. The other face is the one you adjust, in red; where they overlap it goes dark. Drag its size until the x-heights meet, then its weight until the stems do. The snap points are the skills' numbers.</p>
+    <p class="hint">The same sentence twice, overlaid. The reference face stays put, in grey. The other face is the one you adjust, in red; where they overlap it goes dark. Drag its size until the x-heights meet, its weight until the stems do, then its letter-spacing until the gaps between letters do. The snap points are the skills' numbers.</p>
   </header>
 
   <section class="controls">
@@ -62,6 +62,11 @@
       <span class="slider__label"><b id="weight-label">Weight of Equinor</b> <output id="weight-out"></output></span>
       <input type="range" id="weight" min="300" max="700" step="0.1" value="400">
       <span class="slider__snap" id="weight-snap"></span>
+    </label>
+    <label class="slider">
+      <span class="slider__label"><b id="tracking-label">Letter-spacing of Equinor</b> <output id="tracking-out"></output></span>
+      <input type="range" id="tracking" min="-0.04" max="0.03" step="0.0005" value="0">
+      <span class="slider__snap" id="tracking-snap"></span>
     </label>
     <label class="check"><input type="checkbox" id="guides" checked> <span>Show baseline and x-height guides</span></label>
   </section>
