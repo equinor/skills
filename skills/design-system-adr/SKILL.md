@@ -111,9 +111,10 @@ and `Decision makers` present, the status in the closed vocabulary
 required sections present and in the template's order; at least two options,
 each with pros and cons; consequences as `Good, because` / `Bad, because`
 bullets; a `Superseded by` link that resolves; a number used once; an index
-that lists the record. It warns when `Confirmation` is missing, when no
-consequence is bad, when guidance comments are still in the file, and when
-the directory has no index.
+that lists the record; a partial supersession's link resolving too; no
+template placeholder (`[Name]`, `[Advantage]`) left in. It warns when
+`Confirmation` is missing, when no consequence is bad, when guidance comments
+are still in the file, and when the directory has no index.
 
 Then the judgement no linter makes: are the consequences implications or
 restated pros, are the rejected options fairly described, does the decision

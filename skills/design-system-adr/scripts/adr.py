@@ -25,6 +25,8 @@ REQUIRED = ["## Context", "## Decision Drivers", "## Options Considered", "## De
             "### Consequences", "## Related"]
 OPTIONAL = ["### Confirmation"]
 TEMPLATE = Path(__file__).resolve().parent.parent / "references" / "template.md"
+# every `[...]` in the template that is not a link is a placeholder to be replaced
+PLACEHOLDERS = sorted({m.group(0) for m in re.finditer(r"\[[^\]\n]+\](?!\()", TEMPLATE.read_text())})
 
 
 # ---- reading -----------------------------------------------------------------
@@ -66,6 +68,9 @@ def check_file(path, all_numbers=None):
         errors.append("H1 carries the number; the filename does, the title does not")
     if "<!--" in text:
         warns.append("guidance comments left in; the template's comments are deleted in a finished record")
+    left = [ph for ph in PLACEHOLDERS if ph in text]
+    if left:
+        errors.append(f"template placeholders left in: {', '.join(left[:4])}{' …' if len(left) > 4 else ''}")
     md = meta(text)
     if not md["status"]:
         errors.append("no `- **Status:**` line")
@@ -74,7 +79,7 @@ def check_file(path, all_numbers=None):
         if head not in STATUSES:
             errors.append(f"status {md['status']!r} is not one of {'/'.join(STATUSES)}"
                           + (" — 'Approved' is not in the vocabulary; use Accepted" if head == "Approved" else ""))
-        if head == "Superseded":
+        if head == "Superseded" or "uperseded by" in md["status"]:
             link = re.search(r"\[[^\]]*\]\(([^)]+)\)", md["status"])
             if not link:
                 errors.append("Superseded status names no ADR: `Superseded by [ADR-NNNN](NNNN-....md)`")
@@ -104,7 +109,9 @@ def check_file(path, all_numbers=None):
         body = text[text.index("## Options Considered"):]
         body = body[:body.index("\n## Decision")] if "\n## Decision" in body else body
         for opt in options:
-            seg_start = body.index(opt)
+            seg_start = body.find(opt)
+            if seg_start < 0:
+                errors.append(f"{opt} appears outside Options Considered"); continue
             seg = body[seg_start:]
             nxt = re.search(r"\n### Option \d+", seg[1:])
             seg = seg[: nxt.start() + 1] if nxt else seg
@@ -174,10 +181,21 @@ def cmd_check(args):
 
 
 # ---- numbering ---------------------------------------------------------------
-def claimed_by_open_prs(repo=None):
-    """Numbers used by ADR files in open pull requests, via the GitHub CLI."""
+def repo_relative(directory):
+    """The ADR directory as a path inside the repository, for matching PR file lists."""
     try:
-        cmd = ["gh", "pr", "list", "--state", "open", "--json", "number,files", "--limit", "100"]
+        top = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=directory, capture_output=True,
+                             text=True, check=True).stdout.strip()
+        return Path(directory).resolve().relative_to(Path(top).resolve()).as_posix()
+    except (FileNotFoundError, subprocess.CalledProcessError, ValueError):
+        return Path(directory).name
+
+
+def claimed_by_open_prs(directory, repo=None):
+    """Numbers used by ADR files *in the ADR directory* in open pull requests, via the GitHub CLI."""
+    prefix = repo_relative(directory).rstrip("/") + "/"
+    try:
+        cmd = ["gh", "pr", "list", "--state", "open", "--json", "number,files", "--limit", "1000"]
         if repo:
             cmd += ["--repo", repo]
         out = subprocess.run(cmd, capture_output=True, text=True, check=True).stdout
@@ -185,17 +203,21 @@ def claimed_by_open_prs(repo=None):
         print(f"warning: could not ask gh for open PRs ({e}); pass --also with any numbers you know of",
               file=sys.stderr)
         return []
+    prs = json.loads(out)
+    if len(prs) >= 1000:
+        print("warning: 1000 open PRs listed; the scan may be capped — pass --also with numbers you know of", file=sys.stderr)
     nums = []
-    for pr in json.loads(out):
+    for pr in prs:
         for f in pr.get("files", []):
-            m = re.search(r"(\d{4})-[a-z0-9-]+\.md$", f.get("path", ""))
+            p = f.get("path", "")
+            m = FILENAME.match(Path(p).name) if p.startswith(prefix) else None
             if m:
                 nums.append(int(m.group(1)))
     return nums
 
 
 def next_number(directory, also=(), gh=False, repo=None):
-    used = [n for n, _ in records(directory)] + list(also) + (claimed_by_open_prs(repo) if gh else [])
+    used = [n for n, _ in records(directory)] + list(also) + (claimed_by_open_prs(directory, repo) if gh else [])
     return (max(used) + 1) if used else 1
 
 
@@ -238,20 +260,19 @@ def cmd_index(args):
     d = Path(args.dir)
     recs = records(d)
     rows = ["| ADR | Title | Status | Date |", "| --- | --- | --- | --- |"]
-    seen = set()
-    for n, f in recs:
+    by_number = {n: f for n, f in recs}
+    for n in range(1, max(by_number) + 1) if by_number else []:      # number order, gaps in place
+        f = by_number.get(n)
+        if f is None:
+            rows.append(f"| {n:04d} | — | Unused | — |"); continue
         text = f.read_text(); md = meta(text)
         h1 = re.search(r"^# (.+)$", text, re.M)
         rows.append(f"| [{n:04d}]({f.name}) | {h1.group(1) if h1 else f.stem} | {md['status'] or '?'} | {md['date'] or '?'} |")
-        seen.add(n)
-    if seen:
-        for gap in range(1, max(seen)):
-            if gap not in seen:
-                rows.append(f"| {gap:04d} | — | Unused | — |")
     table = "\n".join(rows)
     tmpl = "[0000-template.md](0000-template.md)" if (d / "0000-template.md").exists() else "`0000-template.md`"
+    first = f"ADR-{min(by_number):04d}" if by_number else "the first record"
     out = ("# Architecture Decision Records\n\n"
-           f"Decisions follow the format in {tmpl}. See ADR-0001 for\n"
+           f"Decisions follow the format in {tmpl}. See {first} for\n"
            "when to write one, the numbering rule and the status lifecycle. One row per record,\n"
            "regenerated with `adr.py index --write`; a number with no record is a PR that closed\n"
            "unmerged, kept so a gap is distinguishable from a lost file.\n\n" + table + "\n")
