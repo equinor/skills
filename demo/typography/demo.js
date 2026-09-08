@@ -24,15 +24,17 @@ const lastApplied = () => [...ORDER].reverse().find((k) => state[k]) ?? 'before'
 // in the CSS on data-swap, so switching the face back and forth shows the fix.
 const needs = { baseline: ['scale'] };
 
-// typography-weight-matching, Inter → Equinor at the same perceived size
-// (× 1.137288), with Inter's opsz following the heading's px size. Measured
-// 2026-09-05 with, per step:
-//   stem.py Inter.woff2 EquinorVariable-VF.woff2 --match 600 --opsz <px> --correction 1.137288
+// typography-weight-matching, Inter → Equinor at the same perceived size, with
+// Inter's opsz following the heading's px size and the x-height correction taken
+// at that same opsz (Inter's x-height drifts with the axis; see INTENT §3).
+// x-heights sampled 2026-09-07, stems 2026-09-08, with, per step:
+//   xheight.py Inter.woff2 --location wght=400,opsz=<px>          → correction = xRatio / 0.48
+//   stem.py Inter.woff2 EquinorVariable-VF.woff2 --match 300,400,600 --opsz <px> --correction <that>
 // Bolder tier, Inter 600: h1 5xl 32px, h2 3xl 24.5px, h3 2xl 21px.
 // Browser-default headings are 700, which no weight on Equinor's 300–700 axis
 // reaches: the skill reports null and the value holds at the axis maximum.
 const matched = {
-  scaleOn: { h1: 640.8, h2: 648.8, h3: 652.5 },
+  scaleOn: { h1: 680.7, h2: 671.6, h3: 667.7 },
   scaleOff: { h1: 700, h2: 700, h3: 700 },
 };
 
@@ -112,59 +114,67 @@ h3 { font-size: var(--font-size-2xl); line-height: var(--line-height-2xl); font-
 @font-face {
   font-family: Equinor;
   src: url(…/EquinorVariable-VF.woff2) format("woff2-variations");
-  font-weight: 1 999;
+  font-weight: 300 700;   <span class="c">/* the file's wght axis */</span>
 }
 h1, h2, h3 { font-family: Equinor; }`,
   },
   xheight: {
     title: 'Align the x-height of Equinor and Inter, Inter is the master',
     state: 'typography-x-height-alignment',
-    css: `<span class="c">/* Measured from the two files, not from a spec page:
-   Inter   xRatio 0.545898  (sxHeight 1118 / upm 2048) @ wght 400
-   Equinor xRatio 0.480000  (sxHeight  480 / upm 1000) @ wght 400
-   correction = 0.545898 / 0.48 = <span class="n">1.137288</span> */</span>
+    css: `<span class="c">/* Measured from the two files, not from a spec page — and Inter's
+   x-height is one number per optical size, not per family:
+   Inter   xRatio 0.545898 @ opsz 14 … 0.515625 @ opsz 32  (wght 400)
+   Equinor xRatio 0.480000, flat along its axis
+   correction at the text step = 0.545898 / 0.48 = <span class="n">1.137288</span> */</span>
+<span class="c">/* 5.9% clears the tolerance: one correction per step, not one per
+   family (x-height-alignment, optical-size.md, outcome 2) */</span>
 <span class="k">"x-height-correction"</span>: { <span class="k">"display"</span>: {
-  <span class="k">"$type"</span>: "number", <span class="k">"$value"</span>: <span class="n">1.137288</span>,
-  <span class="k">"$extensions"</span>: { <span class="k">"com.equinor.typography"</span>: { <span class="k">"derived"</span>: {
-    <span class="k">"expression"</span>: "referenceXRatio / selfXRatio",
-    <span class="k">"inputs"</span>: { <span class="k">"referenceXRatio"</span>: <span class="n">0.545898</span>,
-                <span class="k">"selfXRatio"</span>: <span class="n">0.48</span> } } } } } }
-<span class="c">/* Also Figma or React Native → two ramps: the display size is
-   the text size × the correction, re-snapped to the same 0.5px
-   grid. Line-heights are shared: the faces now look the same size. */</span>
+  <span class="k">"$extensions"</span>: { <span class="k">"com.equinor.typography"</span>: { <span class="k">"drift"</span>: { <span class="k">"axis"</span>: "opsz",
+    <span class="k">"sampledAt"</span>: [10.5, 12, 14, 16, 18.5, 21, 24.5, 28, 32, 37],
+    <span class="k">"range"</span>: [<span class="n">1.074219</span>, <span class="n">1.137288</span>], <span class="k">"max"</span>: <span class="n">0.0587</span> } } },
+  <span class="k">"2xl"</span>: { <span class="k">"$type"</span>: "number", <span class="k">"$value"</span>: <span class="n">1.112875</span>, <span class="k">"$extensions"</span>: { <span class="k">"com.equinor.typography"</span>: {
+    <span class="k">"derived"</span>: { <span class="k">"expression"</span>: "referenceXRatio / selfXRatio", <span class="k">"inputs"</span>: { <span class="k">"referenceXRatio"</span>: <span class="n">0.534180</span>, <span class="k">"selfXRatio"</span>: <span class="n">0.48</span> } },
+    <span class="k">"metrics"</span>: { <span class="k">"instance"</span>: { <span class="k">"opsz"</span>: <span class="n">21</span>, <span class="k">"wght"</span>: <span class="n">400</span> } } } } },
+  <span class="k">"3xl"</span>: { <span class="k">"$value"</span>: <span class="n">1.100667</span>, … <span class="k">"instance"</span>: { <span class="k">"opsz"</span>: <span class="n">24.5</span> } },
+  <span class="k">"5xl"</span>: { <span class="k">"$value"</span>: <span class="n">1.074219</span>, … <span class="k">"instance"</span>: { <span class="k">"opsz"</span>: <span class="n">32</span> } } } }
+<span class="c">/* Two ramps: each display step baked with its own correction,
+   re-snapped to the same 0.5px grid. Line-heights are shared. */</span>
 :root {
-  --font-size-display-2xl: round(calc(var(--font-size-2xl) * <span class="n">1.137288</span>), 0.03125rem); <span class="c">/* 24px  */</span>
-  --font-size-display-3xl: round(calc(var(--font-size-3xl) * <span class="n">1.137288</span>), 0.03125rem); <span class="c">/* 28px  */</span>
-  --font-size-display-5xl: round(calc(var(--font-size-5xl) * <span class="n">1.137288</span>), 0.03125rem); <span class="c">/* 36.5px */</span>
+  --font-size-display-2xl: round(calc(var(--font-size-2xl) * <span class="n">1.112875</span>), 0.03125rem); <span class="c">/* 23.5px · opsz 21   */</span>
+  --font-size-display-3xl: round(calc(var(--font-size-3xl) * <span class="n">1.100667</span>), 0.03125rem); <span class="c">/* 27px   · opsz 24.5 */</span>
+  --font-size-display-5xl: round(calc(var(--font-size-5xl) * <span class="n">1.074219</span>), 0.03125rem); <span class="c">/* 34.5px · opsz 32   */</span>
 }
-h1 { font-size: var(--font-size-display-5xl); }  <span class="c">/* 32   → 36.5 */</span>
-h2 { font-size: var(--font-size-display-3xl); }  <span class="c">/* 24.5 → 28   */</span>
-h3 { font-size: var(--font-size-display-2xl); }  <span class="c">/* 21   → 24   */</span>`,
+h1 { font-size: var(--font-size-display-5xl); }  <span class="c">/* 32   → 34.5 */</span>
+h2 { font-size: var(--font-size-display-3xl); }  <span class="c">/* 24.5 → 27   */</span>
+h3 { font-size: var(--font-size-display-2xl); }  <span class="c">/* 21   → 23.5 */</span>`,
     cssUnscaled: `<span class="c">/* Measured from the two files, not from a spec page:
-   Inter   xRatio 0.545898   Equinor xRatio 0.480000
-   correction = 0.545898 / 0.48 = <span class="n">1.137288</span> */</span>
+   Inter   xRatio 0.545898 @ opsz 14 … 0.515625 @ opsz 32
+   Equinor xRatio 0.480000, flat
+   The correction is taken at each heading's own px, which is
+   where Inter's opsz axis puts it. */</span>
 <span class="c">/* No scale yet, so the browser's em sizes are multiplied as
    they are. With the scale on, the corrected sizes snap to the
    same half-pixel grid as the text ramp. */</span>
-h1 { font-size: calc(2em    * <span class="n">1.137288</span>); }
-h2 { font-size: calc(1.5em  * <span class="n">1.137288</span>); }
-h3 { font-size: calc(1.17em * <span class="n">1.137288</span>); }`,
+h1 { font-size: calc(2em    * <span class="n">1.074219</span>); }  <span class="c">/* 32px    · opsz 32    */</span>
+h2 { font-size: calc(1.5em  * <span class="n">1.102702</span>); }  <span class="c">/* 24px    · opsz 24    */</span>
+h3 { font-size: calc(1.17em * <span class="n">1.121012</span>); }  <span class="c">/* 18.72px · opsz 18.72 */</span>`,
   },
   weight: {
     title: 'Equinor looks lighter than Inter at the same weight. What should it be?',
     state: 'typography-weight-matching',
     css: `<span class="c">/* Stem width at the glyph midpoint, from the outlines, at the
-   same perceived size (× 1.137288). Inter's opsz axis thins its
-   stems as the size grows; Equinor has no such axis, so the
-   match falls with size. Bolder tier, Inter 600: */</span>
+   same perceived size — each step's own x-height correction
+   applied. Inter's opsz axis thins its stems as the size grows
+   and lowers its x-height, so Equinor is set smaller at the large
+   steps and the bolder tier has to keep up. Bolder tier, Inter 600: */</span>
 <span class="k">"font-weight"</span>: { <span class="k">"Equinor"</span>: { <span class="k">"bolder"</span>: {
-  <span class="k">"xs"</span>–<span class="k">"md"</span>: <span class="n">660.0</span>,  <span class="k">"lg"</span>: <span class="n">657.8</span>,  <span class="k">"xl"</span>: <span class="n">655.2</span>,  <span class="k">"2xl"</span>: <span class="n">652.5</span>,
-  <span class="k">"3xl"</span>: <span class="n">648.8</span>, <span class="k">"4xl"</span>: <span class="n">645.1</span>, <span class="k">"5xl"</span>–<span class="k">"6xl"</span>: <span class="n">640.8</span> } } }
-h1 { font-weight: <span class="n">640.8</span>; }  <span class="c">/* 5xl · Inter 600 @ opsz 32   */</span>
-h2 { font-weight: <span class="n">648.8</span>; }  <span class="c">/* 3xl · Inter 600 @ opsz 24.5 */</span>
-h3 { font-weight: <span class="n">652.5</span>; }  <span class="c">/* 2xl · Inter 600 @ opsz 21   */</span>
-<span class="c">/* Normal tier, Inter 400: 458.5 at md, falling to 438.0 at 5xl.
-   Lighter, Inter 300: 376.2 falling to 366.3. */</span>`,
+  <span class="k">"xs"</span>–<span class="k">"md"</span>: <span class="n">660.0</span>,  <span class="k">"lg"</span>: <span class="n">662.2</span>,  <span class="k">"xl"</span>: <span class="n">664.6</span>,  <span class="k">"2xl"</span>: <span class="n">667.7</span>,
+  <span class="k">"3xl"</span>: <span class="n">671.6</span>, <span class="k">"4xl"</span>: <span class="n">675.7</span>, <span class="k">"5xl"</span>–<span class="k">"6xl"</span>: <span class="n">680.7</span> } } }
+h1 { font-weight: <span class="n">680.7</span>; }  <span class="c">/* 5xl · Inter 600 @ opsz 32   */</span>
+h2 { font-weight: <span class="n">671.6</span>; }  <span class="c">/* 3xl · Inter 600 @ opsz 24.5 */</span>
+h3 { font-weight: <span class="n">667.7</span>; }  <span class="c">/* 2xl · Inter 600 @ opsz 21   */</span>
+<span class="c">/* Normal tier, Inter 400: 458.5 at every step — the thinner stem
+   and the smaller size cancel. Lighter, Inter 300: 376.2 → 377.5. */</span>`,
     cssClamped: `<span class="c">/* Stem width at the glyph midpoint, from the outlines. The
    headings are at the browser's bold, 700. Inter 700 has a stem
    of 0.1464em; Equinor's axis stops at 700 with 0.1180em, so no

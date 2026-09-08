@@ -89,7 +89,12 @@ But it does mean the named tiers are not evenly spaced, and the fix is to
 ```
 
 Returns the target weight whose stem matches the reference at each tier, at the
-same *perceived* size. The target's curve is sampled once and inverted by
+same *perceived* size. `--correction` is the x-height correction **at the size
+being matched**: when `--opsz` pins the reference's optical size, pass the
+correction sampled at that same `opsz` (`typography-x-height-alignment`,
+`references/optical-size.md`), not the text step's — Inter's x-height falls
+5.5% between opsz 14 and 32, and the flat factor at 32px puts the bolder match
+40 weight units low. The target's curve is sampled once and inverted by
 interpolation, then corrected with one real measurement per tier — instancing a
 variable font is what costs, so the sampling dominates. Expect 20–30 seconds
 for a large variable face such as Inter (measured 2026-09-04); each extra tier

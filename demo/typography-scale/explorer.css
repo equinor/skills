@@ -1,7 +1,7 @@
 /* Scale explorer — equinor/skills, demo/typography-scale. Same tokens as the
  * typography demo: EDS palette steps (Gray and Moss Green from the palette
  * generator), the EDS spacing ladder, Inter and CommitMono from the CDN. */
-@font-face { font-family: Inter; src: url(https://cdn.eds.equinor.com/font/InterVariable.woff2) format("woff2-variations"); font-weight: 1 999; font-display: block; }
+@font-face { font-family: Inter; src: url(https://cdn.eds.equinor.com/font/InterVariable.woff2) format("woff2-variations"); font-weight: 100 900; font-display: block; }
 @font-face { font-family: CommitMono; src: url(https://cdn.eds.equinor.com/font/CommitMonoV143-VF.woff2) format("woff2-variations"); font-weight: 1 999; font-display: swap; }
 
 :root {
