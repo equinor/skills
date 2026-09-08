@@ -45,8 +45,9 @@ which pushed the control to 40 and off the grid.
 *Prevents:* approving spacing that is on the ladder but on the wrong
 relationship, or off the grid by a rounding that looked like tidying.
 
-**6. "Add a leading icon to the medium button."** → `spacing.py glyph --label
-md --icon md`: the icon is one `<svg class="icon">`, 20px of ink at
+**6. "Add a leading icon to the medium button."** → Ask CSS-only or also
+Figma/RN, as in request 1; then `spacing.py glyph --label md --icon md`: in
+CSS the icon is one `<svg class="icon">`, 20px of ink at
 comfortable, sitting in the label's 12px cap cell with `margin: −4px` on every
 side; the control's `align-items: center` does the rest. Read back the glyph's
 centre and the label's cap centre from the rendered button: they coincide.

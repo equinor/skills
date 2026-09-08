@@ -217,6 +217,7 @@ def css(baked=False, cap_ratio=CAP_RATIO):
                     c = control(s, p, s, d, cap_ratio)
                     out.append(f"  --optical-padding-{s}-{p}: {c['paddingBlock']:g}px; /* inset − (lh − round(fontSize × {cap_ratio}, 4px)) / 2 → height {c['height']:g} */")
                 out.append(f"  --icon-gap-{s}: {css_round(font_px(s, d) * GAP_RATIO, GAP_SNAP):g}px; /* round(fontSize × {GAP_RATIO}, {GAP_SNAP}px) */")
+            for s in ICON_SIZES:
                 g = glyph(s, s, d, cap_ratio)   # label step == icon step; a mixed pairing comes from `glyph`
                 out.append(f"  --glyph-margin-{s}: {g['margin']:g}px; /* (cap {g['footprint']:g} − glyph {g['glyph']}) / 2, label and icon both {s}: the icon's footprint is the label's cap cell */")
         out.append("}")
@@ -234,8 +235,10 @@ def css(baked=False, cap_ratio=CAP_RATIO):
             for p in PROPORTIONS:
                 out.append(f"  --optical-padding-{s}-{p}: calc(var(--inset-{s}-vertical-{p}) - var(--half-leading-{s}));")
             out.append(f"  --icon-gap-{s}: round(calc(var(--font-size-{s}) * {GAP_RATIO}), {GAP_SNAP}px);")
-        out.append("  /* glyph seat for a label and icon of the same step: the icon's footprint is the label's cap cell; the ink overflows it. Negative by construction. A mixed pairing comes from `spacing.py glyph`. */")
-        for s in INSET_SIZES:
+        out.append("  /* glyph seat for a label and icon of the same step, every step that has an icon size: the icon's footprint is the label's cap cell; the ink overflows it. Negative by construction. A mixed pairing comes from `spacing.py glyph`. */")
+        for s in ICON_SIZES:
+            if s not in INSET_SIZES:
+                out.append(f"  --cap-rounded-{s}: round(calc(var(--font-size-{s}) * {cap_ratio}), 4px);")
             out.append(f"  --glyph-margin-{s}: calc((var(--cap-rounded-{s}) - var(--sizing-icon-{s})) / 2);")
     out.append("}")
     return "\n".join(out) + "\n"
@@ -252,7 +255,8 @@ FIXTURE = {
     "strip": {"compact": 36, "comfortable": 52, "relaxed": 68},
     "icon_gap_md": {"compact": 8, "comfortable": 8, "relaxed": 10},
     # eds-tokens-reworked build/css/typography.css --eds-sizing-icon-md per density
-    "sizing_icon_md": {"compact": 18, "comfortable": 20, "relaxed": 24},
+    "sizing_icon": {"compact": [14, 16, 18, 20, 24, 28, 32, 37, 42, 48], "comfortable": [16, 18, 20, 24, 28, 32, 37, 42, 48, 56],
+                    "relaxed": [18, 20, 24, 28, 32, 37, 42, 48, 56, 64]},
     # the md button's leading icon: (footprint = cap, glyph, margin); eds-contracts build/button.css .icon
     "glyph_md_md": {"compact": (8, 18, -5), "comfortable": (12, 20, -4), "relaxed": (12, 24, -6)},
     "glyph_small_button_sm_xs": {"comfortable": (8, 16, -4)},
@@ -281,8 +285,8 @@ def check():
         eq(f"strip {d}", strip(control("md", "squished", "md", d)["height"], d)["height"], h)
     for d, g in FIXTURE["icon_gap_md"].items():
         eq(f"icon gap {d}", control("md", "squished", "md", d)["iconGap"], g)
-    for d, px in FIXTURE["sizing_icon_md"].items():
-        eq(f"sizing-icon md {d}", icon_px("md", d), px)
+    for d, want in FIXTURE["sizing_icon"].items():
+        eq(f"sizing-icon {d}", [icon_px(s, d) for s in ICON_SIZES], want)
     for d, want in FIXTURE["glyph_md_md"].items():
         g = glyph("md", "md", d); eq(f"glyph seat md/md {d}", (g["footprint"], g["glyph"], g["margin"]), want)
     for d, want in FIXTURE["glyph_small_button_sm_xs"].items():
@@ -293,7 +297,7 @@ def check():
         print("FAIL " + f, file=sys.stderr)
     if not fails:
         print("ok: ladder at three densities, button 24/36/44, chip 24, tooltip 20/24/36, strips 36/52/68, "
-              "icon gap, icon-only square, icon sizes 18/20/24, glyph seat -5/-4/-6, typography-scale constants")
+              "icon gap, icon-only square, icon sizes at three densities, glyph seat -5/-4/-6, typography-scale constants")
     return 1 if fails else 0
 
 

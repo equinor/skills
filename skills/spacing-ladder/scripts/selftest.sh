@@ -31,6 +31,8 @@ grep -q -- '--optical-padding-sm-squished:' "$tmp/spacing.css"      # every size
 grep -q -- '--icon-gap-md: round(' "$tmp/spacing.css"
 grep -q -- '--sizing-icon-md: 20px;' "$tmp/spacing.css"
 grep -q -- '--glyph-margin-md: calc((var(--cap-rounded-md) - var(--sizing-icon-md)) / 2);' "$tmp/spacing.css"
+grep -q -- '--glyph-margin-2xl: calc((var(--cap-rounded-2xl) - var(--sizing-icon-2xl)) / 2);' "$tmp/spacing.css"   # every icon step, not only inset sizes
+grep -q -- '--cap-rounded-2xl: round(' "$tmp/spacing.css"
 # :root must precede the [data-density] blocks: equal specificity, source order decides
 test "$(grep -E "^(:root|\[data-density=)" "$tmp/spacing.css" | head -1)" = ":root {"
 echo "  css carries the ladder per density with :root first, every size's optical padding, the icon gap and the glyph seat"

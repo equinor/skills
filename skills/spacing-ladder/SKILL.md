@@ -181,7 +181,9 @@ comes up short is the seat working, not a gap to widen.
 carries the size and the margin itself, and the flex or inline layout of the
 control does the centring. Everything a wrapper would do, the margin already
 does; a wrapper belongs to Figma, where it is mask-and-tint machinery, and has
-no counterpart in CSS.
+no counterpart in CSS. There, the wrapper *is* the cap cell: a frame
+`cap-rounded-<step>` square with the `sizing-icon` glyph centred in it. React
+Native takes the margin recipe unchanged, negative margins included.
 
 ```css
 .button .icon {
@@ -192,8 +194,9 @@ no counterpart in CSS.
 ```
 
 The emitted `--glyph-margin-<step>` pairs a label step with the icon step of
-the same name. A mixed pairing takes its seat from `spacing.py glyph` and
-writes the `calc()` out with both steps named.
+the same name, for every step that has an icon size, `xs` to `6xl`. A mixed
+pairing takes its seat from `spacing.py glyph` and writes the `calc()` out
+with both steps named.
 
 ```bash
 python3 $skill/scripts/spacing.py glyph --label md --icon md
@@ -210,11 +213,11 @@ gives the seat for any pairing.
 One rung lives below all of these, inside components themselves: the gap
 between a glyph and its label. It is derived from the label, not from the
 ladder — `round(fontSize × 0.618, 2px)`, 8px at comfortable `md` — and it
-belongs to the atom's anatomy, not to layout. It separates the glyph's cap
-cell from the label, so with the seat of §5 the visible ink-to-text distance is
-`gap + margin`, 4px at comfortable `md`; do not add the margin back. Never use
-icon-gap tokens
-between siblings, and never use the ladder rungs inside an atom. The
+belongs to the atom's anatomy, not to layout. It separates the glyph's cap cell
+from the label, so with the seat of section 5 the visible ink-to-text distance
+is `gap + margin`, 4px at comfortable `md`; do not add the margin back. Never
+use icon-gap tokens between siblings, and never use the ladder rungs inside an
+atom. The
 `icon-gap` tokens this skill emits are the ones `typography-scale` mentions
 in passing; this is where they are defined.
 

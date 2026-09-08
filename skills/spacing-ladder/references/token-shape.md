@@ -1,6 +1,6 @@
 # Token shape
 
-The DTCG output of `scripts/spacing.py tokens`, referenced from section 6 of
+The DTCG output of `scripts/spacing.py tokens`, referenced from section 7 of
 `SKILL.md`. One file per density — `spacing.compact.tokens.json`,
 `spacing.comfortable.tokens.json`, `spacing.relaxed.tokens.json` — with the
 same paths in each, so density is a mode and nothing else changes.
@@ -218,7 +218,11 @@ CSS output carries `--glyph-margin-<step>` for the label-equals-icon pairing
 only; `--glyph-margin-sm` is −5 and the small button's `sm`/`xs` seat is −4.
 The `icon-gap` is measured to the cap cell, so the visible ink-to-text distance
 is `gap + margin`.
-Relaxed `6xl` is flagged `extrapolated` like the ladder's top rung.
+Relaxed `6xl` is flagged `extrapolated` like the ladder's top rung. Upstream
+the same values live in the typography build (`sizing-icon-*` beside the type
+scale); they are emitted here, under `spacing`, because the glyph seat that
+consumes them is a spacing recipe and `typography-scale` does not emit them.
+A consumer applying both should alias one to the other rather than keep two.
 
 **Figma** gets `optical-padding` per density mode, named from the token path
 (`spacing/optical-padding/<size>-<proportion>`), bound to `paddingTop` /
