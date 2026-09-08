@@ -289,28 +289,36 @@ def letter_spacing_tokens(ref, target, ls, correction_token, display):
     fam = display or "display"
     tier = int(ls["reference"]["weight"]) if float(ls["reference"]["weight"]).is_integer() else ls["reference"]["weight"]
     inst = {"wght": ls["reference"]["weight"], **({"opsz": ls["opsz"]} if ls["opsz"] is not None else {})}
+    em = ls["letterSpacingEm"]
+    # DTCG `dimension` allows px and rem only, and this value is relative to the element's
+    # own size, so it is a plain number in em — like the port factor — with the other
+    # units a consumer needs beside it: percent for Figma, px (at --px) for React Native.
+    units = {"em": em, "percent": round(em * 100, 4)}
+    if "letterSpacingPx" in ls:
+        units["px"] = {"at": ls["px"], "targetPx": ls["targetPx"], "value": ls["letterSpacingPx"]}
     return {"typography": {"letter-spacing": {fam: {str(tier): {
-        "$type": "dimension", "$value": {"value": ls["letterSpacingEm"], "unit": "em"}, "$extensions": {
+        "$type": "number", "$value": em, "$extensions": {
             NS: {"derived": {"expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
                              "inputs": {"reference": ls["reference"], "target": ls["target"],
                                         "correction": correction_token or ls["correction"],
                                         "correctionValue": ls["correction"]}},
                  "metrics": {"reference": source(ref), "target": source(target), "glyphs": "a-z",
                              "method": "outline:advance-minus-ink", "instance": inst, "extractedAt": today()},
-                 "family": fam, "tier": tier,
-                 "note": "em of the target's own size; zero at the text step, from 2xl up it is the missing opsz axis"},
-            NS_FIGMA: {"collection": "Typography", "scopes": ["LETTER_SPACING"]}}}}}}}
+                 "family": fam, "tier": tier, "units": units,
+                 "note": "em of the target's own size: CSS letter-spacing: <value>em. Figma takes percent, React Native px"},
+            NS_FIGMA: {"collection": "Typography", "scopes": ["LETTER_SPACING"], "unit": "PERCENT", "value": units["percent"]}}}}}}}
 
 
 def tracking_tokens(ref, target, a, b, factor, display):
     fam = display or "display"
+    inst = {"wght": a["weight"], **({"opsz": a["opsz"]} if "opsz" in a else {})}
     return {"typography": {"letter-spacing-port-factor": {fam: {
         "$type": "number", "$value": factor, "$extensions": {
             NS: {"derived": {"expression": "target.sideSpaceEm / reference.sideSpaceEm",
                              "inputs": {"reference": a, "target": b}},
                  "metrics": {"reference": source(ref), "target": source(target),
                              "glyphs": "a-z", "method": "outline:advance-minus-ink",
-                             "extractedAt": today()},
+                             "instance": inst, "extractedAt": today()},
                  "family": fam}}}}}}
 
 
@@ -349,6 +357,9 @@ def main(argv):
     if a.letter_spacing:
         ref, target = a.fonts
         wa, wb = floats(a.at)
+        if "opsz" in axis_info(target)["axes"]:
+            print("warning: the target has an opsz axis of its own and was measured at its default; "
+                  "section 4 compensates a *missing* axis", file=sys.stderr)
         ls = letter_spacing(ref, target, wa, wb, a.correction, a.opsz, a.px)
         if a.format == "tokens":
             print(json.dumps(letter_spacing_tokens(ref, target, ls, a.correction_token, a.display), indent=2))
@@ -360,6 +371,8 @@ def main(argv):
         wa, wb = floats(a.at)
         sa, sb = side_space(ref, wa, a.opsz), side_space(target, wb)
         sa["weight"], sb["weight"] = wa, wb
+        if a.opsz is not None:
+            sa["opsz"] = a.opsz
         factor = round(sb["sideSpaceEm"] / sa["sideSpaceEm"], 3)
         if a.format == "tokens":
             print(json.dumps(tracking_tokens(ref, target, sa, sb, factor, a.display), indent=2))

@@ -1,6 +1,6 @@
 ---
 name: typography-weight-matching
-description: 'Use when two paired font families look mismatched in weight or spacing rather than in size — one reads heavier, or headings look loose beside body text. USE FOR: finding the weight in face B that matches face A, deriving a per-step weight and letter-spacing ramp, checking whether a weight axis is perceptually evenly spaced, compensating for a face that lacks an optical-size axis, emitting matched weights and a tracking port factor as DTCG tokens. DO NOT USE FOR: matching apparent size (use typography-x-height-alignment), building the size ramp (use typography-scale), choosing which typefaces to pair.'
+description: 'Use when two paired font families look mismatched in weight or spacing rather than in size — one reads heavier, or headings look loose beside body text. USE FOR: finding the weight in face B that matches face A, deriving a per-step weight and letter-spacing ramp, checking whether a weight axis is perceptually evenly spaced, compensating for a face that lacks an optical-size axis, emitting matched weights, a tracking port factor and a letter-spacing compensation as DTCG tokens. DO NOT USE FOR: matching apparent size (use typography-x-height-alignment), building the size ramp (use typography-scale), choosing which typefaces to pair.'
 ---
 
 # Weight matching
@@ -152,13 +152,18 @@ letterSpacing(step) = sideSpace(ref, opsz = step px, tier) / correction(step)
 ```
 
 `correction` is the x-height correction **at that opsz**, as in section 3.
-Measured for the pair here, in Equinor's em: +0.006 / +0.004 / +0.001 at
-14px for tiers 400 / 500 / 600 — nothing — and −0.0139 / −0.0141 / −0.0142
-at 32px, about −0.48px. The value is the same at every tier because it is a
-property of the missing axis, not of the weight; it crosses zero around 21px
-and only matters from `2xl` up. Emit it per step beside the matched weights.
-Section 5 then ports any tracking ramp the reference *already* has on top of
-this; the two add.
+Measured for the pair here on 2026-09-08, in Equinor's em: +0.006 / +0.004 /
++0.001 at 14px for tiers 400 / 500 / 600 — under a tenth of a pixel — and
+−0.0139 / −0.0141 / −0.0142 at 32px, about −0.48px. At the top of the axis
+the tiers agree to 0.0003em because what is being compensated is the axis,
+not the weight; at the bottom they spread by 0.005em and are all nothing. The
+crossing depends on the tier — `lg` for the bolder tier, about 21px for the
+normal one — so emit per step and per tier, and expect the text steps to come
+out at zero. The target is measured at its own default `opsz`, which is the
+point when it has no axis; the script warns when it has one. Section 5 then
+ports any tracking ramp the reference *already* has on top of this, and a
+design system's own per-style tracking adds the same way: this value is a
+compensation, never a replacement.
 
 ## 5. Port letter-spacing by side space, not one-to-one
 
@@ -180,6 +185,10 @@ Equinor  @460   advance 0.4905em   ink 0.4050em   side space 0.0855em   17.4%
 port factor = 0.0855 / 0.1042 = 0.82
 ```
 
+That is Inter at its default `opsz`, 14. Pin `--opsz` to read the reference
+at a heading size and the factor moves with it (1.13 at opsz 32, where Inter
+has tightened and Equinor has not); the token records which.
+
 So the target's tracking ramp is the reference's **scaled by 0.82**. Identical em
 tracking would eat a larger share of the target's gap and read too tight — at
 32px, −0.047em removes 45% of one face's side space and 55% of the other's.
@@ -197,7 +206,10 @@ token carries the snapped value, the measured one and the residual, and the
 pairing is checked at the snapped weight rather than assumed. The same applies
 in CSS wherever the *variable* font may not load and a static face stands in —
 a question for the project's `browserslist` and its `@font-face` fallbacks,
-not for this skill. A question that would not change the output is not asked.
+not for this skill. For the letter-spacing compensation the answer changes the
+**unit**: CSS takes the em value as is, Figma wants percent and React Native
+px, so pass `--px` with the step's size and the token carries all three. A
+question that would not change the output is not asked.
 
 Then emit the tokens, and derive everything else from them:
 
@@ -206,10 +218,14 @@ Then emit the tokens, and derive everything else from them:
   --match 300,400,500 --correction 1.137288 --format tokens --display Equinor
 .venv/bin/python $skill/scripts/stem.py REF.woff2 TARGET.woff2 \
   --tracking --at 400,458.5 --format tokens --display Equinor
+.venv/bin/python $skill/scripts/stem.py REF.woff2 TARGET.woff2 \
+  --letter-spacing --at 600,680.7 --opsz 32 --correction 1.074219 --px 32 \
+  --format tokens --display Equinor
 ```
 
-One `fontWeight` token per tier and one port-factor token, each with its
-derivation, the tier's axis location and the `sha256` of both files:
+One `fontWeight` token per tier, one port-factor token, and one
+`letter-spacing` compensation per tier and step, each with its derivation, the
+axis location it was measured at and the `sha256` of both files:
 [`references/token-shape.md`](references/token-shape.md). Pass
 `--correction-token` with the alias of the x-height token so the chain back to
 the measurement survives.
@@ -245,8 +261,8 @@ from `github.com/google/fonts`.
 ## Representative requests
 
 Acceptance criteria — the matched-weight path, the uneven-tier check, the
-refusal path when a file cannot be obtained, and auditing committed weights —
-plus a routing check:
+refusal path when a file cannot be obtained, auditing committed weights, and
+the headings that read loose at 32px — plus a routing check:
 [`references/representative-requests.md`](references/representative-requests.md).
 
 ## Positions this skill takes

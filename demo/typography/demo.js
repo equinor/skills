@@ -297,8 +297,9 @@ if (params.has('on')) {
 }
 
 // ?measure: prove the baseline claim. Applies scale, swap, x-height and
-// weight, then reports each block's first baseline modulo 4 with the grid
-// toggle off and on. On the grid means every remainder is 0.
+// weight (not tracking: letter-spacing cannot move a baseline), then reports
+// each block's first baseline modulo 4 with the grid toggle off and on. On
+// the grid means every remainder is 0.
 if (params.has('measure')) {
   document.fonts.ready.then(() => {
     const rows = [];

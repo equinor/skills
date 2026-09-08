@@ -117,7 +117,7 @@ function render() {
   $('weight-snap').innerHTML = m != null ? `snaps at <b>${fmt(m, 1)}</b> for ${FAMILY[state.ref]} ${state.tier} (${opszNote()})` : 'no measured match for this pairing';
   $('tracking-label').textContent = `Letter-spacing of ${FAMILY[t]}`;
   $('tracking-out').textContent = `${state.tracking >= 0 ? '+' : ''}${fmt(state.tracking, 4)}em`;
-  $('tracking-snap').innerHTML = tr != null ? `snaps at <b>${tr >= 0 ? '+' : ''}${fmt(tr, 4)}em</b> (${opszNote()}); ${Math.abs(tr) < 0.007 ? 'within a tenth of a pixel of nothing' : `about ${fmt(tr * state.px * corr, 2)}px at this size`}` : 'no measured value for this pairing';
+  $('tracking-snap').innerHTML = tr != null ? `snaps at <b>${tr >= 0 ? '+' : ''}${fmt(tr, 4)}em</b> (${opszNote()}); ${Math.abs(tr * state.px * corr) < 0.1 ? 'within a tenth of a pixel of nothing' : `about ${fmt(tr * state.px * corr, 2)}px at this size`}` : 'no measured value for this pairing';
 
   const instance = hasOpsz() ? `wght 400, Inter opsz ${opszKey()}` : 'wght 400';
   const rows = [
