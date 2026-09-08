@@ -147,7 +147,9 @@ straight stem in almost every Latin design.
 **`instance`** records the reference's axis location the tier was measured at.
 With `--opsz` the optical size is pinned too, which is how the per-size table
 in section 4 is produced; without it the reference's default `opsz` applies and
-the token says so by omission.
+the token says so by omission. A pinned `opsz` changes the right `correction`
+as well as the stem: the token's `correctionValue` must be the x-height
+correction sampled at that `opsz`, and a reader can check the two agree.
 
 **The port factor's inputs are both side-space records**, including the
 weights they were measured at. Section 5 insists these are the *matched*

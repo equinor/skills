@@ -83,14 +83,32 @@ September). Browser-default headings are bold, 700, and Inter 700 has a stem
 no weight on Equinor's 300–700 axis reaches, so with the scale off the weight
 toggle holds at 700 and the code panel shows the skill's warning rather than
 pretending. The scale sets headings at the bolder tier, Inter 600, and the
-match is taken per heading size with Inter's `opsz` following the size: `h1`
-5xl 640.8, `h2` 3xl 648.8, `h3` 2xl 652.5 (the full 300 / 400 / 600 table
-across the ramp is in `demo.js`; measured 5 September with
-`stem.py Inter.woff2 EquinorVariable-VF.woff2 --match 600 --opsz <px>
---correction 1.137288` per step). Holding an unreachable tier at the axis
-maximum is the demo's choice; the skill reports null. The values fall with
-size because Inter's optical axis thins its stems and Equinor has none. Deep
-links apply controls in order: `index.html?on=guides,scale,baseline,swap,xheight,weight`.
+match is taken per heading size with Inter's `opsz` following the size and
+the x-height correction taken at that same `opsz`: `h1` 5xl 680.7, `h2` 3xl
+671.6, `h3` 2xl 667.7 (the full 300 / 400 / 600 table across the ramp is in
+`demo.js`; measured 8 September with `xheight.py Inter.woff2 --location
+wght=400,opsz=<px>` for the step's correction and `stem.py Inter.woff2
+EquinorVariable-VF.woff2 --match 300,400,600 --opsz <px> --correction <that>`
+per step). Holding an unreachable tier at the axis maximum is the demo's
+choice; the skill reports null. The bolder values rise with size: Inter's
+optical axis thins its stems, but it also lowers its x-height, so Equinor is
+set smaller at the large steps and needs more weight to keep up; at the normal
+tier the two effects cancel and 458.5 holds at every step. Deep links apply
+controls in order: `index.html?on=guides,scale,baseline,swap,xheight,weight`.
+
+**The x-height correction is one number per step, not per family** (8
+September, from the bot's review of the overlay demo, #33). Inter's `opsz`
+axis lowers its x-height as the size grows: `OS/2.sxHeight` 0.545898 at opsz
+14 and 0.515625 at opsz 32, confirmed against the outlines of x v w z and
+against Chrome's `measureText` at 14 / 32 / 48px; Equinor's is flat along its
+axis. The drift is 5.5%, well past the x-height skill's 1–2% tolerance, so
+the demo takes the skill's second outcome (`references/optical-size.md`):
+each display step is baked with the correction measured at its own px —
+2xl × 1.112875 → 23.5px, 3xl × 1.100667 → 27px, 5xl × 1.074219 →
+34.5px, against 24 / 28 / 36.5 with the flat factor — and the browser-default
+headings get theirs at 32 / 24 / 18.72px. Until 7 September every heading
+used the text step's × 1.137288 and was about 6% too large by x-height
+parity.
 
 Each control's label is the request itself, in the wording of the skill's
 representative requests, for example "Align the x-height of Equinor and
@@ -106,8 +124,9 @@ anything.
   showed.
 - **No animation, and the baked branch rather than `size-adjust`** (revised
   5 September). The page is a visualisation of the solution, and the two-ramp
-  branch — display size = text size × 1.137288, re-snapped to the half-pixel
-  grid — is what EDS ships for Figma and React Native parity, so it is the
+  branch — display size = text size × the step's correction, re-snapped to
+  the half-pixel grid — is what EDS ships for Figma and React Native parity,
+  and the only branch that can carry a per-step correction at all, so it is the
   CSS that runs and the CSS the panel shows. Before the scale is applied the
   browser's em sizes are multiplied as they are, and the panel says so. The
   earlier plan, a simulated size animating into a `size-adjust` rest state,
@@ -123,8 +142,9 @@ anything.
 - **The claims are measured in the page itself.** `index.html?measure`
   applies the scale, the swap, the x-height and the weight, then prints each
   block's family, size, weight and first baseline modulo 4 with the grid
-  toggle off and on. Off: remainders 2, 2, 3, 2. On: 0.00 for the headings
-  and 3.98 for the paragraphs, a 0.02px rounding of `1ex` (5 September).
+  toggle off and on. Off: remainders 2, 1, 3, 2. On: 0.00 for `h1` and `h2`,
+  3.98 for `h3` and the paragraphs, a 0.02px rounding of `1ex` (re-run 8
+  September with the per-step display sizes 34.5 / 27 / 23.5).
 - **The code panel never claims less than is running.** When a control goes
   off, the panel falls back to the last control in the telling order that is
   still on, and to the browser-default text only when nothing is.
@@ -235,3 +255,9 @@ not a ceiling for CSS.
   padding. Reconcile before the demo inherits one of them.
 - **Spacing skill.** Baseline alignment, flow spacing and the inset patterns
   above belong to it. This demo is its fixture.
+- **Per-step corrections in the scripts** (8 September). `scale.py` takes one
+  `--correction` and cannot emit the per-step display ramp this demo runs;
+  `stem.py --opsz` pins the reference's axis but not the target's, which the
+  overlay demo's Equinor → Inter pairing needs. Both are follow-ups in their
+  skills; until then the per-step numbers here are produced by running the
+  two scripts once per step, as `demo.js` records.

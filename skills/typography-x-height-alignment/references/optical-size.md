@@ -42,6 +42,27 @@ ramp. That is a property of this pair, not of the method: at the axis floor the
 error is 2.4%, and another face can easily drift more. The number to publish is
 the bound, not the assumption that it is small.
 
+The EDS pair drifts more. Inter (reference, `opsz` 14–32, `MVAR` present)
+against Equinor (no `opsz`, x-height 0.480 at every weight), measured
+2026-09-07 at `wght` 400 from `InterVariable.woff2` sha256 `87a69aea…1359722`
+and `EquinorVariable-VF.woff2` sha256 `e04fc3f7…0603953`, and confirmed on
+the outlines of x v w z and in Chrome's `measureText`:
+
+| opsz (px) | Inter xRatio | correction | vs. flat 1.137288 |
+| --- | --- | --- | --- |
+| 14 (axis floor; 10.5 and 12 clamp here) | 0.545898 | 1.137288 | 0 |
+| 16 | 0.542480 | 1.130167 | −0.6% |
+| 18.5 | 0.538574 | 1.122029 | −1.3% |
+| 21 | 0.534180 | 1.112875 | −2.1% |
+| 24.5 | 0.528320 | 1.100667 | −3.2% |
+| 28 | 0.522461 | 1.088460 | −4.3% |
+| 32 (axis ceiling; 37 clamps here) | 0.515625 | 1.074219 | −5.5% |
+
+A flat 1.137288 sets a 32px Equinor heading 5.5% too large by x-height
+parity, and on the 0.5px grid the per-step table differs from the flat one at
+every step from `2xl` up: 23.5 / 27 / 30.5 / 34.5 / 39.5 against
+24 / 28 / 32 / 36.5 / 42. This pair takes outcome 2 below.
+
 **Tolerance.** A size difference below about 1% does not read at text sizes;
 above 2% it does. State the bound you accept, and record it.
 
