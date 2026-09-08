@@ -48,10 +48,22 @@ assert d["portFactor"] == 1.0
 print("  side space 0.104154em (19.4%) at 400; self-pair port factor 1.0")
 PY
 
-# 4. Matching a face against itself returns the tier back, and the documented token is the emitted token.
+# 3b. The opsz axis tightens side space: Inter at 500 is 0.0967em at opsz 14 and 0.0718em at opsz 32 (SKILL.md §4),
+#     so pinning the reference at 32 against the same face at its default gives the axis's own letter-spacing, −0.0249em.
+"$py" "$here/scripts/stem.py" "$F" "$F" --letter-spacing --at 500,500 --opsz 32 --correction 1 > "$tmp/ls.json"
+"$py" - "$tmp/ls.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+assert round(d["reference"]["sideSpaceEm"], 4) == 0.0718 and round(d["target"]["sideSpaceEm"], 4) == 0.0967, d
+assert round(d["letterSpacingEm"], 4) == -0.0249, d["letterSpacingEm"]
+print("  side space at 500: 0.0967em at opsz 14, 0.0718em at opsz 32; the axis alone is −0.0249em of letter-spacing")
+PY
+
+# 4. Matching a face against itself returns the tier back, and the documented tokens are the emitted tokens.
 "$py" "$here/scripts/stem.py" "$F" "$F" --match 400 --format tokens --display Inter > "$tmp/tok.json"
 "$py" "$here/scripts/stem.py" "$F" "$F" --tracking --at 400,400 --format tokens --display Inter > "$tmp/trktok.json"
-"$py" - "$here" "$tmp/tok.json" "$tmp/trktok.json" <<'PY'
+"$py" "$here/scripts/stem.py" "$F" "$F" --letter-spacing --at 400,400 --opsz 32 --correction 1 --format tokens --display Inter > "$tmp/lstok.json"
+"$py" - "$here" "$tmp/tok.json" "$tmp/trktok.json" "$tmp/lstok.json" <<'PY'
 import json, re, sys, pathlib
 here = pathlib.Path(sys.argv[1]); got = json.load(open(sys.argv[2]))
 w = got["typography"]["font-weight"]["Inter"]["400"]["$value"]
@@ -65,5 +77,7 @@ dump = lambda o: json.dumps(norm(o), sort_keys=True)
 assert dump(doc["typography"]["font-weight"]) == dump(got["typography"]["font-weight"]), "font-weight token drifted from token-shape.md"
 trk = json.load(open(sys.argv[3]))
 assert dump(doc["typography"]["letter-spacing-port-factor"]) == dump(trk["typography"]["letter-spacing-port-factor"]), "port-factor token drifted from token-shape.md"
-print(f"  self-match returns {w}; both documented tokens match the emitted ones (paths and dates normalised)")
+lst = json.load(open(sys.argv[4]))
+assert dump(doc["typography"]["letter-spacing"]) == dump(lst["typography"]["letter-spacing"]), "letter-spacing token drifted from token-shape.md"
+print(f"  self-match returns {w}; all three documented tokens match the emitted ones (paths and dates normalised)")
 PY

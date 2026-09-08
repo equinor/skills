@@ -135,6 +135,31 @@ Two things to know before trusting a single curve:
 The full closed form, and how it was verified, is in
 [`references/algorithm.md`](references/algorithm.md).
 
+**The same axis tightens the spacing**, and this half is the one a reader
+sees first: at 32px the face with the axis sits closer, letter to letter,
+than the face without it. Inter's side space at 500 falls from 0.0967em at
+opsz 14 to 0.0718em at opsz 32, 26%; Equinor's stays wherever its weight puts
+it. The compensation is a letter-spacing per step, in the **target's** em:
+
+```
+letterSpacing(step) = sideSpace(ref, opsz = step px, tier) / correction(step)
+                    − sideSpace(target, matched weight)
+```
+
+```bash
+.venv/bin/python $skill/scripts/stem.py Inter.woff2 Equinor.woff2 \
+  --letter-spacing --at 600,680.7 --opsz 32 --correction 1.074219 --px 32
+```
+
+`correction` is the x-height correction **at that opsz**, as in section 3.
+Measured for the pair here, in Equinor's em: +0.006 / +0.004 / +0.001 at
+14px for tiers 400 / 500 / 600 — nothing — and −0.0139 / −0.0141 / −0.0142
+at 32px, about −0.48px. The value is the same at every tier because it is a
+property of the missing axis, not of the weight; it crosses zero around 21px
+and only matters from `2xl` up. Emit it per step beside the matched weights.
+Section 5 then ports any tracking ramp the reference *already* has on top of
+this; the two add.
+
 ## 5. Port letter-spacing by side space, not one-to-one
 
 Tracking removes an absolute amount per character, but how it *reads* depends on

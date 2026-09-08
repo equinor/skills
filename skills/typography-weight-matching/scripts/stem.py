@@ -6,6 +6,7 @@ Usage:
   python stem.py FONT.ttf --weights 300,400,500      # one face, several weights
   python stem.py REFERENCE.ttf TARGET.ttf --match 300,400,500 --correction 1.137288
   python stem.py REFERENCE.ttf TARGET.ttf --tracking --at 400,460
+  python stem.py REF.woff2 TARGET.woff2 --letter-spacing --at 600,680.7 --opsz 32 --correction 1.074219 --px 32
   python stem.py REF.ttf TARGET.ttf --match 400 --format tokens --display Equinor
 
 `--format tokens` emits DTCG tokens with the derivation attached; `json` (the
@@ -130,13 +131,15 @@ def axis_info(path):
                      for a in font["fvar"].axes}}
 
 
-def side_space(path, weight=400):
+def side_space(path, weight=400, opsz=None):
     """Mean side space as a fraction of advance, over lowercase a-z.
 
     What letter-spacing eats into. Two faces with different side space respond
-    differently to the same em tracking.
+    differently to the same em tracking. An opsz axis tightens it as the size
+    grows (Inter at 500: 0.0967em at opsz 14, 0.0718em at opsz 32), so pin opsz
+    when the size matters.
     """
-    font = at(path, {"wght": weight})
+    font = at(path, {"wght": weight, **({"opsz": opsz} if opsz is not None else {})})
     upm, glyphs, cmap = font["head"].unitsPerEm, font.getGlyphSet(), font.getBestCmap()
     hmtx = font["hmtx"]
     adv = ink = 0
@@ -261,6 +264,44 @@ def weight_tokens(ref, target, matches, correction, correction_token, display, o
     return {"typography": {"font-weight": {fam: out}}}
 
 
+def letter_spacing(ref, target, w_ref, w_target, correction, opsz=None, px=None):
+    """Letter-spacing the target needs, in its own em, to leave the same gap between
+    letters as the reference at the same perceived size.
+
+    The reference's side space is read at the opsz the browser gives it at that
+    size; the target's at its matched weight; the correction is the x-height
+    correction at that same opsz. Positive means the target is tighter than the
+    reference and gets air; negative means it is looser and gets tracked in."""
+    sa, sb = side_space(ref, w_ref, opsz), side_space(target, w_target)
+    sa["weight"], sb["weight"] = w_ref, w_target
+    if opsz is not None:
+        sa["opsz"] = opsz
+    em = round(sa["sideSpaceEm"] / correction - sb["sideSpaceEm"], 6)
+    out = {"reference": sa, "target": sb, "correction": correction, "opsz": opsz, "letterSpacingEm": em}
+    if px is not None:
+        out["px"] = px
+        out["targetPx"] = round(px * correction, 4)
+        out["letterSpacingPx"] = round(px * correction * em, 4)
+    return out
+
+
+def letter_spacing_tokens(ref, target, ls, correction_token, display):
+    fam = display or "display"
+    tier = int(ls["reference"]["weight"]) if float(ls["reference"]["weight"]).is_integer() else ls["reference"]["weight"]
+    inst = {"wght": ls["reference"]["weight"], **({"opsz": ls["opsz"]} if ls["opsz"] is not None else {})}
+    return {"typography": {"letter-spacing": {fam: {str(tier): {
+        "$type": "dimension", "$value": {"value": ls["letterSpacingEm"], "unit": "em"}, "$extensions": {
+            NS: {"derived": {"expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                             "inputs": {"reference": ls["reference"], "target": ls["target"],
+                                        "correction": correction_token or ls["correction"],
+                                        "correctionValue": ls["correction"]}},
+                 "metrics": {"reference": source(ref), "target": source(target), "glyphs": "a-z",
+                             "method": "outline:advance-minus-ink", "instance": inst, "extractedAt": today()},
+                 "family": fam, "tier": tier,
+                 "note": "em of the target's own size; zero at the text step, from 2xl up it is the missing opsz axis"},
+            NS_FIGMA: {"collection": "Typography", "scopes": ["LETTER_SPACING"]}}}}}}}
+
+
 def tracking_tokens(ref, target, a, b, factor, display):
     fam = display or "display"
     return {"typography": {"letter-spacing-port-factor": {fam: {
@@ -284,28 +325,40 @@ def parse_args(argv):
     p.add_argument("--correction", type=float, default=1.0, metavar="FACTOR",
                    help="x-height correction applied to the target (typography-x-height-alignment)")
     p.add_argument("--correction-token", metavar="ALIAS", help="DTCG alias of the correction token")
-    p.add_argument("--opsz", type=float, metavar="PX", help="pin the reference's optical size when matching")
+    p.add_argument("--opsz", type=float, metavar="PX", help="pin the reference's optical size when matching or spacing")
     p.add_argument("--tracking", action="store_true", help="side space of both faces and the port factor")
-    p.add_argument("--at", default="400,400", metavar="WREF,WTARGET", help="weights for --tracking (matched!)")
+    p.add_argument("--letter-spacing", action="store_true",
+                   help="letter-spacing the target needs (its em) to match the reference's gaps at --opsz")
+    p.add_argument("--at", default="400,400", metavar="WREF,WTARGET", help="weights for --tracking / --letter-spacing (matched!)")
+    p.add_argument("--px", type=float, metavar="PX", help="with --letter-spacing: also report the value in px at this reference size")
     p.add_argument("--format", choices=["json", "tokens"], default="json")
     p.add_argument("--display", metavar="FAMILY", help="name of the target family, for token paths")
     p.add_argument("--snap", type=int, metavar="N",
                    help="round matched weights to a multiple of N and record the residual (React Native: 100)")
     a = p.parse_args(argv)
-    if (a.match or a.tracking) and len(a.fonts) != 2:
-        p.error("--match and --tracking need REFERENCE and TARGET")
-    if a.format == "tokens" and not (a.match or a.tracking):
-        p.error("--format tokens applies to --match or --tracking; a single-face measurement is not a token")
+    if (a.match or a.tracking or a.letter_spacing) and len(a.fonts) != 2:
+        p.error("--match, --tracking and --letter-spacing need REFERENCE and TARGET")
+    if a.format == "tokens" and not (a.match or a.tracking or a.letter_spacing):
+        p.error("--format tokens applies to --match, --tracking or --letter-spacing; a single-face measurement is not a token")
     return a, p
 
 
 def main(argv):
     a, p = parse_args(argv)
     floats = lambda t: [float(x) for x in t.split(",")]
-    if a.tracking:
+    if a.letter_spacing:
         ref, target = a.fonts
         wa, wb = floats(a.at)
-        sa, sb = side_space(ref, wa), side_space(target, wb)
+        ls = letter_spacing(ref, target, wa, wb, a.correction, a.opsz, a.px)
+        if a.format == "tokens":
+            print(json.dumps(letter_spacing_tokens(ref, target, ls, a.correction_token, a.display), indent=2))
+        else:
+            print(json.dumps({"reference": {**source(ref), **ls["reference"]}, "target": {**source(target), **ls["target"]},
+                              **{k: v for k, v in ls.items() if k not in ("reference", "target")}}, indent=2))
+    elif a.tracking:
+        ref, target = a.fonts
+        wa, wb = floats(a.at)
+        sa, sb = side_space(ref, wa, a.opsz), side_space(target, wb)
         sa["weight"], sb["weight"] = wa, wb
         factor = round(sb["sideSpaceEm"] / sa["sideSpaceEm"], 3)
         if a.format == "tokens":
