@@ -121,6 +121,12 @@ body { margin: 0; font-family: Inter, system-ui, sans-serif; }
 .surface[data-swap="on"][data-weight="on"] h1 { font-weight: var(--_h1-matched, var(--_h-weight, 700)); }
 .surface[data-swap="on"][data-weight="on"] h2 { font-weight: var(--_h2-matched, var(--_h-weight, 700)); }
 .surface[data-swap="on"][data-weight="on"] h3 { font-weight: var(--_h3-matched, var(--_h-weight, 700)); }
+/* 3b. letter-spacing: Inter's opsz axis tightens its spacing as the size grows and
+      Equinor has none, so each heading gets the measured difference, in its own em;
+      set per heading by demo.js */
+.surface[data-swap="on"][data-tracking="on"] h1 { letter-spacing: calc(var(--_h1-tracking, 0) * 1em); }
+.surface[data-swap="on"][data-tracking="on"] h2 { letter-spacing: calc(var(--_h2-tracking, 0) * 1em); }
+.surface[data-swap="on"][data-tracking="on"] h3 { letter-spacing: calc(var(--_h3-tracking, 0) * 1em); }
 /* 4. the scale: sizes from the steps, line-heights from the curve, EDS heading weight */
 .surface[data-scale="on"] { line-height: var(--line-height-lg); }
 .surface[data-scale="on"] p { font-size: var(--font-size-lg); line-height: var(--line-height-lg); }

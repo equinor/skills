@@ -68,7 +68,7 @@ h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-xl); line-height: v
   mix-blend-mode: multiply;
 }
 .face--ref { position: relative; color: var(--color-ref); font-family: var(--_ref-family, Inter), Inter, sans-serif; }
-.face--target { position: absolute; left: 0; bottom: 0; color: var(--color-target); font-family: var(--_target-family, Equinor); font-size: calc(1em * var(--_scale, 1)); font-weight: var(--_target-weight, 400); }
+.face--target { position: absolute; left: 0; bottom: 0; color: var(--color-target); font-family: var(--_target-family, Equinor); font-size: calc(1em * var(--_scale, 1)); font-weight: var(--_target-weight, 400); letter-spacing: calc(var(--_target-tracking, 0) * 1em); }
 .guide { position: absolute; left: -2em; right: -2em; height: 0; border-top: 1px dashed; pointer-events: none; opacity: 0.9; }
 .guide--baseline { bottom: 0; border-color: var(--color-text-subtle); }
 .guide--xref { bottom: var(--_x-ref, 0); border-color: color-mix(in oklch, var(--color-ref), black 40%); }   /* the pale face colour, darkened so a 1px line reads */

@@ -8,8 +8,9 @@ other in deep red (`#7D0023`, both Victor's, 8 September, and confirmed by him
 after the review measured the reference at 1.75:1 on white — the one-face
 toggle is the mitigation), so that the
 overlap reads dark and both stay legible (`mix-blend-mode: multiply` on white).
-Two sliders bring the second face to the first: size until the x-heights meet,
-weight until the stems do. The snap points are the skills' numbers.
+Three sliders bring the second face to the first: size until the x-heights
+meet, weight until the stems do, letter-spacing until the gaps between letters
+do. The snap points are the skills' numbers.
 
 ## Decisions
 
@@ -94,6 +95,22 @@ weight until the stems do. The snap points are the skills' numbers.
   a keyboard trap at the exact state the deep links land on. The slider keeps
   its raw position; the applied size and weight snap; four arrow steps walk
   through the band and out.
+- **A third slider for letter-spacing** (8 September, Victor: "right now,
+  when looking at the 32px version, Inter has tighter letter-spacing compared
+  to Equinor"). Measured, he was right: Inter's `opsz` axis cuts its side
+  space (advance − ink, mean over a–z) from 0.0967em at opsz 14 to 0.0718em at
+  opsz 32 at weight 500, and Equinor has no axis, so at 32px Equinor reads
+  about 20% looser at the matched weight and perceived size. The slider snaps
+  at `sideSpace(ref @ opsz) / correction − sideSpace(Equinor @ matched)`, in
+  Equinor's em: for Inter +0.0061 / +0.0038 / +0.0013em at 14px (nothing) and
+  −0.0139 / −0.0141 / −0.0142em at 32px, about −0.48px — the same at every
+  tier, because it is the axis, not the weight; for Barlow +0.0193 / +0.0113 /
+  +0.0051em at any size, Barlow being the looser face. Commands:
+  `stem.py Inter.woff2 Equinor.woff2 --letter-spacing --at 600,680.7 --opsz 32
+  --correction 1.074219 --px 32` and the same per tier and size;
+  `stem.py Barlow-Medium.ttf Equinor.woff2 --letter-spacing --at 500,531.7
+  --correction 1.054167`. Applied as `letter-spacing: calc(<em> * 1em)` on the
+  adjusted face only. Deep link `&tracking=snap`.
 - **One face at a time** (8 September, Victor). The two key entries above
   the overlay are checkboxes; unticking one hides that face and its x-height
   guide with `visibility: hidden`, so the hidden face keeps its box — the
