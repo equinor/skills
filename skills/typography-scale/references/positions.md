@@ -223,3 +223,17 @@ deliberately between: accepting the unevenness; dropping the correction, since a
 well-matched pair may be better served by none than by an uneven one; or giving
 the display ramp a finer grid, at the cost of leaving the shared half-pixel one.
 Do not let rounding make that choice silently.
+
+## 8. One correction per ramp is a limit of the script, not of the method
+
+`scale.py --correction` takes a single factor and writes it into every display
+step. That is exact only when the reference face's x-height does not move
+along the ramp. Inter's does: its `opsz` axis lowers `sxHeight` from 0.545898
+at opsz 14 to 0.515625 at opsz 32, so the correction against Equinor falls
+from 1.137288 to 1.074219 and a flat factor sets a 32px heading 5.9% too large
+(measured 2026-09-07; the table is in
+`typography-x-height-alignment/references/optical-size.md`). Outcome 2 there
+asks for a correction per step. Until `scale.py` accepts one — a per-step
+`--correction` map, or the per-step token group as input — bake the display
+ramp by running the derivation once per step, and say so in the tokens'
+`derived.inputs`, as `demo/typography/` does.

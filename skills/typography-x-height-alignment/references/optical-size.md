@@ -44,8 +44,10 @@ the bound, not the assumption that it is small.
 
 The EDS pair drifts more. Inter (reference, `opsz` 14–32, `MVAR` present)
 against Equinor (no `opsz`, x-height 0.480 at every weight), measured
-2026-09-07 at `wght` 400 from `InterVariable.woff2` sha256 `87a69aea…1359722`
-and `EquinorVariable-VF.woff2` sha256 `e04fc3f7…0603953`, and confirmed on
+2026-09-07 at `wght` 400 from this skill's neighbour's bundled copy of Inter,
+`typography-weight-matching/assets/fonts/Inter.woff2` sha256 `87a69aea…1359722`
+(the EDS CDN's `InterVariable.woff2`), and `EquinorVariable-VF.woff2` sha256
+`e04fc3f7…0603953`, and confirmed on
 the outlines of x v w z and in Chrome's `measureText`:
 
 | opsz (px) | Inter xRatio | correction | vs. flat 1.137288 |
@@ -58,10 +60,12 @@ the outlines of x v w z and in Chrome's `measureText`:
 | 28 | 0.522461 | 1.088460 | −4.3% |
 | 32 (axis ceiling; 37 clamps here) | 0.515625 | 1.074219 | −5.5% |
 
-A flat 1.137288 sets a 32px Equinor heading 5.5% too large by x-height
-parity, and on the 0.5px grid the per-step table differs from the flat one at
-every step from `2xl` up: 23.5 / 27 / 30.5 / 34.5 / 39.5 against
-24 / 28 / 32 / 36.5 / 42. This pair takes outcome 2 below.
+A flat 1.137288 sets a 32px Equinor heading 5.9% too large by x-height
+parity (36.393 / 34.375), and on the 0.5px grid the per-step table differs
+from the flat one at every step from `2xl` up: 23.5 / 27 / 30.5 / 34.5 / 39.5
+against 24 / 28 / 32 / 36.5 / 42. At `xl` the two land 0.28px apart and still
+snap to the same 21px — the test is whether the *snapped* values differ, not
+whether the raw gap clears half a unit. This pair takes outcome 2 below.
 
 **Tolerance.** A size difference below about 1% does not read at text sizes;
 above 2% it does. State the bound you accept, and record it.
@@ -88,16 +92,48 @@ above 2% it does. State the bound you accept, and record it.
    }
    ```
 
+   `sampledAt` lists every step's px, clamped ends included; `range` is the
+   lowest and highest correction found; `max` is `high / low − 1`. A build
+   can recompute all three from the fonts and fail on disagreement.
+
 2. **Drift exceeds tolerance, non-CSS target in play** — you are already in the
    two-ramp branch of `typography-scale`, baking a corrected size per step. Bake
-   each step with *its own* correction, sampled at that step's `opsz` — but
-   only where the difference clears half the snap unit at that step. On the
-   0.5px grid that is 0.25px: about 1.6% at 16px and 0.7% at 37px. Below it
-   the snap erases the per-step value, and for the pair above the per-step
-   table comes out identical to the flat one at every step (10.5, 16.0, 37.5
-   either way). Check this before building the table, or you will diff two
-   identical files and not know whether the method or the arithmetic failed.
-   `typography-scale` records the same limit among its positions.
+   each step with *its own* correction, sampled at that step's `opsz`, and
+   keep only the steps whose *snapped* display size differs from the flat
+   one. On the 0.5px grid a difference under 0.25px never survives, and one
+   over it may still not (Inter/Equinor `xl` above). Below it the snap erases
+   the per-step value, and for the Literata pair above the per-step table
+   comes out identical to the flat one at every step (10.5, 16.0, 37.5 either
+   way). Check this before building the table, or you will diff two identical
+   files and not know whether the method or the arithmetic failed.
+   `typography-scale` records the snap limit among its positions.
+
+   The token is then a **group, one correction per step**, in place of the
+   single `display` token: the flat value has no step it is true for. Each
+   entry carries the same `derived` and `metrics` as the flat token, with
+   `metrics.instance.opsz` set to the step's px, and the group carries the
+   `drift` block. `typography-weight-matching` names the step's token in
+   `--correction-token`, so its `correctionValue` and this `$value` agree.
+
+   ```json
+   "x-height-correction": { "display": {
+     "$extensions": { "com.equinor.typography": { "drift": {
+       "axis": "opsz", "sampledAt": [10.5, 12, 14, 16, 18.5, 21, 24.5, 28, 32, 37],
+       "range": [1.074219, 1.137288], "max": 0.0587 } } },
+     "2xl": { "$type": "number", "$value": 1.112875, "$extensions": { "com.equinor.typography": {
+       "derived": { "expression": "referenceXRatio / selfXRatio",
+                    "inputs": { "referenceXRatio": 0.534180, "selfXRatio": 0.48 } },
+       "metrics": { "…": "as in token-shape.md", "instance": { "opsz": 21, "wght": 400 } } } } },
+     "5xl": { "$type": "number", "$value": 1.074219, "$extensions": { "com.equinor.typography": {
+       "derived": { "…": "referenceXRatio 0.515625" },
+       "metrics": { "…": "instance opsz 32, wght 400" } } } }
+   } }
+   ```
+
+   `xheight.py` emits the flat token today and the per-step group is built by
+   running it once per step; `scale.py` takes one `--correction`, so the
+   display ramp is baked per step by hand until both grow the option.
+   `typography-scale` records that limit among its positions.
 
 3. **Drift exceeds tolerance, CSS only** — `size-adjust` is one number per
    `@font-face`, and `@font-face` has no size-range descriptor, so the flat

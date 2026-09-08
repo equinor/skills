@@ -264,4 +264,7 @@ not a ceiling for CSS.
   The token rework in `equinor/ids-meetup-oslo-26` still bakes the flat
   factor into its header sizes and its weight table; the measurement and the
   deferral are recorded in its `DECISIONS.md` (8 September) and the
-  regeneration is planned in its issue #48, after the talk.
+  regeneration is planned in its issue #48, after the talk. The trigger to
+  redo all of it is not a date but "Inter changed": the per-step ramp rests
+  on the CDN's `InterVariable.woff2` keeping its `opsz` masters at 14 and 32
+  with `sxHeight` 1118 → 1056, pinned by the checksum in the skill's table.

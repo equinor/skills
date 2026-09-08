@@ -27,7 +27,7 @@ const needs = { baseline: ['scale'] };
 // typography-weight-matching, Inter → Equinor at the same perceived size, with
 // Inter's opsz following the heading's px size and the x-height correction taken
 // at that same opsz (Inter's x-height drifts with the axis; see INTENT §3).
-// Measured 2026-09-08 with, per step:
+// x-heights sampled 2026-09-07, stems 2026-09-08, with, per step:
 //   xheight.py Inter.woff2 --location wght=400,opsz=<px>          → correction = xRatio / 0.48
 //   stem.py Inter.woff2 EquinorVariable-VF.woff2 --match 300,400,600 --opsz <px> --correction <that>
 // Bolder tier, Inter 600: h1 5xl 32px, h2 3xl 24.5px, h3 2xl 21px.
@@ -114,7 +114,7 @@ h3 { font-size: var(--font-size-2xl); line-height: var(--line-height-2xl); font-
 @font-face {
   font-family: Equinor;
   src: url(…/EquinorVariable-VF.woff2) format("woff2-variations");
-  font-weight: 1 999;
+  font-weight: 300 700;   <span class="c">/* the file's wght axis */</span>
 }
 h1, h2, h3 { font-family: Equinor; }`,
   },
@@ -126,17 +126,19 @@ h1, h2, h3 { font-family: Equinor; }`,
    Inter   xRatio 0.545898 @ opsz 14 … 0.515625 @ opsz 32  (wght 400)
    Equinor xRatio 0.480000, flat along its axis
    correction at the text step = 0.545898 / 0.48 = <span class="n">1.137288</span> */</span>
+<span class="c">/* 5.9% clears the tolerance: one correction per step, not one per
+   family (x-height-alignment, optical-size.md, outcome 2) */</span>
 <span class="k">"x-height-correction"</span>: { <span class="k">"display"</span>: {
-  <span class="k">"$type"</span>: "number", <span class="k">"$value"</span>: <span class="n">1.137288</span>,
-  <span class="k">"$extensions"</span>: { <span class="k">"com.equinor.typography"</span>: {
-    <span class="k">"derived"</span>: { <span class="k">"expression"</span>: "referenceXRatio / selfXRatio",
-                 <span class="k">"inputs"</span>: { <span class="k">"referenceXRatio"</span>: <span class="n">0.545898</span>, <span class="k">"selfXRatio"</span>: <span class="n">0.48</span> } },
-    <span class="k">"metrics"</span>: { <span class="k">"instance"</span>: { <span class="k">"opsz"</span>: <span class="n">14</span>, <span class="k">"wght"</span>: <span class="n">400</span> } },
-    <span class="k">"drift"</span>: { <span class="k">"axis"</span>: "opsz", <span class="k">"sampledAt"</span>: [14, 16, 18.5, 21, 24.5, 28, 32],
-               <span class="k">"range"</span>: [<span class="n">1.074219</span>, <span class="n">1.137288</span>], <span class="k">"max"</span>: <span class="n">0.0555</span> } } } } }
-<span class="c">/* 5.5% clears the tolerance, so: two ramps, and each display step
-   is baked with the correction measured at its own px, re-snapped
-   to the same 0.5px grid. Line-heights are shared. */</span>
+  <span class="k">"$extensions"</span>: { <span class="k">"com.equinor.typography"</span>: { <span class="k">"drift"</span>: { <span class="k">"axis"</span>: "opsz",
+    <span class="k">"sampledAt"</span>: [10.5, 12, 14, 16, 18.5, 21, 24.5, 28, 32, 37],
+    <span class="k">"range"</span>: [<span class="n">1.074219</span>, <span class="n">1.137288</span>], <span class="k">"max"</span>: <span class="n">0.0587</span> } } },
+  <span class="k">"2xl"</span>: { <span class="k">"$type"</span>: "number", <span class="k">"$value"</span>: <span class="n">1.112875</span>, <span class="k">"$extensions"</span>: { <span class="k">"com.equinor.typography"</span>: {
+    <span class="k">"derived"</span>: { <span class="k">"expression"</span>: "referenceXRatio / selfXRatio", <span class="k">"inputs"</span>: { <span class="k">"referenceXRatio"</span>: <span class="n">0.534180</span>, <span class="k">"selfXRatio"</span>: <span class="n">0.48</span> } },
+    <span class="k">"metrics"</span>: { <span class="k">"instance"</span>: { <span class="k">"opsz"</span>: <span class="n">21</span>, <span class="k">"wght"</span>: <span class="n">400</span> } } } } },
+  <span class="k">"3xl"</span>: { <span class="k">"$value"</span>: <span class="n">1.100667</span>, … <span class="k">"instance"</span>: { <span class="k">"opsz"</span>: <span class="n">24.5</span> } },
+  <span class="k">"5xl"</span>: { <span class="k">"$value"</span>: <span class="n">1.074219</span>, … <span class="k">"instance"</span>: { <span class="k">"opsz"</span>: <span class="n">32</span> } } } }
+<span class="c">/* Two ramps: each display step baked with its own correction,
+   re-snapped to the same 0.5px grid. Line-heights are shared. */</span>
 :root {
   --font-size-display-2xl: round(calc(var(--font-size-2xl) * <span class="n">1.112875</span>), 0.03125rem); <span class="c">/* 23.5px · opsz 21   */</span>
   --font-size-display-3xl: round(calc(var(--font-size-3xl) * <span class="n">1.100667</span>), 0.03125rem); <span class="c">/* 27px   · opsz 24.5 */</span>

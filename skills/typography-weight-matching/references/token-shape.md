@@ -148,8 +148,12 @@ straight stem in almost every Latin design.
 With `--opsz` the optical size is pinned too, which is how the per-size table
 in section 4 is produced; without it the reference's default `opsz` applies and
 the token says so by omission. A pinned `opsz` changes the right `correction`
-as well as the stem: the token's `correctionValue` must be the x-height
-correction sampled at that `opsz`, and a reader can check the two agree.
+as well as the stem: `correctionValue` must be the x-height correction sampled
+at that `opsz`, and `--correction-token` must then name the *per-step* token
+from `typography-x-height-alignment`'s outcome 2 (`x-height-correction.display.5xl`),
+not the flat one — the alias and the value agree only when both are the
+step's. With no per-step token in the project, pass the bare factor and let
+`instance.opsz` record where it holds.
 
 **The port factor's inputs are both side-space records**, including the
 weights they were measured at. Section 5 insists these are the *matched*

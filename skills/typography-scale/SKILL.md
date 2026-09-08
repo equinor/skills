@@ -163,7 +163,10 @@ Four rules make this work:
 
 - **Correct the font size only.** Apply the factor to each step and re-snap to
   the same grid (`round(step × correction, 0.5px)`), so the corrected ramp lands
-  on the same half-pixel grid as the reference.
+  on the same half-pixel grid as the reference. When the reference carries an
+  `opsz` axis the factor is per step, not per family — Inter's x-height falls
+  5.5% from opsz 14 to 32 — so sample it at each step first:
+  `typography-x-height-alignment/references/optical-size.md`.
 - **Share the line-heights.** Both families use the reference ramp's
   line-heights at the same step. The whole point of x-height alignment is that
   the faces look the same size at that step — so they get the same line box, and
@@ -174,13 +177,12 @@ Four rules make this work:
   smallest step it is erased there: `× 1.019345` lands as 0.00% at `xs`/`sm` but
   +3.57% at `md`. Figures in [`references/positions.md`](references/positions.md).
 
-`scripts/scale.py --correction 1.137288 --display Equinor` emits this branch.
-Two numbers under one step label is the correct outcome: `display-md = 16`
-beside `text-md = 14` means *the same perceived size*, reached from different
-nominal values. A designer and a developer both see 16 for a display step, with
-no hidden multiplier anywhere. The cost is that off-scale sizes get no
-correction — acceptable, since they are already outside the system, and
-lintable.
+`scripts/scale.py --correction 1.137288 --display Equinor` emits this branch
+with one factor (positions §8 for the per-step limit). Two numbers under one
+step label is the correct outcome: `display-md = 16` beside `text-md = 14`
+means *the same perceived size*, reached from different nominal values. Both
+designer and developer see 16 for a display step, with no hidden multiplier.
+Off-scale sizes get no correction — acceptable, they are outside the system.
 
 ## 5. Emit: tokens first, then CSS and Figma
 
