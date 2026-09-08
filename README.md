@@ -16,6 +16,7 @@ Available now:
 - **[spacing-ladder](skills/spacing-ladder)** – one spacing sequence read by relationship, inset proportions, and optical padding that lets a control's height emerge instead of being typed
 - **[colour-fill-tiers](skills/colour-fill-tiers)** – which fill rung an element gets: emphasis, muted or ghost for things you can press, canvas or surface for things you cannot
 - **[design-system-adr](skills/design-system-adr)** – write, check, supersede and index Architecture Decision Records in the EDS team's MADR-based format
+- **[css-authoring](skills/css-authoring)** – hand-authored component CSS the EDS way: channel variables, `data-*` variants, modern selectors, browser support verified rather than recalled
 
 Planned areas:
 
