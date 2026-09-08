@@ -32,6 +32,14 @@ Open `index.html` over HTTP (the fonts load from the EDS CDN), or append
 `?on=guides,scale,baseline,swap,xheight,weight` to arrive with everything on.
 `INTENT.md` alongside records why it is built the way it is.
 
+[`demo/typography-scale/`](demo/typography-scale/) is its companion explorer:
+one step at a time through the size formula, both line-height curves, the
+three densities and the 4px snap.
+
+[`demo/typography-overlay/`](demo/typography-overlay/) overlays one sentence in
+two faces on a shared baseline, with sliders that snap to the skills' x-height
+and weight numbers.
+
 ## Browser support
 
 The CSS in these skills targets modern, evergreen browsers. Features are

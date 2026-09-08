@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two typefaces on one baseline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&display=block">
+<link rel="stylesheet" href="overlay.css">
+</head>
+<body>
+<main class="stage">
+  <header class="head">
+    <h1>Two typefaces on one baseline</h1>
+    <p class="hint">The same sentence twice, overlaid. The reference face stays put, in grey. The other face is the one you adjust, in red; where they overlap it goes dark. Drag its size until the x-heights meet, then its weight until the stems do. The snap points are the skills' numbers.</p>
+  </header>
+
+  <section class="controls">
+    <fieldset class="control">
+      <legend class="control__label">Pairing <small>(grey stays put, red is adjusted)</small></legend>
+      <label><input type="radio" name="ref" value="inter" checked> <span><b>Adjust Equinor to match Inter</b> <small>Inter is the EDS text face and the reference</small></span></label>
+      <label><input type="radio" name="ref" value="barlow"> <span><b>Adjust Equinor to match Barlow</b> <small>the font named in the source of APCA's size/weight lookup table</small></span></label>
+    </fieldset>
+    <fieldset class="control">
+      <legend class="control__label">Rendered size <small>(what Inter's opsz axis sees)</small></legend>
+      <label><input type="radio" name="px" value="14" checked> <span><b>14px</b> <small>a button label</small></span></label>
+      <label><input type="radio" name="px" value="32"> <span><b>32px</b> <small>a heading</small></span></label>
+      <label><input type="radio" name="px" value="48"> <span><b>48px</b> <small>display; Inter's axis is clamped at 32</small></span></label>
+    </fieldset>
+    <fieldset class="control">
+      <legend class="control__label">Weight of the reference face <small>(what the red face is matched to)</small></legend>
+      <label><input type="radio" name="tier" value="400" checked> <span><b>400</b> <small>normal</small></span></label>
+      <label><input type="radio" name="tier" value="500"> <span><b>500</b> <small>medium · the button label</small></span></label>
+      <label><input type="radio" name="tier" value="600"> <span><b>600</b> <small>semibold</small></span></label>
+    </fieldset>
+  </section>
+
+  <section class="surface overlay" id="overlay" data-guides="on" data-show-ref="on" data-show-target="on">
+    <p class="key">
+      <label class="key__ref"><input type="checkbox" id="show-ref" checked> <span id="key-ref">Inter — reference, stays put</span></label>
+      <label class="key__target"><input type="checkbox" id="show-target" checked> <span id="key-target">Equinor — adjusted by the sliders</span></label>
+      <small>untick one to see the other alone</small>
+    </p>
+    <div class="pair" id="pair">
+      <span class="face face--ref" id="ref">sphinx of black quartz judge my vow</span>
+      <span class="face face--target" id="target">sphinx of black quartz judge my vow</span>
+      <i class="guide guide--baseline" aria-hidden="true"></i>
+      <i class="guide guide--xref" id="xref" aria-hidden="true"></i>
+      <i class="guide guide--xtarget" id="xtarget" aria-hidden="true"></i>
+    </div>
+    <p class="overlay__note" id="scale-note"></p>
+  </section>
+
+  <section class="sliders">
+    <label class="slider">
+      <span class="slider__label"><b id="size-label">Size of Equinor</b> <output id="size-out"></output></span>
+      <input type="range" id="size" min="0.85" max="1.25" step="0.001" value="1">
+      <span class="slider__snap" id="size-snap"></span>
+    </label>
+    <label class="slider">
+      <span class="slider__label"><b id="weight-label">Weight of Equinor</b> <output id="weight-out"></output></span>
+      <input type="range" id="weight" min="300" max="700" step="0.1" value="400">
+      <span class="slider__snap" id="weight-snap"></span>
+    </label>
+    <label class="check"><input type="checkbox" id="guides" checked> <span>Show baseline and x-height guides</span></label>
+  </section>
+
+  <section class="surface readout">
+    <h2>What the sliders snap to</h2>
+    <dl id="readout"></dl>
+  </section>
+
+  <footer class="foot">
+    <p>Numbers from <code>typography-x-height-alignment</code> and <code>typography-weight-matching</code>, measured from the font files on 2026-09-06. Do the same in your project:</p>
+    <pre><code>npx skills add equinor/skills --skill typography-x-height-alignment</code></pre>
+    <p><a href="https://github.com/equinor/skills">github.com/equinor/skills</a></p>
+  </footer>
+</main>
+<script src="overlay.js"></script>
+</body>
+</html>
