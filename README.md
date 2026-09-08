@@ -15,13 +15,14 @@ Available now:
 - **[typography-weight-matching](skills/typography-weight-matching)** – match weight and letter-spacing across a font pair, and compensate for a face with no optical-size axis
 - **[spacing-ladder](skills/spacing-ladder)** – one spacing sequence read by relationship, inset proportions, and optical padding that lets a control's height emerge instead of being typed
 - **[colour-fill-tiers](skills/colour-fill-tiers)** – which fill rung an element gets: emphasis, muted or ghost for things you can press, canvas or surface for things you cannot
+- **[design-system-adr](skills/design-system-adr)** – write, check, supersede and index Architecture Decision Records in the EDS team's MADR-based format
 
 Planned areas:
 
 - **Typography** – optical padding, algorithmic tracking for prose
 - **Colour** – OKLCH palette generation, contrast (APCA), semantic roles
 - **Spacing** – the baseline grid for running text
-- **Design systems** – broader EDS-informed practices
+- **Design systems** – broader EDS-informed practices beyond the ADR skill
 
 ## Demo
 

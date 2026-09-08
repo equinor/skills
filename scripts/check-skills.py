@@ -70,7 +70,11 @@ def check_length(path):
 
 
 def check_links(path):
-    for target in re.findall(r"\]\(([^)#][^)]*)\)", path.read_text()):
+    """Relative links must resolve. Links inside fenced blocks or inline code are
+    examples of link syntax, not references, and are skipped."""
+    text = re.sub(r"```.*?```", "", path.read_text(), flags=re.S)
+    text = re.sub(r"`[^`\n]*`", "", text)
+    for target in re.findall(r"\]\(([^)#][^)]*)\)", text):
         if target.startswith(("http://", "https://", "mailto:")):
             continue
         if not (path.parent / target).exists():
