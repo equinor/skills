@@ -4,7 +4,9 @@ Built 6 September 2026 from a brief relayed from Victor: the missing middle
 piece between the scale explorer and the toggle-by-toggle text demo. One
 sentence — *sphinx of black quartz judge my vow* — rendered twice and overlaid
 on one baseline, the reference face in pale grey-blue (`#B5C7C9`) and the
-other in deep red (`#7D0023`, both Victor's, 8 September), so that the
+other in deep red (`#7D0023`, both Victor's, 8 September, and confirmed by him
+after the review measured the reference at 1.75:1 on white — the one-face
+toggle is the mitigation), so that the
 overlap reads dark and both stay legible (`mix-blend-mode: multiply` on white).
 Two sliders bring the second face to the first: size until the x-heights meet,
 weight until the stems do. The snap points are the skills' numbers.
@@ -59,7 +61,14 @@ weight until the stems do. The snap points are the skills' numbers.
 - **Fonts are not bundled.** Inter and Equinor from the EDS CDN as raw files,
   Barlow from Google Fonts. Equinor's licence permits use in an application
   and forbids redistribution; this repository is public, so the file is
-  referenced, never committed.
+  referenced, never committed. Barlow is the first face in these demos served
+  from outside the EDS CDN, so its arrival is checked (`document.fonts.check`)
+  and a notice replaces a silently wrong reference when it is blocked; the
+  fallback stack ends in Inter.
+- **The frame does not move with the slider** (8 September, review). The
+  zoom is sized from the reference's width at the widest the size slider can
+  make the target, so the reference stays put while the target grows into the
+  room; a narrow viewport scales the pair down rather than clipping it.
 - **Numbers, measured 6–7 September 2026** with the two skills' scripts, in
   the `skills-test` venv (fontTools 4.64), against `InterVariable.woff2` from
   the EDS CDN (the copy bundled with `typography-weight-matching`, sha256
@@ -74,7 +83,7 @@ weight until the stems do. The snap points are the skills' numbers.
     --correction 1.054167` → 411.4 / 531.7 / 650.3 (Barlow has no axes, so one
     file per tier); Barlow → Inter 500 → 480.4.
   - Equinor → Inter (no longer shown): `stem.py Equinor.woff2 Inter.woff2
-    --match 400,500 --opsz 14 --correction 0.879271` → 336.0 / 450.8.
+    --match 400,500 --opsz 14 --correction 0.879284` → 336.0 / 450.8.
     `stem.py` pins `--opsz` on the reference, and here the axis was the
     target's, so the opsz-32 values (334.7 / 446.4, correction 0.930909) were
     taken with the same functions and Inter's `opsz` pinned to 32 on the

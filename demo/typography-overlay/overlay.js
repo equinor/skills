@@ -15,7 +15,7 @@ const MATCH = {
   barlow:  { 400: { 14: 411.4, 32: 411.4 }, 500: { 14: 531.7, 32: 531.7 }, 600: { 14: 650.3, 32: 650.3 } },
 };
 const FAMILY = { inter: 'Inter', equinor: 'Equinor', barlow: 'Barlow' };
-const AXIS = { equinor: [300, 700] };
+const TARGET = 'equinor', TARGET_AXIS = [300, 700];          // the adjusted face is always Equinor
 const SIZE_RANGE = [0.85, 1.25], SIZE_TOL = 0.004, WEIGHT_TOL = 2.5;
 
 const $ = (id) => document.getElementById(id);
@@ -25,10 +25,9 @@ const size = $('size'), weight = $('weight');
 // The detent snaps the applied value only, so arrow keys can still leave it.
 const state = { ref: 'inter', px: 14, tier: 400, rawScale: 1, rawWeight: 400, scale: 1, weight: 400, snappedSize: false, snappedWeight: false };
 
-const targetOf = () => 'equinor';
 const opszKey = () => (state.px >= 32 ? 32 : 14);
 const xr = (face) => (typeof X[face] === 'number' ? X[face] : X[face][opszKey()]);
-const correction = () => xr(state.ref) / xr(targetOf(state.ref));
+const correction = () => xr(state.ref) / xr(TARGET);
 const matched = () => (MATCH[state.ref][state.tier] || {})[opszKey()];
 const hasOpsz = () => state.ref !== 'barlow';                 // Inter is in the pair
 const opszNote = () => (hasOpsz() ? `Inter @ opsz ${opszKey()}` : 'any size');
@@ -41,15 +40,9 @@ function snap(value, target, tolerance) {
 }
 
 function render() {
-  const t = targetOf(state.ref);
-  const [lo, hi] = AXIS[t];
+  const t = TARGET;
+  const [lo, hi] = TARGET_AXIS;
   weight.min = lo; weight.max = hi;
-  // reference weights Equinor can play: only 400 / 500 are measured
-  document.querySelectorAll('input[name="tier"]').forEach((r) => {
-    const ok = Boolean(MATCH[state.ref][Number(r.value)]);
-    r.disabled = !ok;
-    if (!ok && r.checked) { state.tier = 400; document.querySelector('input[name="tier"][value="400"]').checked = true; }
-  });
 
   const corr = correction();
   const m = matched();
@@ -75,11 +68,14 @@ function render() {
   pair.style.setProperty('--_x-ref', `${xr(state.ref)}em`);
   pair.style.setProperty('--_x-target', `${xr(t) * state.scale}em`);
   requestAnimationFrame(() => {
+    // The frame is sized from the reference alone, at the widest the slider can
+    // make the target, so the reference stays put while the size slider moves.
+    // No lower bound: a narrow viewport scales the pair down instead of clipping.
     const avail = overlay.clientWidth - 2 * 24 - 40;
     const prev = Number(pair.dataset.zoom) || 1;
-    const w = Math.max(refEl.getBoundingClientRect().width, targetEl.getBoundingClientRect().width) / prev;
+    const w = (refEl.getBoundingClientRect().width / prev) * SIZE_RANGE[1];
     const h = pair.getBoundingClientRect().height / prev;
-    const zoom = Math.max(1, Math.min(avail / w, 14));
+    const zoom = Math.min(avail / w, 14);
     pair.dataset.zoom = zoom;
     pair.style.transform = `scale(${zoom})`;
     pair.style.marginTop = `${(zoom - 1) * h}px`;          // room for the scaled glyphs above the baseline
@@ -104,7 +100,7 @@ function render() {
       ? `${FAMILY[state.ref]} ${state.tier} → ${FAMILY[t]} <b>${fmt(m, 1)}</b> (${opszNote()}), measured at the glyph midpoint at the same perceived size${state.snappedWeight ? ' ✓' : ''}`
       : `not measured for this pairing`],
     ['why it moves', state.ref === 'inter'
-      ? `Inter's opsz axis lowers its x-height (${fmt(X.inter[14])} → ${fmt(X.inter[32])}) and thins its stems above 14px. The correction falls from × ${fmt(X.inter[14] / X.equinor)} to × ${fmt(X.inter[32] / X.equinor)}, so Equinor is set smaller at 32px and needs more weight to keep up: the match goes ${MATCH.inter[state.tier][14]} → ${MATCH.inter[state.tier][32]} between 14px and 32px`
+      ? `Inter's opsz axis lowers its x-height (${fmt(X.inter[14])} → ${fmt(X.inter[32])}) and thins its stems above 14px. The correction falls from × ${fmt(X.inter[14] / X.equinor)} to × ${fmt(X.inter[32] / X.equinor)}, so Equinor is set smaller at 32px: the match goes ${MATCH.inter[state.tier][14]} → ${MATCH.inter[state.tier][32]} between 14px and 32px${MATCH.inter[state.tier][32] > MATCH.inter[state.tier][14] + 1 ? ', so it needs more weight to keep up' : ' — the thinner stem and the smaller size cancel'}`
       : `Barlow has no optical axis, so one match holds at every size. Equinor 500 (stem 0.086em) sits below Barlow Medium (0.096em); Inter 500 (0.107em) sits above it — Equinor needs 531.7 and Inter only 480.4 to match Barlow Medium, measured here from the outlines`],
   ];
   if (state.ref === 'barlow') {
@@ -134,12 +130,21 @@ if ([400, 500, 600].includes(Number(q.get('tier')))) { state.tier = Number(q.get
 if (q.get('size') === 'snap') state.rawScale = correction();
 else if (num(q.get('size')) != null) state.rawScale = clamp(num(q.get('size')), ...SIZE_RANGE);
 if (q.get('weight') === 'snap') state.rawWeight = matched() ?? state.rawWeight;
-else if (num(q.get('weight')) != null) state.rawWeight = clamp(num(q.get('weight')), ...AXIS[targetOf(state.ref)]);
+else if (num(q.get('weight')) != null) state.rawWeight = clamp(num(q.get('weight')), ...TARGET_AXIS);
 size.value = state.rawScale; weight.value = state.rawWeight;
 if (['ref', 'target'].includes(q.get('show'))) {
   const other = q.get('show') === 'ref' ? 'target' : 'ref';
   $(`show-${other}`).checked = false; $(`show-${other}`).dispatchEvent(new Event('change'));
 }
 if (q.get('guides') === 'off') { $('guides').checked = false; $('guides').dispatchEvent(new Event('change')); }
-document.fonts.ready.then(render);
+// Barlow is the one face not served from the EDS CDN. If Google Fonts is blocked
+// the reference would render in a fallback while the readout still quoted Barlow's
+// numbers, so say so instead — the same treatment as the text-box notice.
+const fontWarn = document.createElement('p');
+fontWarn.className = 'overlay__warn'; fontWarn.hidden = true;
+fontWarn.textContent = 'Barlow did not load from Google Fonts. The reference below is a fallback face, and the numbers in the readout do not describe it.';
+pair.before(fontWarn);
+function checkFonts() { fontWarn.hidden = !(state.ref === 'barlow' && !document.fonts.check(`${state.tier} ${state.px}px Barlow`)); }
+document.querySelectorAll('input[name="ref"], input[name="tier"], input[name="px"]').forEach((r) => r.addEventListener('change', () => document.fonts.ready.then(checkFonts)));
+document.fonts.ready.then(() => { render(); checkFonts(); });
 render();

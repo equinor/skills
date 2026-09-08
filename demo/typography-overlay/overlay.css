@@ -39,7 +39,6 @@ h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-xl); line-height: v
 .control label { display: grid; grid-template-columns: 20px 1fr; gap: var(--space-sm); align-items: start; cursor: pointer; }
 .control label b { font-weight: 500; }
 .control label small { display: block; color: var(--color-text-subtle); font-size: var(--font-size-sm); line-height: var(--line-height-sm); }
-.control label:has(input:disabled) { opacity: 0.4; cursor: not-allowed; }
 
 /* the overlay: two faces, one baseline. text-box trims each box to cap top and
    baseline, so aligning the bottoms aligns the baselines. */
@@ -47,6 +46,7 @@ h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-xl); line-height: v
 /* text-box is the mechanism, not a refinement: without it the two boxes meet on
    their content-box bottoms, which are not baselines. Chrome 133, Safari 18.2 and
    Firefox 154 trim; anything older is told so instead of shown a wrong lesson. */
+.overlay__warn { margin: 0 0 var(--space-md); padding: var(--space-sm) var(--space-md); border-radius: var(--radius); background: oklch(0.96 0.05 60); color: oklch(0.35 0.08 60); font-size: var(--font-size-sm); line-height: var(--line-height-sm); }
 @supports not (text-box: trim-both cap alphabetic) {
   .overlay::before { content: "This browser cannot trim text boxes to the baseline (text-box), so the two faces below are not on one baseline and the snap points do not describe what you see."; display: block; margin: 0 0 var(--space-md); padding: var(--space-sm) var(--space-md); border-radius: var(--radius); background: oklch(0.96 0.05 60); color: oklch(0.35 0.08 60); }
 }
@@ -67,7 +67,7 @@ h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-xl); line-height: v
   text-box: trim-both cap alphabetic;
   mix-blend-mode: multiply;
 }
-.face--ref { position: relative; color: var(--color-ref); font-family: var(--_ref-family, Inter); }
+.face--ref { position: relative; color: var(--color-ref); font-family: var(--_ref-family, Inter), Inter, sans-serif; }
 .face--target { position: absolute; left: 0; bottom: 0; color: var(--color-target); font-family: var(--_target-family, Equinor); font-size: calc(1em * var(--_scale, 1)); font-weight: var(--_target-weight, 400); }
 .guide { position: absolute; left: -2em; right: -2em; height: 0; border-top: 1px dashed; pointer-events: none; opacity: 0.9; }
 .guide--baseline { bottom: 0; border-color: var(--color-text-subtle); }
