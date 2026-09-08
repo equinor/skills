@@ -162,16 +162,13 @@ xl             18.5px                          21px                       24px
 Four rules make this work:
 
 - **Correct the font size only.** Apply the factor to each step and re-snap to
-  the same grid (`round(step × correction, 0.5px)`), so the corrected ramp lands
-  on the same half-pixel grid as the reference. When the reference carries an
-  `opsz` axis the factor is per step, not per family — Inter's x-height falls
-  5.5% from opsz 14 to 32 — so sample it at each step first:
+  the same grid (`round(step × correction, 0.5px)`). When the reference carries
+  an `opsz` axis the factor is per step, not per family — Inter's x-height
+  falls 5.5% from opsz 14 to 32 — so sample it at each step first:
   `typography-x-height-alignment/references/optical-size.md`.
 - **Share the line-heights.** Both families use the reference ramp's
-  line-heights at the same step. The whole point of x-height alignment is that
-  the faces look the same size at that step — so they get the same line box, and
-  the 4px rhythm holds across families. Deriving a second line-height ramp from
-  the corrected sizes would undo it.
+  line-heights at the same step: aligned faces look the same size there, so
+  they get the same line box and the 4px rhythm holds across families.
 - **Take `size-adjust` out.** Keep both mechanisms and you double-correct.
 - **Check the correction survives the snap.** Below half a snap unit at the
   smallest step it is erased there: `× 1.019345` lands as 0.00% at `xs`/`sm` but
