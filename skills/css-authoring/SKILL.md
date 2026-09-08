@@ -9,6 +9,10 @@ How to write CSS that stays legible as it grows: every colour, size, and
 state change flows through a small set of named channels, selectors say what
 they mean, and browser support is checked, not remembered.
 
+This skill **emits no values**: the sizes, colours and weights come from the
+token skills (see Related). This is the shape the CSS that consumes them
+takes.
+
 **This skill targets modern, evergreen browsers.** It recommends features on
 the basis that they are Baseline available, not that they are universally
 supported. Backward compatibility with older browsers is the consuming
@@ -43,13 +47,17 @@ property**.
 ```
 
 **A state rule assigns *from* a channel; it never assigns a literal token.**
-The state selector always out-specifies the variant — `.btn:not(:disabled):hover`
-is `(0,3,0)` against `.btn[data-variant='danger']`'s `(0,2,0)` (class and
-attribute selectors weigh the same, and `:not()` takes the specificity of its
-argument) — so a hover rule that assigned
-`var(--color-fill-hover)` directly would flatten every variant it touched. By
-assigning `var(--_bg-hover)`, the rule still wins the cascade, but what it
-resolves to is a channel each variant owns.
+A hover rule that assigned `var(--color-fill-hover)` directly would flatten
+every variant it touched. Assigning `var(--_bg-hover)` instead means what the
+rule resolves to is a channel each variant owns.
+
+**State rules come last.** Variant attributes stack, so
+`.btn[data-variant='danger'][data-size='small']` is `(0,3,0)` — a tie with
+`.btn:not(:disabled):hover` (class and attribute selectors weigh the same, and
+`:not()` takes the specificity of its argument) — and a third axis would
+out-specify it. Ties resolve by source order, so keep the state rules at the
+end of the component's rules, or in a later `@layer`; never rely on the state
+selector being heavier.
 
 Why this wins:
 
@@ -68,8 +76,8 @@ Conventions:
   state, not an error: `outline-color: var(--_outline, transparent);`
   `box-shadow: var(--_elevation, none);`
 - Size parameters are channels too (`--_font-size`, `--_inset`, `--_gap`):
-  a size modifier overrides the parameters; the geometry properties that
-  consume them are written once.
+  `[data-size='small']` overrides the parameters; the geometry properties
+  that consume them are written once.
 
 ## 2. Modern CSS, deliberately
 
@@ -89,25 +97,25 @@ first (section 3).
   a later layer wins without specificity games.
 - **`:focus-visible`**, never bare `:focus`, for focus rings.
 - **Math functions** (`calc()`, `round()`, `clamp()`) to keep derivations in
-  the stylesheet instead of baking their results. `round()` is Baseline *newly*
-  rather than widely — fine on an evergreen target, worth a check against the
-  project's matrix (section 3) if there is a long tail to support. Note: `calc()` rejects
-  unitless `0` in addition/subtraction — write `0px` for a semantic zero.
+  the stylesheet instead of baking their results. `round()` landed later than
+  the rest of this list; look it up before use (section 3, `round-mod-rem`)
+  rather than assume. `calc()` rejects unitless `0` in addition and
+  subtraction — write `0px` for a semantic zero.
 
-Two traps worth naming:
-
-- **`box-sizing`**: `min-height`/`min-width` resolve against the *content*
-  box by default. Buttons get `border-box` from the UA stylesheet; a `<div>`
-  with the same padding measures larger. Set `box-sizing: border-box`
-  explicitly wherever geometry matters.
-- **State selectors**: ARIA states are attributes, not classes — style
-  `[aria-selected='true']`, `[aria-expanded='true']` directly, and gate
-  interactive states with `:not(:disabled)`.
+One trap worth naming: **`box-sizing`**. `min-height`/`min-width` resolve
+against the *content* box by default. Buttons get `border-box` from the UA
+stylesheet; a `<div>` with the same padding measures larger. Set
+`box-sizing: border-box` explicitly wherever geometry matters. (Runtime state
+is section 4's third bullet.)
 
 ## 3. Verify support — never recall it
 
 Your knowledge of browser support has a cutoff; the web does not. Before
 using a feature you have not verified in this session, check it.
+
+**Ask before you emit a rule that leans on a feature's support:**
+
+> Which browsers does this product ship to — is there a `browserslist`?
 
 **Find the project's own matrix first.** It overrides every global figure:
 `browserslist` in `package.json`, a `.browserslistrc`, or a `targets` field in
@@ -132,9 +140,11 @@ not dead
   — read `usage_perc_y` (global support %) and `stats` per browser.
   Slugs match caniuse URLs — for the features this skill recommends:
   `css-has`, `css-nesting`, `css-cascade-layers`, `css-focus-visible`,
-  `css-logical-props`, `css-matches-pseudo` (`:is()`), `css-math-functions`
-  (`min()`/`max()`/`clamp()`).
-- Human view: `https://caniuse.com/<slug>` or `https://caniuse.com/?search=<term>`.
+  `css-logical-props`, `css-matches-pseudo` (`:is()`), `css-not-sel-list`
+  (`:not()` with a list), `css-math-functions` (`min()`/`max()`/`clamp()`
+  only), `calc`. All nine returned JSON on 2026-09-08.
+- Human view: `https://caniuse.com/<slug>` or
+  `https://caniuse.com/?search=<term>`.
 - Baseline status, and the fallback when caniuse has no feature at all:
   `https://api.webstatus.dev/v1/features/<id>`, searchable with
   `?q=<term>`. caniuse does not track `:where()` or `round()`; webstatus does,
@@ -155,19 +165,21 @@ Rules of thumb:
   `usage_perc_y` is context, not a second gate. The two measure different
   things — Baseline counts ~30 months of interop across a core browser set,
   `usage_perc_y` is market-share weighted and lags it — so a feature can be
-  Baseline widely and still sit below 95%. `:has()` (94%) and nesting (91%)
-  both do, and both are safe. Treat a low usage figure as a prompt to check
-  the project's matrix, not as a veto.
+  Baseline widely and still sit below 95%. `:has()` and nesting both do, and
+  both are safe. Treat a low usage figure as a prompt to check the project's
+  matrix, not as a veto.
 - Newly available — Baseline newly, or not yet Baseline: the project's matrix
   decides. On a managed, auto-updating fleet a Baseline-newly feature is
   usually fine; where there is a long tail of older browsers, ship a graceful
   fallback and say so in the commit or PR.
-  Pick the fallback mechanism that matches the feature: `@supports selector(…)`
-  for selectors (`:has()`, `:where()`, `:focus-visible`), `@supports (prop: val)`
-  for properties and values, and a preceding declaration the older engine can
-  parse for an unsupported *value* — `var()`'s fallback only covers an unset
-  custom property, not a value that failed to parse. Nesting and `@layer` are
-  not reliably detectable; author the flat form instead.
+  Pick the fallback mechanism that matches the feature:
+  `@supports selector(…)` for selectors (`:has()`, `:where()`,
+  `:focus-visible`), `@supports (prop: val)` for properties and values, and a
+  preceding declaration the older engine can parse for an unsupported
+  *value* — `var()`'s fallback only covers an unset custom property, not a
+  value that failed to parse. Nesting is detectable with
+  `@supports selector(&)`; `@layer` is not detectable at all — where either is
+  outside the matrix, author the flat form.
 - Not interoperable yet: don't build the component's core mechanism on it.
 
 ## 4. Selector discipline
@@ -175,8 +187,8 @@ Rules of thumb:
 - **One class on the component root** (`.btn`); nothing else about the
   component needs a class of its own unless the element is ambiguous.
 - **Variants, sizes, and boolean options are `data-*` attributes, never
-  modifier classes** — [ADR-0006 rule 3](https://github.com/equinor/design-system/blob/main/documentation/adr/0006-flat-class-names-for-eds-2-components.md)
-  (Accepted 2026-06-29): `.btn[data-variant='danger'][data-size='small']`.
+  modifier classes** — [ADR-0006 rule 3][adr6] (Accepted 2026-06-29; link
+  checked 2026-09-08): `.btn[data-variant='danger'][data-size='small']`.
   Name the attribute after the axis, so the markup says *which* axis each
   value belongs to. Let the default value also match the attribute's
   absence (`:is([data-size='md'], :not([data-size]))`), so resting markup
@@ -185,10 +197,10 @@ Rules of thumb:
 - **Attributes carry design-time configuration; pseudo-classes and ARIA
   carry runtime state.** Style `:hover`, `:disabled`, `[aria-selected='true']`,
   `[aria-pressed='true']` directly — never mirror them into `data-*`. (The
-  same split the headless libraries expose: Radix documents "when components
-  are stateful, their state will be exposed in a `data-state` attribute" —
-  state the *element* computes; the variants an *author* chooses are a
-  different kind of information.)
+  same split the headless libraries expose: Radix's [styling guide][radix]
+  says "when components are stateful, their state will be exposed in a
+  `data-state` attribute" — state the *element* computes; the variants an
+  *author* chooses are a different kind of information.)
 - **Semantic descendants are targeted by element, scoped with `>`**
   (`& > details > summary`, `& > :is(input, select, textarea)`, `& th, & td`)
   so consumer content inside the component can never collide. Inner classes
@@ -205,3 +217,40 @@ A note on lint configs: `stylelint-config-standard` accepts all of the above
 as-is. A `selector-class-pattern` that demands BEM (`block__element--modifier`)
 contradicts ADR-0006 — do not copy one from an older repo without checking
 what it enforces.
+
+[adr6]: https://github.com/equinor/design-system/blob/main/documentation/adr/0006-flat-class-names-for-eds-2-components.md
+[radix]: https://www.radix-ui.com/primitives/docs/guides/styling
+
+## Representative requests
+
+Four acceptance criteria — the button with variants and a hover, the review
+of committed component CSS, "can I use `:has()` here", and adding a size —
+plus a routing check:
+[`references/representative-requests.md`](references/representative-requests.md).
+
+## Positions this skill takes
+
+Five, each with what backs it: channels over restated properties, state rules
+last rather than heavier, `data-*` for configuration and the platform for
+state, support verified live with Baseline governing, and the matrix in a
+`browserslist` rather than in prose:
+[`references/positions.md`](references/positions.md).
+
+## Related
+
+- **`typography-scale`**, **`spacing-ladder`**, **`colour-fill-tiers`** — where
+  the values a channel is set to come from: the size and line-height, the
+  inset and padding, the fill rung. This skill says how the CSS that consumes
+  them is shaped, not what they are.
+- **`typography-weight-matching`** — its matched weights and letter-spacing
+  are channel values too (`--_weight`, `--_tracking`).
+
+## Provenance
+
+The channel-variable pattern and the selector rules are the ones the EDS
+component emitter in `equinor/ids-meetup-oslo-26` (Equinor-internal) enforces
+on every generated stylesheet and checks in its harness; this skill is how
+they travel to CSS written by hand. `data-*` over modifier classes is
+ADR-0006 in `equinor/design-system` (MIT, public). The support-verification
+endpoints are caniuse's `features-json` and webstatus.dev, both checked live
+on 2026-09-08.
