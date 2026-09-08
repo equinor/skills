@@ -261,3 +261,7 @@ not a ceiling for CSS.
   overlay demo's Equinor → Inter pairing needs. Both are follow-ups in their
   skills; until then the per-step numbers here are produced by running the
   two scripts once per step, as `demo.js` records.
+  The token rework in `equinor/ids-meetup-oslo-26` still bakes the flat
+  factor into its header sizes and its weight table; the measurement and the
+  deferral are recorded in its `DECISIONS.md` (8 September) and the
+  regeneration is planned in its issue #48, after the talk.
