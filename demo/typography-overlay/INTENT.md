@@ -37,8 +37,11 @@ weight until the stems do. The snap points are the skills' numbers.
   outlines checked; its `MVAR` table does not move it) and Barlow's moves 1%
   between Regular and SemiBold (0.506 / 0.509 / 0.511), so one ratio serves
   every tier and the readout names the instance it holds at.
-- **Reference face is a choice**: Inter (default, target Equinor), Barlow
-  (target Equinor), Equinor (target Inter). **The Barlow claim, verified 6
+- **Reference face is a choice**: Inter (default) or Barlow; the adjusted
+  face is always Equinor. A third pairing, Equinor as the reference with
+  Inter adjusted, was built and removed on 8 September at Victor's request:
+  the talk's story runs one way, the text face is the master. The numbers it
+  used are kept below as a record. **The Barlow claim, verified 6
   September from primary sources**, is narrow and real: the Lc number is
   colour math with no font input, but the font lookup table that turns an Lc
   target into a minimum size and weight — `src/apca-w3.js` and
@@ -69,12 +72,12 @@ weight until the stems do. The snap points are the skills' numbers.
   - Barlow → Equinor: `stem.py Barlow-<Weight>.ttf Equinor.woff2 --match <w>
     --correction 1.054167` → 411.4 / 531.7 / 650.3 (Barlow has no axes, so one
     file per tier); Barlow → Inter 500 → 480.4.
-  - Equinor → Inter: `stem.py Equinor.woff2 Inter.woff2 --match 400,500 --opsz
-    14 --correction 0.879271` → 336.0 / 450.8. `stem.py` pins `--opsz` on the
-    reference, and here the axis is the target's, so the opsz-32 values
-    (334.7 / 446.4, correction 0.930909) were taken with the same functions and
-    Inter's `opsz` pinned to 32 on the target; a `--target-opsz` flag for
-    `stem.py` is the follow-up.
+  - Equinor → Inter (no longer shown): `stem.py Equinor.woff2 Inter.woff2
+    --match 400,500 --opsz 14 --correction 0.879271` → 336.0 / 450.8.
+    `stem.py` pins `--opsz` on the reference, and here the axis was the
+    target's, so the opsz-32 values (334.7 / 446.4, correction 0.930909) were
+    taken with the same functions and Inter's `opsz` pinned to 32 on the
+    target; a `--target-opsz` flag for `stem.py` is the follow-up.
 - **Sliders snap the applied value, not the control** (7 September). The
   detent used to write the snapped value back into the range input, so an
   arrow key moved one step into the tolerance and was pulled straight back —

@@ -6,18 +6,16 @@
 // Inter carries one ratio per optical size the browser can render — 14 up to 32,
 // where the axis clamps. typography-x-height-alignment.
 const X = { inter: { 14: 0.545898, 32: 0.515625 }, equinor: 0.48, barlow: 0.506 };
-// Matched target weight for a reference tier, by the opsz the browser gives Inter
+// Matched Equinor weight for a reference tier, by the opsz the browser gives Inter
 // at the rendered px (Barlow and Equinor have no optical axis). Stems compared at
 // the same perceived size, i.e. with that size's x-height correction applied.
-// typography-weight-matching.
+// typography-weight-matching. The target is always Equinor.
 const MATCH = {
   inter:   { 400: { 14: 458.5, 32: 458.4 }, 500: { 14: 552.7, 32: 563.1 }, 600: { 14: 660.0, 32: 680.7 } },
   barlow:  { 400: { 14: 411.4, 32: 411.4 }, 500: { 14: 531.7, 32: 531.7 }, 600: { 14: 650.3, 32: 650.3 } },
-  // reference Equinor → target Inter, Inter's opsz pinned to the rendered size
-  equinor: { 400: { 14: 336.0, 32: 334.7 }, 500: { 14: 450.8, 32: 446.4 } },
 };
 const FAMILY = { inter: 'Inter', equinor: 'Equinor', barlow: 'Barlow' };
-const AXIS = { equinor: [300, 700], inter: [100, 900] };
+const AXIS = { equinor: [300, 700] };
 const SIZE_RANGE = [0.85, 1.25], SIZE_TOL = 0.004, WEIGHT_TOL = 2.5;
 
 const $ = (id) => document.getElementById(id);
@@ -27,7 +25,7 @@ const size = $('size'), weight = $('weight');
 // The detent snaps the applied value only, so arrow keys can still leave it.
 const state = { ref: 'inter', px: 14, tier: 400, rawScale: 1, rawWeight: 400, scale: 1, weight: 400, snappedSize: false, snappedWeight: false };
 
-const targetOf = (ref) => (ref === 'equinor' ? 'inter' : 'equinor');
+const targetOf = () => 'equinor';
 const opszKey = () => (state.px >= 32 ? 32 : 14);
 const xr = (face) => (typeof X[face] === 'number' ? X[face] : X[face][opszKey()]);
 const correction = () => xr(state.ref) / xr(targetOf(state.ref));
@@ -107,9 +105,7 @@ function render() {
       : `not measured for this pairing`],
     ['why it moves', state.ref === 'inter'
       ? `Inter's opsz axis lowers its x-height (${fmt(X.inter[14])} → ${fmt(X.inter[32])}) and thins its stems above 14px. The correction falls from × ${fmt(X.inter[14] / X.equinor)} to × ${fmt(X.inter[32] / X.equinor)}, so Equinor is set smaller at 32px and needs more weight to keep up: the match goes ${MATCH.inter[state.tier][14]} → ${MATCH.inter[state.tier][32]} between 14px and 32px`
-      : state.ref === 'barlow'
-        ? `Barlow has no optical axis, so one match holds at every size. Equinor 500 (stem 0.086em) sits below Barlow Medium (0.096em); Inter 500 (0.107em) sits above it — Equinor needs 531.7 and Inter only 480.4 to match Barlow Medium, measured here from the outlines`
-        : `Equinor as the reference: Inter is set smaller and needs less weight than its name says. At 14px the factor is × ${fmt(X.equinor / X.inter[14])}; above it Inter's opsz axis lowers its own x-height, so the factor rises to × ${fmt(X.equinor / X.inter[32])} and the match moves ${MATCH.equinor[state.tier][14]} → ${MATCH.equinor[state.tier][32]}`],
+      : `Barlow has no optical axis, so one match holds at every size. Equinor 500 (stem 0.086em) sits below Barlow Medium (0.096em); Inter 500 (0.107em) sits above it — Equinor needs 531.7 and Inter only 480.4 to match Barlow Medium, measured here from the outlines`],
   ];
   if (state.ref === 'barlow') {
     rows.push(['about Barlow', `The Lc contrast number is colour math with no font in it. The lookup table that turns an Lc target into a minimum size and weight — shipped in apca-w3 (src/apca-w3.js, data/LUT-GseriesMay28-2022.js) — says in its source: "reference font is Barlow". By APCA's own x-height-ratio method, 14px Barlow (x-height 7.08px) is 13px Inter. Its docs call weight matching "ongoing research"; the weight slider is a measured answer.`]);
@@ -128,7 +124,7 @@ window.addEventListener('resize', render);
 // Deep links: ?ref=inter&px=14&tier=400&size=1.137288&weight=458.5 (or size=snap&weight=snap)
 const q = new URLSearchParams(location.search);
 const num = (v) => (v != null && v !== '' && Number.isFinite(Number(v)) ? Number(v) : null);
-if (FAMILY[q.get('ref')]) { state.ref = q.get('ref'); document.querySelector(`input[name="ref"][value="${state.ref}"]`).checked = true; }
+if (MATCH[q.get('ref')]) { state.ref = q.get('ref'); document.querySelector(`input[name="ref"][value="${state.ref}"]`).checked = true; }
 if ([14, 32, 48].includes(Number(q.get('px')))) { state.px = Number(q.get('px')); document.querySelector(`input[name="px"][value="${state.px}"]`).checked = true; }
 if ([400, 500, 600].includes(Number(q.get('tier')))) { state.tier = Number(q.get('tier')); document.querySelector(`input[name="tier"][value="${state.tier}"]`).checked = true; }
 if (q.get('size') === 'snap') state.rawScale = correction();
