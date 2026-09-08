@@ -1,18 +1,19 @@
 # Token shape
 
-The DTCG output of `scripts/spacing.py tokens`, referenced from section 6 of
+The DTCG output of `scripts/spacing.py tokens`, referenced from section 7 of
 `SKILL.md`. One file per density — `spacing.compact.tokens.json`,
 `spacing.comfortable.tokens.json`, `spacing.relaxed.tokens.json` — with the
 same paths in each, so density is a mode and nothing else changes.
 
-Four groups: the **ladder** (a value per rung, with the sequence and the
+Five groups: the **ladder** (a value per rung, with the sequence and the
 density's offset as inputs), the **insets** (aliases of ladder rungs: the
 vertical rung is one below, the same as, or one above the horizontal), the
 **optical paddings** (a value with its derivation and the height it produces,
 for a label whose step equals the inset size — other pairings come from
-`spacing.py control`), and the **icon gaps** (derived from the label's size).
-The `md` rung, the `md` inset, the `md` squished padding and the `md` icon gap at
-comfortable density, exactly as emitted:
+`spacing.py control`), the **icon gaps** (derived from the label's size), and
+the **icon sizes** (a second sequence read with the ladder's density offset).
+The `md` rung, the `md` inset, the `md` squished padding, the `md` icon gap and
+the `md` icon size at comfortable density, exactly as emitted:
 
 ```json
 {
@@ -141,6 +142,49 @@ comfortable density, exactly as emitted:
           }
         }
       }
+    },
+    "sizing-icon": {
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        },
+        "$extensions": {
+          "com.equinor.spacing": {
+            "derived": {
+              "expression": "ICON_SEQUENCE[index(size) + offset(density)]",
+              "inputs": {
+                "sequence": [
+                  14,
+                  16,
+                  18,
+                  20,
+                  24,
+                  28,
+                  32,
+                  37,
+                  42,
+                  48,
+                  56,
+                  64
+                ],
+                "size": "md",
+                "offset": 1
+              }
+            },
+            "density": "comfortable",
+            "note": "the glyph's ink size only; its footprint is the label's cap cell, margin (cap - glyph) / 2"
+          },
+          "com.equinor.figma": {
+            "collection": "Spacing",
+            "mode": "comfortable",
+            "scopes": [
+              "WIDTH_HEIGHT"
+            ]
+          }
+        }
+      }
     }
   }
 }
@@ -164,6 +208,21 @@ the resolved pixels, `capRatio` is the label face's `capHeight / unitsPerEm`
 (Inter 0.727539). `height` is what the padding produces, and is the number the
 control is allowed to be checked against; the padding itself is deliberately
 off the 4px grid, and `note` says so where the number is.
+
+**Icon sizes are ink, not layout.** `sizing-icon` is the glyph's drawn size and
+nothing else; the `note` says so where the number is. The glyph's footprint is
+the label's cap cell, and the seat — `margin: (cap − glyph) / 2`, negative by
+construction — is a component-level pairing of a label step with an icon step,
+so it is not a token. `spacing.py glyph --label md --icon md` gives it, and the
+CSS output carries `--glyph-margin-<step>` for the label-equals-icon pairing
+only; `--glyph-margin-sm` is −5 and the small button's `sm`/`xs` seat is −4.
+The `icon-gap` is measured to the cap cell, so the visible ink-to-text distance
+is `gap + margin`.
+Relaxed `6xl` is flagged `extrapolated` like the ladder's top rung. Upstream
+the same values live in the typography build (`sizing-icon-*` beside the type
+scale); they are emitted here, under `spacing`, because the glyph seat that
+consumes them is a spacing recipe and `typography-scale` does not emit them.
+A consumer applying both should alias one to the other rather than keep two.
 
 **Figma** gets `optical-padding` per density mode, named from the token path
 (`spacing/optical-padding/<size>-<proportion>`), bound to `paddingTop` /

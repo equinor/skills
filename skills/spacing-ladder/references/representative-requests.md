@@ -45,6 +45,18 @@ which pushed the control to 40 and off the grid.
 *Prevents:* approving spacing that is on the ladder but on the wrong
 relationship, or off the grid by a rounding that looked like tidying.
 
-A sixth, for routing: **"what line-height goes with 14px?"** is
+**6. "Add a leading icon to the medium button."** → Ask CSS-only or also
+Figma/RN, as in request 1; then `spacing.py glyph --label md --icon md`: in
+CSS the icon is one `<svg class="icon">`, 20px of ink at
+comfortable, sitting in the label's 12px cap cell with `margin: −4px` on every
+side; the control's `align-items: center` does the rest. Read back the glyph's
+centre and the label's cap centre from the rendered button: they coincide.
+Across densities the seat is −5 / −4 / −6 for 18 / 20 / 24px glyphs, and the
+small button's `sm` label with an `xs` glyph gives 8 / 16 / −4.
+*Prevents:* a cap-sized wrapper around the svg with `place-items: center`,
+which put the glyph 4px below the button's centre in a measured run, and an
+icon size held flat across densities.
+
+A seventh, for routing: **"what line-height goes with 14px?"** is
 `typography-scale`, and **"align the paragraphs to the baseline grid"** is the
 baseline-grid skill; this skill spaces boxes, not text.
