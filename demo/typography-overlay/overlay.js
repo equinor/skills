@@ -119,9 +119,13 @@ document.querySelectorAll('input[name="tier"]').forEach((r) => r.addEventListene
 size.addEventListener('input', () => { state.rawScale = Number(size.value); render(); });
 weight.addEventListener('input', () => { state.rawWeight = Number(weight.value); render(); });
 $('guides').addEventListener('change', (e) => { overlay.dataset.guides = e.target.checked ? 'on' : 'off'; });
+// one face at a time: the key entries are checkboxes; a hidden face keeps its box
+$('show-ref').addEventListener('change', (e) => { overlay.dataset.showRef = e.target.checked ? 'on' : 'off'; });
+$('show-target').addEventListener('change', (e) => { overlay.dataset.showTarget = e.target.checked ? 'on' : 'off'; });
 window.addEventListener('resize', render);
 
 // Deep links: ?ref=inter&px=14&tier=400&size=1.137288&weight=458.5 (or size=snap&weight=snap)
+// &show=ref | target shows one face alone; &guides=off hides the guides
 const q = new URLSearchParams(location.search);
 const num = (v) => (v != null && v !== '' && Number.isFinite(Number(v)) ? Number(v) : null);
 if (MATCH[q.get('ref')]) { state.ref = q.get('ref'); document.querySelector(`input[name="ref"][value="${state.ref}"]`).checked = true; }
@@ -132,5 +136,10 @@ else if (num(q.get('size')) != null) state.rawScale = clamp(num(q.get('size')), 
 if (q.get('weight') === 'snap') state.rawWeight = matched() ?? state.rawWeight;
 else if (num(q.get('weight')) != null) state.rawWeight = clamp(num(q.get('weight')), ...AXIS[targetOf(state.ref)]);
 size.value = state.rawScale; weight.value = state.rawWeight;
+if (['ref', 'target'].includes(q.get('show'))) {
+  const other = q.get('show') === 'ref' ? 'target' : 'ref';
+  $(`show-${other}`).checked = false; $(`show-${other}`).dispatchEvent(new Event('change'));
+}
+if (q.get('guides') === 'off') { $('guides').checked = false; $('guides').dispatchEvent(new Event('change')); }
 document.fonts.ready.then(render);
 render();

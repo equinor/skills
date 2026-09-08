@@ -84,7 +84,13 @@ weight until the stems do. The snap points are the skills' numbers.
   a keyboard trap at the exact state the deep links land on. The slider keeps
   its raw position; the applied size and weight snap; four arrow steps walk
   through the band and out.
-- Deep links: `?ref=inter&px=14&tier=500&size=snap&weight=snap`. Numeric
+- **One face at a time** (8 September, Victor). The two key entries above
+  the overlay are checkboxes; unticking one hides that face and its x-height
+  guide with `visibility: hidden`, so the hidden face keeps its box — the
+  reference gives the pair its width and its baseline — and nothing shifts
+  when it comes back. Both can be off; the baseline guide stays.
+- Deep links: `?ref=inter&px=14&tier=500&size=snap&weight=snap`, plus
+  `&show=ref` or `&show=target` for one face alone and `&guides=off`. Numeric
   `size` and `weight` are validated and clamped to the slider's range and the
   target's axis; anything else is ignored.
 

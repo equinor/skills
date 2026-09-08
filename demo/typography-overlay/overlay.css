@@ -50,10 +50,14 @@ h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-xl); line-height: v
 @supports not (text-box: trim-both cap alphabetic) {
   .overlay::before { content: "This browser cannot trim text boxes to the baseline (text-box), so the two faces below are not on one baseline and the snap points do not describe what you see."; display: block; margin: 0 0 var(--space-md); padding: var(--space-sm) var(--space-md); border-radius: var(--radius); background: oklch(0.96 0.05 60); color: oklch(0.35 0.08 60); }
 }
-.key { margin: 0 0 var(--space-xl); display: flex; gap: var(--space-xl); font-size: var(--font-size-sm); line-height: var(--line-height-sm); color: var(--color-text-subtle); }
-.key span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
-.key__ref::before { background: var(--color-ref); }
-.key__target::before { background: var(--color-target); }
+.key { margin: 0 0 var(--space-xl); display: flex; gap: var(--space-xl); align-items: center; font-size: var(--font-size-sm); line-height: var(--line-height-sm); color: var(--color-text-subtle); }
+.key label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.key input { margin: 0; }
+.key label span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.key__ref span::before { background: var(--color-ref); }
+.key__target span::before { background: var(--color-target); }
+.key label:has(input:not(:checked)) span { text-decoration: line-through; }
+.key small { margin-left: auto; }
 /* the reference face is in flow and gives the pair its width and (trimmed)
    height; the target is absolute at the same bottom edge, i.e. the same baseline */
 .pair { position: relative; width: max-content; margin: 0 auto; transform-origin: bottom left; }
@@ -70,6 +74,10 @@ h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-xl); line-height: v
 .guide--xref { bottom: var(--_x-ref, 0); border-color: var(--color-ref); }
 .guide--xtarget { bottom: var(--_x-target, 0); border-color: var(--color-target); }
 .overlay[data-guides="off"] .guide { display: none; }
+/* a hidden face keeps its box (the reference gives the pair its size); its
+   x-height guide goes with it, the baseline stays */
+.overlay[data-show-ref="off"] :is(.face--ref, .guide--xref) { visibility: hidden; }
+.overlay[data-show-target="off"] :is(.face--target, .guide--xtarget) { visibility: hidden; }
 .overlay__note { margin: var(--space-md) 0 0; color: var(--color-text-subtle); font-size: var(--font-size-sm); line-height: var(--line-height-sm); text-align: center; }
 
 .sliders { display: grid; gap: var(--space-md); padding: var(--space-md) var(--space-xl); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); border-radius: var(--radius); }

@@ -35,8 +35,12 @@
     </fieldset>
   </section>
 
-  <section class="surface overlay" id="overlay" data-guides="on">
-    <p class="key"><span class="key__ref" id="key-ref">Inter — reference, stays put</span> <span class="key__target" id="key-target">Equinor — adjusted by the sliders</span></p>
+  <section class="surface overlay" id="overlay" data-guides="on" data-show-ref="on" data-show-target="on">
+    <p class="key">
+      <label class="key__ref"><input type="checkbox" id="show-ref" checked> <span id="key-ref">Inter — reference, stays put</span></label>
+      <label class="key__target"><input type="checkbox" id="show-target" checked> <span id="key-target">Equinor — adjusted by the sliders</span></label>
+      <small>untick one to see the other alone</small>
+    </p>
     <div class="pair" id="pair">
       <span class="face face--ref" id="ref">sphinx of black quartz judge my vow</span>
       <span class="face face--target" id="target">sphinx of black quartz judge my vow</span>
