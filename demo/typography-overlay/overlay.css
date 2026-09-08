@@ -10,8 +10,8 @@
   --color-border-subtle: oklch(0.87 0 0); --color-border-medium: oklch(0.75 0 0);
   --color-text-subtle: oklch(0.46 0 0); --color-text-strong: oklch(0.23 0 0);
   --color-accent: oklch(0.5 0.075 204.6); --color-accent-surface: oklch(0.999 0.01 184.6);
-  --color-ref: oklch(0.52 0 0);             /* the reference stays put: a quiet mid grey, readable under the red */
-  --color-target: oklch(0.58 0.21 25);      /* the adjusted face: red; multiply on white → dark where they overlap */
+  --color-ref: #B5C7C9;                     /* the reference stays put: pale grey-blue, quiet under the red (Victor, 8 Sept) */
+  --color-target: #7D0023;                  /* the adjusted face: deep red; multiply on white → dark where they overlap */
   --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 20px; --space-xl: 24px; --space-2xl: 32px; --space-3xl: 40px;
   --radius: 4px;
   --_base: 1rem;
@@ -71,7 +71,7 @@ h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-xl); line-height: v
 .face--target { position: absolute; left: 0; bottom: 0; color: var(--color-target); font-family: var(--_target-family, Equinor); font-size: calc(1em * var(--_scale, 1)); font-weight: var(--_target-weight, 400); }
 .guide { position: absolute; left: -2em; right: -2em; height: 0; border-top: 1px dashed; pointer-events: none; opacity: 0.9; }
 .guide--baseline { bottom: 0; border-color: var(--color-text-subtle); }
-.guide--xref { bottom: var(--_x-ref, 0); border-color: var(--color-ref); }
+.guide--xref { bottom: var(--_x-ref, 0); border-color: color-mix(in oklch, var(--color-ref), black 40%); }   /* the pale face colour, darkened so a 1px line reads */
 .guide--xtarget { bottom: var(--_x-target, 0); border-color: var(--color-target); }
 .overlay[data-guides="off"] .guide { display: none; }
 /* a hidden face keeps its box (the reference gives the pair its size); its

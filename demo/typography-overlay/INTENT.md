@@ -3,7 +3,8 @@
 Built 6 September 2026 from a brief relayed from Victor: the missing middle
 piece between the scale explorer and the toggle-by-toggle text demo. One
 sentence — *sphinx of black quartz judge my vow* — rendered twice and overlaid
-on one baseline, the reference face in grey and the other in red, so that the
+on one baseline, the reference face in pale grey-blue (`#B5C7C9`) and the
+other in deep red (`#7D0023`, both Victor's, 8 September), so that the
 overlap reads dark and both stay legible (`mix-blend-mode: multiply` on white).
 Two sliders bring the second face to the first: size until the x-heights meet,
 weight until the stems do. The snap points are the skills' numbers.
