@@ -61,6 +61,17 @@ Install a single skill with:
 npx skills add equinor/skills --skill typography-scale
 ```
  
+## Try it
+
+A prompt a designer would type to get a whole type system — the scale with both
+line-height curves, Equinor sized, weighted and letter-spaced to match Inter
+per step, three densities, as DTCG tokens, CSS and Figma variables — is in
+[`docs/prompts/typography-system.md`](docs/prompts/typography-system.md), with
+the acceptance criteria a correct result meets. The result it produced is
+[`demo/typography-tokens/`](demo/typography-tokens/). Prompts that need several
+skills at once collect in [`docs/prompts/`](docs/prompts/); each skill's own
+requests are in its `references/representative-requests.md`.
+
 ## Third-party assets
 
 Some skills bundle files they need in order to run — currently the Inter and
