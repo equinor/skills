@@ -22,6 +22,61 @@ them: `build.py` writes the JSON, reads it back, and emits each custom
 property from the token's `$value` or its `$extensions…css` expression, so the
 CSS cannot disagree with the tokens.
 
+## The request, as a designer would put it
+
+Written 9 September after the first build, as the representative request this
+folder answers; the agent chooses the skills from the acceptance criteria and
+the designer never names one.
+
+```
+I'm setting up the typography for our design system. Our text face is Inter
+and our display face is Equinor; both are variable fonts on our CDN:
+
+  https://cdn.eds.equinor.com/font/InterVariable.woff2
+  https://cdn.eds.equinor.com/font/EquinorVariable-VF.woff2
+
+Inter is the reference. Equinor has to look the same size and weight as
+Inter when they sit next to each other, at every size we use.
+
+Build me the full type system and deliver it three ways:
+
+1. Design tokens in DTCG format, one file per density (compact, comfortable,
+   relaxed), same token names in each so density is a mode:
+   - the type scale, ten steps, and both line-height curves (default for
+     reading, compressed for UI) for every step
+   - Equinor's size per step, baked as a number, so it imports into Figma —
+     and measured at the size it will actually render at, since Inter's
+     optical-size axis changes its x-height as it grows
+   - three weight tiers, lighter / normal / bolder = Inter 300 / 400 / 500,
+     with Equinor's matched weight for every tier and step
+   - Equinor's letter-spacing per tier and step, so the gaps between letters
+     match Inter's too
+   - every token carries how it was derived in $extensions, including the
+     CSS calc() expression a stylesheet would use for it
+2. CSS custom properties generated from those tokens: the expressions, with
+   comfortable as the root and the other densities as a data attribute, plus
+   a baked version with literals.
+3. Figma: push the tokens into this file as variables (one collection, the
+   three densities as modes) and bind text styles to them for every step and
+   tier, Inter and Equinor. Then add a preview page that shows the ladder —
+   each step in both faces, all three tiers, at each density — so I can see
+   the pairing on one canvas:
+
+   https://www.figma.com/design/I7325LB6YGBMn6lakfaWFA/EDS-IDS-typography-ladder?node-id=0-1
+
+Rules: measure everything from the font files, don't type numbers from a
+spec page or from memory. If a value can't be matched (a weight Equinor's
+axis doesn't reach, a browser feature you can't verify), say so in the output
+rather than pick something close. Record the commands you ran so the result
+can be rebuilt when the fonts change.
+```
+
+Three things make it work: it names the materials and the reference, so the
+skills' first questions are already answered; it states acceptance criteria
+rather than a method; and its closing rules are the skills' own discipline in
+plain words — measure rather than recall, refuse rather than approximate,
+record the commands.
+
 ## What is in each file
 
 | group | per | from |
