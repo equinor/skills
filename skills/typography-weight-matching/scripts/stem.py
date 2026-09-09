@@ -292,7 +292,9 @@ def letter_spacing_tokens(ref, target, ls, correction_token, display):
     em = ls["letterSpacingEm"]
     # DTCG `dimension` allows px and rem only, and this value is relative to the element's
     # own size, so it is a plain number in em — like the port factor — with the other
-    # units a consumer needs beside it: percent for Figma, px (at --px) for React Native.
+    # units a consumer needs beside it: px (at --px) for Figma and React Native, percent for humans.
+    # A Figma variable bound to letterSpacing is applied in PIXELS whatever unit the layer
+    # shows (Plugin API, checked 2026-09-09), so the Figma value is the px at --px.
     units = {"em": em, "percent": round(em * 100, 4)}
     if "letterSpacingPx" in ls:
         units["px"] = {"at": ls["px"], "targetPx": ls["targetPx"], "value": ls["letterSpacingPx"]}
@@ -305,8 +307,10 @@ def letter_spacing_tokens(ref, target, ls, correction_token, display):
                  "metrics": {"reference": source(ref), "target": source(target), "glyphs": "a-z",
                              "method": "outline:advance-minus-ink", "instance": inst, "extractedAt": today()},
                  "family": fam, "tier": tier, "units": units,
-                 "note": "em of the target's own size: CSS letter-spacing: <value>em. Figma takes percent, React Native px"},
-            NS_FIGMA: {"collection": "Typography", "scopes": ["LETTER_SPACING"], "unit": "PERCENT", "value": units["percent"]}}}}}}}
+                 "note": "em of the target's own size: CSS letter-spacing: <value>em. Figma and React Native take px, at the size the step renders at"},
+            NS_FIGMA: {"collection": "Typography", "scopes": ["LETTER_SPACING"], "unit": "PIXELS",
+                       **({"value": ls["letterSpacingPx"], "atFontSize": ls["targetPx"]} if "letterSpacingPx" in ls
+                          else {"value": None, "note": "pass --px with the step's size; Figma binds letter-spacing in px only"})}}}}}}}
 
 
 def tracking_tokens(ref, target, a, b, factor, display):

@@ -212,8 +212,11 @@ pairing is checked at the snapped weight rather than assumed. The same applies
 in CSS wherever the *variable* font may not load and a static face stands in —
 a question for the project's `browserslist` and its `@font-face` fallbacks,
 not for this skill. For the letter-spacing compensation the answer changes the
-**unit**: CSS takes the em value as is, Figma wants percent and React Native
-px, so pass `--px` with the step's size and the token carries all three. A
+**unit**: CSS takes the em value as is; Figma and React Native take px, so
+pass `--px` with the step's size and the token carries em, percent and px. A
+Figma variable bound to letter-spacing is applied in pixels whatever unit the
+layer shows — switching the layer to `%` drops the binding (Plugin API,
+checked 2026-09-09) — so the px is the value that goes into Figma. A
 question that would not change the output is not asked.
 
 Then emit the tokens, and derive everything else from them:
