@@ -131,15 +131,17 @@ body { margin: 0; font-family: Inter, system-ui, sans-serif; }
 .surface[data-scale="on"] { line-height: var(--line-height-lg); }
 .surface[data-scale="on"] p { font-size: var(--font-size-lg); line-height: var(--line-height-lg); }
 .surface[data-scale="on"] p.lead { font-size: var(--font-size-xl); line-height: var(--line-height-xl); }
-.surface[data-scale="on"] h1 { --_h-size: var(--font-size-5xl); --_h-size-display: var(--font-size-display-5xl); line-height: var(--line-height-5xl); --_flow-space: var(--space-3xl); }
-.surface[data-scale="on"] h2 { --_h-size: var(--font-size-3xl); --_h-size-display: var(--font-size-display-3xl); line-height: var(--line-height-3xl); --_flow-space: var(--space-2xl); }
-.surface[data-scale="on"] h3 { --_h-size: var(--font-size-2xl); --_h-size-display: var(--font-size-display-2xl); line-height: var(--line-height-2xl); --_flow-space: var(--space-xl); }
-.surface[data-scale="on"] p  { --_flow-space: var(--space-lg); }
-.surface[data-scale="on"] :is(h1, h2, h3) { --_h-weight: 600; }      /* EDS headings take the bolder tier */
+.surface[data-scale="on"] h1 { --_h-size: var(--font-size-5xl); --_h-size-display: var(--font-size-display-5xl); line-height: var(--line-height-5xl); }
+.surface[data-scale="on"] h2 { --_h-size: var(--font-size-3xl); --_h-size-display: var(--font-size-display-3xl); line-height: var(--line-height-3xl); }
+.surface[data-scale="on"] h3 { --_h-size: var(--font-size-2xl); --_h-size-display: var(--font-size-display-2xl); line-height: var(--line-height-2xl); }
+.surface[data-scale="on"] :is(h1, h2, h3) { --_h-weight: 500; }      /* EDS headings take the bolder tier, Inter 500 */
 /* flow spacing as in EDS elements.css: each block carries the space before it */
 .surface[data-scale="on"] :is(h1, h2, h3, p) { margin: 0; }
-.surface[data-scale="on"] :is(h1, h2, h3, p) + :is(h1, h2, h3, p) { margin-top: var(--_flow-space, var(--space-lg)); }
-.surface[data-scale="on"] h1 + h2 { --_flow-space: var(--space-md); }   /* the one pair tighter than its own kind */
+/* one flow space for every block, 28px — the ladder's rung between the cluster's
+   24 and the container's 32 — and 20px for the h1 → h2 pair, which is one thought
+   in two sizes (Victor, 9 September; 40 / 32 / 24 / 20 per element read cramped) */
+.surface[data-scale="on"] :is(h1, h2, h3, p) + :is(h1, h2, h3, p) { margin-top: var(--_flow-space, 28px); }
+.surface[data-scale="on"] h1 + h2 { --_flow-space: 20px; }
 /* 5. baseline grid: text in flow snaps, headings included */
 @supports (text-box: trim-both ex alphabetic) {
   .surface[data-baseline="on"] :is(h1, h2, h3, p) {
