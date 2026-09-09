@@ -94,7 +94,7 @@ being matched**: when `--opsz` pins the reference's optical size, pass the
 correction sampled at that same `opsz` (`typography-x-height-alignment`,
 `references/optical-size.md`), not the text step's — Inter's x-height falls
 5.5% between opsz 14 and 32, and the flat factor at 32px puts the bolder match
-40 weight units low. The target's curve is sampled once and inverted by
+about 30 weight units low (529.8 against 563.1 at tier 500). The target's curve is sampled once and inverted by
 interpolation, then corrected with one real measurement per tier — instancing a
 variable font is what costs, so the sampling dominates. Expect 20–30 seconds
 for a large variable face such as Inter (measured 2026-09-04); each extra tier
@@ -148,18 +148,19 @@ letterSpacing(step) = sideSpace(ref, opsz = step px, tier) / correction(step)
 
 ```bash
 .venv/bin/python $skill/scripts/stem.py Inter.woff2 Equinor.woff2 \
-  --letter-spacing --at 600,680.7 --opsz 32 --correction 1.074219 --px 32
+  --letter-spacing --at 500,563.1 --opsz 32 --correction 1.074219 --px 32
 ```
 
 `correction` is the x-height correction **at that opsz**, as in section 3.
-Measured for the pair here on 2026-09-08, in Equinor's em: +0.006 / +0.004 /
-+0.001 at 14px for tiers 400 / 500 / 600 — under a tenth of a pixel — and
-−0.0139 / −0.0141 / −0.0142 at 32px, about −0.48px. At the top of the axis
-the tiers agree to 0.0003em because what is being compensated is the axis,
-not the weight; at the bottom they spread by 0.005em and are all nothing. The
-crossing depends on the tier — `lg` for the bolder tier, about 21px for the
-normal one — so emit per step and per tier, and expect the text steps to come
-out at zero. The target is measured at its own default `opsz`, which is the
+Measured for the pair here on 2026-09-09, in Equinor's em, for the tiers
+lighter / normal / bolder = Inter 300 / 400 / 500: +0.010 / +0.006 / +0.004 at
+14px — under a sixth of a pixel — and −0.0187 / −0.0139 / −0.0141 at 32px,
+about −0.5px. The normal and bolder tiers agree to 0.0002em at the top of the
+axis because what is being compensated is the axis, not the weight; the light
+tier needs more because Inter's axis tightens its light weight most (side
+space 0.1138 → 0.0769em, 32%). Every tier crosses zero between `xl` and `2xl`
+(18.5–21px) — so emit per step and per tier, and expect the text steps to
+come out at zero. The target is measured at its own default `opsz`, which is the
 point when it has no axis; the script warns when it has one. Section 5 then
 ports any tracking ramp the reference *already* has on top of this, and a
 design system's own per-style tracking adds the same way: this value is a
@@ -219,7 +220,7 @@ Then emit the tokens, and derive everything else from them:
 .venv/bin/python $skill/scripts/stem.py REF.woff2 TARGET.woff2 \
   --tracking --at 400,458.5 --format tokens --display Equinor
 .venv/bin/python $skill/scripts/stem.py REF.woff2 TARGET.woff2 \
-  --letter-spacing --at 600,680.7 --opsz 32 --correction 1.074219 --px 32 \
+  --letter-spacing --at 500,563.1 --opsz 32 --correction 1.074219 --px 32 \
   --format tokens --display Equinor
 ```
 
