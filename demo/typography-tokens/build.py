@@ -164,8 +164,12 @@ def build(density, m, today):
                      "units": {"em": em, "percent": round(em * 100, 4),
                                "px": {"at": ls["targetPx"], "value": ls["letterSpacingPx"]}},
                      "css": f"letter-spacing: {em}em;", "step": s, "tier": tier, "density": density,
-                     "note": "em of Equinor's own size; Figma takes percent, React Native px"},
-                NS_FIGMA: {**fig(["LETTER_SPACING"]), "unit": "PERCENT", "value": round(em * 100, 4)}}}
+                     "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"},
+                # A FLOAT variable bound to letterSpacing is applied in PIXELS whatever unit the node
+                # had (checked in the Figma Plugin API 2026-09-09: setting PERCENT unbinds it), so the
+                # Figma value is the px at this step's display size in this density.
+                NS_FIGMA: {**fig(["LETTER_SPACING"]), "unit": "PIXELS", "value": ls["letterSpacingPx"],
+                           "atFontSize": ls["targetPx"]}}}
 
     lo, hi = min(corr_values), max(corr_values)
     corr_group["$extensions"] = {NS: {"drift": {"axis": "opsz", "sampledAt": [SC.clean(out["font-size"][s]["$value"]["value"] * SC.ROOT_PX) for s in SC.STEPS],

@@ -26,7 +26,9 @@ CSS cannot disagree with the tokens.
 
 Written 9 September after the first build, as the representative request this
 folder answers; the agent chooses the skills from the acceptance criteria and
-the designer never names one.
+the designer never names one. It also lives, with its acceptance criteria, in
+[`docs/prompts/typography-system.md`](../../docs/prompts/typography-system.md),
+the repo's home for prompts that span several skills.
 
 ```
 I'm setting up the typography for our design system. Our text face is Inter
@@ -95,9 +97,15 @@ with the axis location it was measured at, and `css`, the expression a
 stylesheet would use — `round(calc(var(--_base) * pow(2, 1/5)), 0.03125rem)`,
 `round(calc(var(--font-size-5xl) * 1.074219), 0.03125rem)`,
 `letter-spacing: -0.014223em;`. `$extensions.com.equinor.figma` names the
-collection, the mode and the variable scopes; letter-spacing carries its
-percent there, since Figma has no em. The file's own `$extensions` records
-both fonts' checksums, the build date and the builder.
+collection, the mode and the variable scopes; for letter-spacing it carries
+the value **in px at that step's display size in that density**, because a
+Figma variable bound to letter-spacing is applied in pixels whatever unit the
+layer shows — checked in the Plugin API on 9 September: binding forces
+`PIXELS`, and switching the layer to `%` drops the binding. The first build
+put the percent there, and the preview page applied −1.41 *px* where −0.49px
+was meant. The em and percent stay in `units` for CSS and for humans. The
+file's own `$extensions` records both fonts' checksums, the build date and
+the builder.
 
 ## Decisions
 
