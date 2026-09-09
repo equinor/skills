@@ -208,8 +208,11 @@ The shipped recipe trims to x-height, pads the top up to the *rounded* cap,
 and puts nothing below. A block is (n−1) line-heights plus one rounded cap
 tall, its first baseline sits at the rounded cap from its top, and it ends on
 its last baseline. The distance between blocks is exactly the flow-space
-token, measured baseline to cap top. Trimming to `ex` rather than `cap` keeps
-the top padding positive whichever way the cap rounds.
+token, measured baseline to cap top: 28px before every block and 20px between
+`h1` and `h2` (9 September; the earlier per-element 40 / 32 / 24 / 20 read
+cramped between paragraphs, and one rung for everything reads calmer than a
+ladder of four). Trimming to `ex` rather than `cap` keeps the top padding
+positive whichever way the cap rounds.
 
 Per-element `1cap` and `1ex` mean the padding recomputes on its own when the
 heading font swaps and when its size grows after x-height correction. Line

@@ -94,7 +94,8 @@ p  { font-size: var(--font-size-lg);  line-height: var(--line-height-lg); }
 h1 { font-size: var(--font-size-5xl); line-height: var(--line-height-5xl); font-weight: 500; }
 h2 { font-size: var(--font-size-3xl); line-height: var(--line-height-3xl); font-weight: 500; }
 h3 { font-size: var(--font-size-2xl); line-height: var(--line-height-2xl); font-weight: 500; }
-<span class="c">/* Space before each block, as in EDS: h1 40px, h2 32px, h3 24px, p 20px.
+<span class="c">/* Space before each block: 28px, one rung of the spacing ladder; 20px
+   between h1 and h2, one thought in two sizes. All multiples of 4.
    Density is one number: [data-density='compact'] { --_base: 0.875rem; } */</span>`,
   },
   baseline: {
