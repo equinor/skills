@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>equinor/skills — demos</title>
+<style>
+  @font-face { font-family: Inter; src: url(https://cdn.eds.equinor.com/font/InterVariable.woff2) format("woff2-variations"); font-weight: 100 900; font-display: swap; }
+  html { background: oklch(0.97 0 0); color: oklch(0.23 0 0); }
+  body { margin: 0; font-family: Inter, system-ui, sans-serif; font-size: 1rem; line-height: 1.5; }
+  main { max-width: 44rem; margin: 0 auto; padding: 2.5rem 2rem; }
+  h1 { font-size: 1.75rem; line-height: 2.25rem; font-weight: 500; margin: 0 0 0.5rem; }
+  p, li { color: oklch(0.35 0 0); }
+  ul { padding: 0; list-style: none; display: grid; gap: 1rem; margin: 1.5rem 0; }
+  li { padding: 1rem 1.25rem; background: oklch(0.999 0 0); border-radius: 4px; box-shadow: inset 0 0 0 1px oklch(0.87 0 0); }
+  a { color: oklch(0.5 0.075 204.6); } a b { font-weight: 500; }
+  small { color: oklch(0.46 0 0); }
+  footer { margin-top: 2rem; font-size: 0.875rem; color: oklch(0.46 0 0); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Demos from equinor/skills</h1>
+  <p>Pages shown at Into Design Systems Oslo, 9 September 2026. Each folder in the
+     repository's <code>demo/</code> carries an <code>INTENT.md</code> that records why it is
+     built the way it is.</p>
+  <ul>
+      <li><a href="typography/"><b>Typography that fits — a demo of three skills</b></a></li>
+      <li><a href="typography-overlay/"><b>Two typefaces on one baseline</b></a><br><small>The same sentence twice, overlaid. The reference face stays put, in grey. The other face is the one you adjust, in red; where they overlap it goes dark. Drag its size until the x-heights meet, its weight until the stems do, then its letter-spacing until the gaps between letters do. The snap points are the skills&#x27; numbers.</small></li>
+      <li><a href="typography-scale/"><b>The EDS type scale, step by step</b></a><br><small>One base, one ratio, one snap for the sizes. One curve, one grid for the line-heights. Move the step and watch the arithmetic.</small></li>
+
+  </ul>
+  <footer>Skills: <a href="https://github.com/equinor/skills">github.com/equinor/skills</a> ·
+    <code>npx skills add equinor/skills --skill &lt;name&gt;</code> · built from <code>551e6d7</code></footer>
+</main>
+</body>
+</html>

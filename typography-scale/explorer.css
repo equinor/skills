@@ -1,0 +1,98 @@
+/* Scale explorer — equinor/skills, demo/typography-scale. Same tokens as the
+ * typography demo: EDS palette steps (Gray and Moss Green from the palette
+ * generator), the EDS spacing ladder, Inter and CommitMono from the CDN. */
+@font-face { font-family: Inter; src: url(https://cdn.eds.equinor.com/font/InterVariable.woff2) format("woff2-variations"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: CommitMono; src: url(https://cdn.eds.equinor.com/font/CommitMonoV143-VF.woff2) format("woff2-variations"); font-weight: 1 999; font-display: swap; }
+
+:root {
+  --color-canvas: oklch(0.97 0 0); --color-surface: oklch(0.999 0 0); --color-muted: oklch(0.91 0 0);
+  --color-border-subtle: oklch(0.87 0 0); --color-border-medium: oklch(0.75 0 0);
+  --color-text-subtle: oklch(0.46 0 0); --color-text-strong: oklch(0.23 0 0);
+  --color-accent: oklch(0.5 0.075 204.6); --color-accent-surface: oklch(0.999 0.01 184.6);
+  --color-guide: oklch(0.5 0.075 204.6 / 0.09); --color-guide-edge: oklch(0.5 0.075 204.6 / 0.3);
+  --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 20px; --space-xl: 24px; --space-2xl: 32px; --space-3xl: 40px;
+  --radius: 4px;
+  --_base: 1rem;
+  --font-size-sm: round(calc(var(--_base) * pow(2, -2/5)), 0.03125rem);
+  --font-size-md: round(calc(var(--_base) * pow(2, -1/5)), 0.03125rem);
+  --font-size-lg: var(--_base);
+  --font-size-xl: round(calc(var(--_base) * pow(2, 1/5)), 0.03125rem);
+  --font-size-3xl: round(calc(var(--_base) * pow(2, 3/5)), 0.03125rem);
+  --line-height-sm: round(calc(var(--font-size-sm) * (1.39 - pow(1/9, 3) * 0.29)), 4px);
+  --line-height-md: round(calc(var(--font-size-md) * (1.39 - pow(2/9, 3) * 0.29)), 4px);
+  --line-height-lg: round(calc(var(--font-size-lg) * (1.39 - pow(3/9, 3) * 0.29)), 4px);
+  --line-height-xl: round(calc(var(--font-size-xl) * (1.39 - pow(4/9, 3) * 0.29)), 4px);
+  --line-height-3xl: round(calc(var(--font-size-3xl) * (1.39 - pow(6/9, 3) * 0.29)), 4px);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--color-canvas); color: var(--color-text-strong); }
+body { margin: 0; font-family: Inter, system-ui, sans-serif; font-size: var(--font-size-md); line-height: var(--line-height-md); }
+.stage { max-width: 960px; margin: 0 auto; padding: var(--space-3xl) var(--space-2xl); display: grid; gap: var(--space-xl); }
+h1 { margin: 0; font-size: var(--font-size-3xl); line-height: var(--line-height-3xl); font-weight: 500; }
+h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-xl); line-height: var(--line-height-xl); font-weight: 500; }
+h2 small { color: var(--color-text-subtle); font-weight: 400; font-size: var(--font-size-md); }
+.hint { margin: var(--space-xs) 0 0; color: var(--color-text-subtle); }
+.surface { position: relative; background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); border-radius: var(--radius); padding: var(--space-xl); }
+
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+.control { display: grid; gap: var(--space-xs); padding: var(--space-md); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); border-radius: var(--radius); margin: 0; border: 0; }
+.control--range { grid-column: 1 / -1; }
+.control__label { font-weight: 500; }
+.control__label output { color: var(--color-accent); font-variant-numeric: tabular-nums; }
+.control label { display: grid; grid-template-columns: 20px 1fr; gap: var(--space-sm); align-items: start; cursor: pointer; }
+.control label b { font-weight: 500; }
+.control label small { display: block; color: var(--color-text-subtle); font-size: var(--font-size-sm); line-height: var(--line-height-sm); }
+.control--checks { grid-column: 1 / -1; grid-template-columns: 1fr 1fr 1fr; }
+.control--checks label:has(input:disabled) { opacity: 0.45; cursor: not-allowed; }
+.control--checks input { margin: 2px 0 0; }
+@media (max-width: 700px) { .control--checks { grid-template-columns: 1fr; } }
+input[type="range"] { width: 100%; accent-color: var(--color-accent); margin: var(--space-xs) 0 0; }
+/* Tick labels sit under the thumb centres. The UA thumb is about 16px wide
+   in Chrome and Safari, so its centre runs from ~8px to (100% − ~8px); the
+   8px inset is that approximation, not a styled guarantee. */
+.ticks { list-style: none; margin: 0 8px; padding: 0; position: relative; height: var(--line-height-sm); font-size: var(--font-size-sm); line-height: var(--line-height-sm); color: var(--color-text-subtle); font-variant-numeric: tabular-nums; }
+.ticks li { position: absolute; left: calc(var(--i) / 9 * 100%); translate: -50% 0; }
+.ticks button { all: unset; cursor: pointer; padding: 0 2px; }
+.ticks button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 2px; }
+.ticks li[aria-current="true"] button { color: var(--color-accent); font-weight: 500; }
+
+
+.preview { padding: var(--space-3xl); min-height: 200px; }
+.preview p { margin: 0; }
+/* spacing-baseline-grid: the block ends on its last baseline and the first
+   baseline sits at the rounded cap height from the top — a multiple of 4. */
+@supports (text-box: trim-both ex alphabetic) {
+  .preview[data-baseline="on"] p {
+    text-box: trim-both ex alphabetic;
+    padding-top: calc(round(1cap, 4px) - 1ex);
+    padding-bottom: 0;
+  }
+}
+.preview[data-guides="on"]::after {
+  content: ""; pointer-events: none; position: absolute; inset: 0; border-radius: inherit;
+  background-image:
+    linear-gradient(to right, transparent var(--space-3xl), var(--color-guide-edge) var(--space-3xl), var(--color-guide-edge) calc(var(--space-3xl) + 1px), transparent calc(var(--space-3xl) + 1px)),
+    repeating-linear-gradient(to bottom, var(--color-guide) 0, var(--color-guide) 1px, transparent 1px, transparent 4px);
+}
+
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); }
+.tile { display: grid; gap: 2px; padding: var(--space-md); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); border-radius: var(--radius); }
+.tile__label { color: var(--color-text-subtle); font-size: var(--font-size-sm); line-height: var(--line-height-sm); }
+.tile__value { font-size: var(--font-size-3xl); line-height: var(--line-height-3xl); font-weight: 500; font-variant-numeric: tabular-nums; }
+.tile__note { color: var(--color-text-subtle); font-size: var(--font-size-sm); line-height: var(--line-height-sm); }
+
+.breakdown dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: var(--space-xs) var(--space-lg); }
+.breakdown dt { color: var(--color-text-subtle); }
+.breakdown dd { margin: 0; font-family: CommitMono, ui-monospace, monospace; font-size: var(--font-size-sm); line-height: var(--line-height-md); font-variant-numeric: tabular-nums; }
+.breakdown dd b { color: var(--color-accent); font-weight: 500; }
+
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: var(--space-xs) var(--space-sm); box-shadow: inset 0 -1px 0 var(--color-border-subtle); }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--color-text-subtle); font-weight: 500; font-size: var(--font-size-sm); }
+tr[aria-current] td { background: var(--color-accent-surface); }
+.foot { color: var(--color-text-subtle); display: grid; gap: var(--space-xs); }
+.foot p { margin: 0; }
+.foot pre { margin: 0; padding: var(--space-md); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); border-radius: var(--radius); color: var(--color-text-strong); font-family: CommitMono, ui-monospace, monospace; font-size: var(--font-size-sm); }
+.foot a { color: var(--color-accent); }
+@media (max-width: 700px) { .controls, .tiles { grid-template-columns: 1fr; } }

@@ -1,0 +1,101 @@
+/* Overlay demo — equinor/skills, demo/typography-overlay. Same tokens as the
+ * other demos. Inter and Equinor from the EDS CDN (raw files, no size-adjust);
+ * Barlow from Google Fonts (SIL OFL). Nothing is bundled. */
+@font-face { font-family: Inter; src: url(https://cdn.eds.equinor.com/font/InterVariable.woff2) format("woff2-variations"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: Equinor; src: url(https://cdn.eds.equinor.com/font/EquinorVariable-VF.woff2) format("woff2-variations"); font-weight: 300 700; font-display: block; }
+@font-face { font-family: CommitMono; src: url(https://cdn.eds.equinor.com/font/CommitMonoV143-VF.woff2) format("woff2-variations"); font-weight: 1 999; font-display: swap; }
+
+:root {
+  --color-canvas: oklch(0.97 0 0); --color-surface: oklch(0.999 0 0);
+  --color-border-subtle: oklch(0.87 0 0); --color-border-medium: oklch(0.75 0 0);
+  --color-text-subtle: oklch(0.46 0 0); --color-text-strong: oklch(0.23 0 0);
+  --color-accent: oklch(0.5 0.075 204.6); --color-accent-surface: oklch(0.999 0.01 184.6);
+  --color-ref: #B5C7C9;                     /* the reference stays put: pale grey-blue, quiet under the red (Victor, 8 Sept) */
+  --color-target: #7D0023;                  /* the adjusted face: deep red; multiply on white → dark where they overlap */
+  --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 20px; --space-xl: 24px; --space-2xl: 32px; --space-3xl: 40px;
+  --radius: 4px;
+  --_base: 1rem;
+  --font-size-sm: round(calc(var(--_base) * pow(2, -2/5)), 0.03125rem);
+  --font-size-md: round(calc(var(--_base) * pow(2, -1/5)), 0.03125rem);
+  --font-size-xl: round(calc(var(--_base) * pow(2, 1/5)), 0.03125rem);
+  --font-size-3xl: round(calc(var(--_base) * pow(2, 3/5)), 0.03125rem);
+  --line-height-sm: round(calc(var(--font-size-sm) * (1.39 - pow(1/9, 3) * 0.29)), 4px);
+  --line-height-md: round(calc(var(--font-size-md) * (1.39 - pow(2/9, 3) * 0.29)), 4px);
+  --line-height-xl: round(calc(var(--font-size-xl) * (1.39 - pow(4/9, 3) * 0.29)), 4px);
+  --line-height-3xl: round(calc(var(--font-size-3xl) * (1.39 - pow(6/9, 3) * 0.29)), 4px);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--color-canvas); color: var(--color-text-strong); }
+body { margin: 0; font-family: Inter, system-ui, sans-serif; font-size: var(--font-size-md); line-height: var(--line-height-md); }
+.stage { max-width: 1100px; margin: 0 auto; padding: var(--space-3xl) var(--space-2xl); display: grid; gap: var(--space-xl); }
+h1 { margin: 0; font-size: var(--font-size-3xl); line-height: var(--line-height-3xl); font-weight: 500; }
+h2 { margin: 0 0 var(--space-md); font-size: var(--font-size-xl); line-height: var(--line-height-xl); font-weight: 500; }
+.hint { margin: var(--space-xs) 0 0; color: var(--color-text-subtle); max-width: 70ch; }
+.surface { position: relative; background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); border-radius: var(--radius); padding: var(--space-xl); }
+
+.controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); }
+.control { display: grid; gap: var(--space-xs); padding: var(--space-md); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); border-radius: var(--radius); margin: 0; border: 0; }
+.control__label { font-weight: 500; } .control__label small { color: var(--color-text-subtle); font-weight: 400; }
+.control label { display: grid; grid-template-columns: 20px 1fr; gap: var(--space-sm); align-items: start; cursor: pointer; }
+.control label b { font-weight: 500; }
+.control label small { display: block; color: var(--color-text-subtle); font-size: var(--font-size-sm); line-height: var(--line-height-sm); }
+
+/* the overlay: two faces, one baseline. text-box trims each box to cap top and
+   baseline, so aligning the bottoms aligns the baselines. */
+.overlay { padding: var(--space-md) var(--space-xl) var(--space-2xl); overflow: hidden; }
+/* text-box is the mechanism, not a refinement: without it the two boxes meet on
+   their content-box bottoms, which are not baselines. Chrome 133, Safari 18.2 and
+   Firefox 154 trim; anything older is told so instead of shown a wrong lesson. */
+.overlay__warn { margin: 0 0 var(--space-md); padding: var(--space-sm) var(--space-md); border-radius: var(--radius); background: oklch(0.96 0.05 60); color: oklch(0.35 0.08 60); font-size: var(--font-size-sm); line-height: var(--line-height-sm); }
+@supports not (text-box: trim-both cap alphabetic) {
+  .overlay::before { content: "This browser cannot trim text boxes to the baseline (text-box), so the two faces below are not on one baseline and the snap points do not describe what you see."; display: block; margin: 0 0 var(--space-md); padding: var(--space-sm) var(--space-md); border-radius: var(--radius); background: oklch(0.96 0.05 60); color: oklch(0.35 0.08 60); }
+}
+.key { margin: 0 0 var(--space-xl); display: flex; gap: var(--space-xl); align-items: center; font-size: var(--font-size-sm); line-height: var(--line-height-sm); color: var(--color-text-subtle); }
+.key label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.key input { margin: 0; }
+.key label span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.key__ref span::before { background: var(--color-ref); }
+.key__target span::before { background: var(--color-target); }
+.key label:has(input:not(:checked)) span { text-decoration: line-through; }
+.key small { margin-left: auto; }
+/* the reference face is in flow and gives the pair its width and (trimmed)
+   height; the target is absolute at the same bottom edge, i.e. the same baseline */
+.pair { position: relative; width: max-content; margin: 0 auto; transform-origin: bottom left; }
+.face {
+  display: block; white-space: nowrap;
+  font-weight: var(--_weight, 400); font-size: 1em; line-height: 1;
+  text-box: trim-both cap alphabetic;
+  mix-blend-mode: multiply;
+}
+.face--ref { position: relative; color: var(--color-ref); font-family: var(--_ref-family, Inter), Inter, sans-serif; }
+.face--target { position: absolute; left: 0; bottom: 0; color: var(--color-target); font-family: var(--_target-family, Equinor); font-size: calc(1em * var(--_scale, 1)); font-weight: var(--_target-weight, 400); letter-spacing: calc(var(--_target-tracking, 0) * 1em); }
+.guide { position: absolute; left: -2em; right: -2em; height: 0; border-top: 1px dashed; pointer-events: none; opacity: 0.9; }
+.guide--baseline { bottom: 0; border-color: var(--color-text-subtle); }
+.guide--xref { bottom: var(--_x-ref, 0); border-color: color-mix(in oklch, var(--color-ref), black 40%); }   /* the pale face colour, darkened so a 1px line reads */
+.guide--xtarget { bottom: var(--_x-target, 0); border-color: var(--color-target); }
+.overlay[data-guides="off"] .guide { display: none; }
+/* a hidden face keeps its box (the reference gives the pair its size); its
+   x-height guide goes with it, the baseline stays */
+.overlay[data-show-ref="off"] :is(.face--ref, .guide--xref) { visibility: hidden; }
+.overlay[data-show-target="off"] :is(.face--target, .guide--xtarget) { visibility: hidden; }
+.overlay__note { margin: var(--space-md) 0 0; color: var(--color-text-subtle); font-size: var(--font-size-sm); line-height: var(--line-height-sm); text-align: center; }
+
+.sliders { display: grid; gap: var(--space-md); padding: var(--space-md) var(--space-xl); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); border-radius: var(--radius); }
+.slider { display: grid; grid-template-columns: 220px 1fr 260px; gap: var(--space-md); align-items: center; }
+.slider__label b { font-weight: 500; } .slider__label output { color: var(--color-accent); font-variant-numeric: tabular-nums; margin-left: var(--space-xs); }
+.slider__snap { color: var(--color-text-subtle); font-size: var(--font-size-sm); line-height: var(--line-height-sm); font-variant-numeric: tabular-nums; }
+.slider__snap b { color: var(--color-text-strong); font-weight: 500; }
+input[type="range"] { width: 100%; accent-color: var(--color-accent); margin: 0; }
+input[type="range"].snapped { accent-color: oklch(0.45 0.15 145); }
+.check { display: grid; grid-template-columns: 20px 1fr; gap: var(--space-sm); align-items: center; color: var(--color-text-subtle); cursor: pointer; }
+.check input { margin: 0; }
+
+.readout dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: var(--space-xs) var(--space-lg); }
+.readout dt { color: var(--color-text-subtle); }
+.readout dd { margin: 0; font-family: CommitMono, ui-monospace, monospace; font-size: var(--font-size-sm); line-height: var(--line-height-md); font-variant-numeric: tabular-nums; }
+.readout dd b { color: var(--color-accent); font-weight: 500; }
+.foot { color: var(--color-text-subtle); display: grid; gap: var(--space-xs); }
+.foot p { margin: 0; }
+.foot pre { margin: 0; padding: var(--space-md); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border-subtle); border-radius: var(--radius); color: var(--color-text-strong); font-family: CommitMono, ui-monospace, monospace; font-size: var(--font-size-sm); }
+.foot a { color: var(--color-accent); }
+@media (max-width: 800px) { .controls { grid-template-columns: 1fr; } .slider { grid-template-columns: 1fr; } }
