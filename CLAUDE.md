@@ -10,7 +10,7 @@ Consequences for how you work here:
 
 - There is **no build, no lint, no test suite, and no package manager** — no `package.json`, no CI beyond the Claude Code action. Do not add tooling unless asked.
 - The deliverable is prose that an agent will follow. Review it the way you would review code that runs: check that instructions are unambiguous, that examples are correct, and that nothing tells the agent to rely on stale knowledge.
-- Status is pre-release (README: 🚧). First skills land after the Into Design Systems Oslo meetup, 9 September 2026.
+- Status: first release, introduced at the Into Design Systems Oslo meetup on 9 September 2026 (seven skills, three demo pages). The README's Status section is the public statement; keep the two in step.
 
 ## Layout and conventions
 
@@ -147,16 +147,6 @@ comes from run on centrally managed browsers that update within weeks of an
 upstream Chromium release, with iOS Safari as the mobile target and Firefox
 supported on a best-effort basis rather than as strategy.
 
-**Evergreen means two engines, not one.** iOS Safari is WebKit, and on iOS
-every browser is WebKit, so a feature has to work in **both Chromium and
-WebKit** before a skill or a demo may rely on it; Gecko (Firefox) should work
-too, and a Gecko gap is worth a note and a fallback, but it is not a
-showstopper. When verifying support (the skills' `features-json` and
-webstatus.dev checks), read the Safari and iOS Safari columns, not only the
-Baseline status: Baseline *newly* can be reached with WebKit as the last
-engine to land, and the date it landed there is the date that matters for
-this fleet.
-
 Two consequences when authoring:
 
 - **Baseline *newly* is not an automatic veto.** Treat it as a question for the
@@ -167,6 +157,19 @@ Two consequences when authoring:
   weighted and lag interop, so a feature can be Baseline widely and still sit
   below 95% — `:has()` and CSS nesting both do. Where the two measures
   disagree, Baseline governs.
+- **Evergreen means two engines, not one.** iOS Safari is WebKit, and on iOS
+  browsers are WebKit in practice, so a feature has to work in **both Chromium
+  and WebKit** before a skill or a demo may rely on it; Gecko (Firefox) should
+  work too, and a Gecko gap is worth a note and a fallback, but it is not a
+  showstopper. When verifying support (the skills' `features-json` and
+  webstatus.dev checks), read the Safari and iOS Safari columns, not only the
+  Baseline status. Baseline *newly* already implies WebKit — its date is the
+  date the last engine landed — so the columns matter for the two cases
+  Baseline alone hides: a feature that is not Baseline at all (Chromium ships
+  it, WebKit does not), and an iOS Safari version tied to an OS release the
+  fleet has not taken yet. This is the *shape* of the target, so the
+  `css-authoring` skill carries it too; the fleet itself stays in a
+  `browserslist`.
 
 Backward compatibility is the consuming project's responsibility, and the
 README says so. Do not silently assume a long-tail matrix on a reader's behalf.
