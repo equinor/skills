@@ -73,5 +73,10 @@ authorship sit alongside them in
 [`skills/typography-x-height-alignment/assets/fonts/`](skills/typography-x-height-alignment/assets/fonts/).
 
 ## Status
- 
-🚧 Pre-release. Nothing here has been announced, and anything may change without warning until the meetup.
+
+First release, announced at Into Design Systems Oslo on 9 September 2026. Seven
+skills, installable with the command above; three demo pages under
+[`demo/`](demo/), each with an `INTENT.md` that records why it is built the way
+it is. Skills are versioned by the git history for now — expect the wording to
+keep improving, and the emitted numbers to change only when the fonts do or a
+measurement is corrected, with the change recorded in the skill's positions.
