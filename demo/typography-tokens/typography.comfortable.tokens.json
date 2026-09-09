@@ -2952,7 +2952,7 @@
                 "step": "xs",
                 "tier": "lighter",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -2960,8 +2960,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.9737
+                "unit": "PIXELS",
+                "value": 0.1163,
+                "atFontSize": 11.9415
               }
             }
           },
@@ -3007,7 +3008,7 @@
                 "step": "sm",
                 "tier": "lighter",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3015,8 +3016,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.9737
+                "unit": "PIXELS",
+                "value": 0.1329,
+                "atFontSize": 13.6475
               }
             }
           },
@@ -3062,7 +3064,7 @@
                 "step": "md",
                 "tier": "lighter",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3070,8 +3072,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.9737
+                "unit": "PIXELS",
+                "value": 0.155,
+                "atFontSize": 15.922
               }
             }
           },
@@ -3117,7 +3120,7 @@
                 "step": "lg",
                 "tier": "lighter",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3125,8 +3128,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.6649
+                "unit": "PIXELS",
+                "value": 0.1202,
+                "atFontSize": 18.0827
               }
             }
           },
@@ -3172,7 +3176,7 @@
                 "step": "xl",
                 "tier": "lighter",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3180,8 +3184,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.2769
+                "unit": "PIXELS",
+                "value": 0.0575,
+                "atFontSize": 20.7575
               }
             }
           },
@@ -3227,7 +3232,7 @@
                 "step": "2xl",
                 "tier": "lighter",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3235,8 +3240,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -0.1091
+                "unit": "PIXELS",
+                "value": -0.0255,
+                "atFontSize": 23.3704
               }
             }
           },
@@ -3282,7 +3288,7 @@
                 "step": "3xl",
                 "tier": "lighter",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3290,8 +3296,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -0.6604
+                "unit": "PIXELS",
+                "value": -0.1781,
+                "atFontSize": 26.9663
               }
             }
           },
@@ -3337,7 +3344,7 @@
                 "step": "4xl",
                 "tier": "lighter",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3345,8 +3352,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -1.2215
+                "unit": "PIXELS",
+                "value": -0.3723,
+                "atFontSize": 30.4769
               }
             }
           },
@@ -3392,7 +3400,7 @@
                 "step": "5xl",
                 "tier": "lighter",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3400,8 +3408,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -1.8686
+                "unit": "PIXELS",
+                "value": -0.6423,
+                "atFontSize": 34.375
               }
             }
           },
@@ -3447,7 +3456,7 @@
                 "step": "6xl",
                 "tier": "lighter",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3455,8 +3464,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -1.8686
+                "unit": "PIXELS",
+                "value": -0.7427,
+                "atFontSize": 39.7461
               }
             }
           }
@@ -3504,7 +3514,7 @@
                 "step": "xs",
                 "tier": "normal",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3512,8 +3522,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.6082
+                "unit": "PIXELS",
+                "value": 0.0726,
+                "atFontSize": 11.9415
               }
             }
           },
@@ -3559,7 +3570,7 @@
                 "step": "sm",
                 "tier": "normal",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3567,8 +3578,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.6082
+                "unit": "PIXELS",
+                "value": 0.083,
+                "atFontSize": 13.6475
               }
             }
           },
@@ -3614,7 +3626,7 @@
                 "step": "md",
                 "tier": "normal",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3622,8 +3634,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.6082
+                "unit": "PIXELS",
+                "value": 0.0968,
+                "atFontSize": 15.922
               }
             }
           },
@@ -3669,7 +3682,7 @@
                 "step": "lg",
                 "tier": "normal",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3677,8 +3690,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.3975
+                "unit": "PIXELS",
+                "value": 0.0719,
+                "atFontSize": 18.0827
               }
             }
           },
@@ -3724,7 +3738,7 @@
                 "step": "xl",
                 "tier": "normal",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3732,8 +3746,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.1285
+                "unit": "PIXELS",
+                "value": 0.0267,
+                "atFontSize": 20.7575
               }
             }
           },
@@ -3779,7 +3794,7 @@
                 "step": "2xl",
                 "tier": "normal",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3787,8 +3802,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -0.1393
+                "unit": "PIXELS",
+                "value": -0.0326,
+                "atFontSize": 23.3704
               }
             }
           },
@@ -3834,7 +3850,7 @@
                 "step": "3xl",
                 "tier": "normal",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3842,8 +3858,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -0.5285
+                "unit": "PIXELS",
+                "value": -0.1425,
+                "atFontSize": 26.9663
               }
             }
           },
@@ -3889,7 +3906,7 @@
                 "step": "4xl",
                 "tier": "normal",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3897,8 +3914,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -0.9333
+                "unit": "PIXELS",
+                "value": -0.2844,
+                "atFontSize": 30.4769
               }
             }
           },
@@ -3944,7 +3962,7 @@
                 "step": "5xl",
                 "tier": "normal",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -3952,8 +3970,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -1.3919
+                "unit": "PIXELS",
+                "value": -0.4785,
+                "atFontSize": 34.375
               }
             }
           },
@@ -3999,7 +4018,7 @@
                 "step": "6xl",
                 "tier": "normal",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -4007,8 +4026,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -1.3919
+                "unit": "PIXELS",
+                "value": -0.5532,
+                "atFontSize": 39.7461
               }
             }
           }
@@ -4056,7 +4076,7 @@
                 "step": "xs",
                 "tier": "bolder",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -4064,8 +4084,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.3783
+                "unit": "PIXELS",
+                "value": 0.0452,
+                "atFontSize": 11.9415
               }
             }
           },
@@ -4111,7 +4132,7 @@
                 "step": "sm",
                 "tier": "bolder",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -4119,8 +4140,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.3783
+                "unit": "PIXELS",
+                "value": 0.0516,
+                "atFontSize": 13.6475
               }
             }
           },
@@ -4166,7 +4188,7 @@
                 "step": "md",
                 "tier": "bolder",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -4174,8 +4196,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.3783
+                "unit": "PIXELS",
+                "value": 0.0602,
+                "atFontSize": 15.922
               }
             }
           },
@@ -4221,7 +4244,7 @@
                 "step": "lg",
                 "tier": "bolder",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -4229,8 +4252,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": 0.1863
+                "unit": "PIXELS",
+                "value": 0.0337,
+                "atFontSize": 18.0827
               }
             }
           },
@@ -4276,7 +4300,7 @@
                 "step": "xl",
                 "tier": "bolder",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -4284,8 +4308,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -0.0494
+                "unit": "PIXELS",
+                "value": -0.0103,
+                "atFontSize": 20.7575
               }
             }
           },
@@ -4331,7 +4356,7 @@
                 "step": "2xl",
                 "tier": "bolder",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -4339,8 +4364,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -0.3084
+                "unit": "PIXELS",
+                "value": -0.0721,
+                "atFontSize": 23.3704
               }
             }
           },
@@ -4386,7 +4412,7 @@
                 "step": "3xl",
                 "tier": "bolder",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -4394,8 +4420,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -0.6486
+                "unit": "PIXELS",
+                "value": -0.1749,
+                "atFontSize": 26.9663
               }
             }
           },
@@ -4441,7 +4468,7 @@
                 "step": "4xl",
                 "tier": "bolder",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -4449,8 +4476,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -0.9911
+                "unit": "PIXELS",
+                "value": -0.3021,
+                "atFontSize": 30.4769
               }
             }
           },
@@ -4496,7 +4524,7 @@
                 "step": "5xl",
                 "tier": "bolder",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -4504,8 +4532,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -1.4052
+                "unit": "PIXELS",
+                "value": -0.483,
+                "atFontSize": 34.375
               }
             }
           },
@@ -4551,7 +4580,7 @@
                 "step": "6xl",
                 "tier": "bolder",
                 "density": "comfortable",
-                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+                "note": "em of Equinor's own size; Figma binds letter-spacing variables in px only, React Native takes px"
               },
               "com.equinor.figma": {
                 "collection": "Typography",
@@ -4559,8 +4588,9 @@
                 "scopes": [
                   "LETTER_SPACING"
                 ],
-                "unit": "PERCENT",
-                "value": -1.4052
+                "unit": "PIXELS",
+                "value": -0.5585,
+                "atFontSize": 39.7461
               }
             }
           }
