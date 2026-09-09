@@ -29,12 +29,12 @@ const needs = { baseline: ['scale'] };
 // at that same opsz (Inter's x-height drifts with the axis; see INTENT §3).
 // x-heights sampled 2026-09-07, stems 2026-09-08, with, per step:
 //   xheight.py Inter.woff2 --location wght=400,opsz=<px>          → correction = xRatio / 0.48
-//   stem.py Inter.woff2 EquinorVariable-VF.woff2 --match 300,400,600 --opsz <px> --correction <that>
-// Bolder tier, Inter 600: h1 5xl 32px, h2 3xl 24.5px, h3 2xl 21px.
+//   stem.py Inter.woff2 EquinorVariable-VF.woff2 --match 300,400,500 --opsz <px> --correction <that>
+// Bolder tier, Inter 500 (the EDS rework's bolder tier; 600 until 9 September): h1 5xl 32px, h2 3xl 24.5px, h3 2xl 21px.
 // Browser-default headings are 700, which no weight on Equinor's 300–700 axis
 // reaches: the skill reports null and the value holds at the axis maximum.
 const matched = {
-  scaleOn: { h1: 680.7, h2: 671.6, h3: 667.7 },
+  scaleOn: { h1: 563.1, h2: 558.5, h3: 556.5 },
   scaleOff: { h1: 700, h2: 700, h3: 700 },
 };
 // typography-weight-matching §4, the spacing half: Inter's opsz axis tightens its
@@ -43,10 +43,10 @@ const matched = {
 // perceived size: sideSpace(Inter @ opsz) / correction − sideSpace(Equinor @ matched).
 // Measured 2026-09-08 with, per step:
 //   stem.py Inter.woff2 EquinorVariable-VF.woff2 --letter-spacing --at <tier>,<matched> --opsz <px> --correction <that step's> --px <px>
-// Bolder tier: 5xl −0.0142em (−0.49px), 3xl −0.0077em (−0.21px), 2xl −0.0046em (−0.11px).
+// Bolder tier: 5xl −0.0141em (−0.48px), 3xl −0.0065em (−0.18px), 2xl −0.0031em (−0.07px).
 // Browser defaults (700 vs Equinor 700 clamped): 32px −0.0183em, 24px −0.0117em, 18.72px −0.0075em.
 const tracked = {
-  scaleOn: { h1: -0.0142, h2: -0.0077, h3: -0.0046 },
+  scaleOn: { h1: -0.0141, h2: -0.0065, h3: -0.0031 },
   scaleOff: { h1: -0.0183, h2: -0.0117, h3: -0.0075 },
 };
 
@@ -91,9 +91,9 @@ h3 { font-size: 1.17em; font-weight: bold; line-height: normal; }`,
   --line-height-5xl: round(calc(var(--font-size-5xl) * (1.39 - pow(8/9, 3) * 0.29)), 4px);  <span class="c">/* 36px */</span>
 }
 p  { font-size: var(--font-size-lg);  line-height: var(--line-height-lg); }
-h1 { font-size: var(--font-size-5xl); line-height: var(--line-height-5xl); font-weight: 600; }
-h2 { font-size: var(--font-size-3xl); line-height: var(--line-height-3xl); font-weight: 600; }
-h3 { font-size: var(--font-size-2xl); line-height: var(--line-height-2xl); font-weight: 600; }
+h1 { font-size: var(--font-size-5xl); line-height: var(--line-height-5xl); font-weight: 500; }
+h2 { font-size: var(--font-size-3xl); line-height: var(--line-height-3xl); font-weight: 500; }
+h3 { font-size: var(--font-size-2xl); line-height: var(--line-height-2xl); font-weight: 500; }
 <span class="c">/* Space before each block, as in EDS: h1 40px, h2 32px, h3 24px, p 20px.
    Density is one number: [data-density='compact'] { --_base: 0.875rem; } */</span>`,
   },
@@ -178,13 +178,13 @@ h3 { font-size: calc(1.17em * <span class="n">1.121012</span>); }  <span class="
    same perceived size — each step's own x-height correction
    applied. Inter's opsz axis thins its stems as the size grows
    and lowers its x-height, so Equinor is set smaller at the large
-   steps and the bolder tier has to keep up. Bolder tier, Inter 600: */</span>
+   steps and the bolder tier has to keep up. Bolder tier, Inter 500: */</span>
 <span class="k">"font-weight"</span>: { <span class="k">"Equinor"</span>: { <span class="k">"bolder"</span>: {
-  <span class="k">"xs"</span>–<span class="k">"md"</span>: <span class="n">660.0</span>,  <span class="k">"lg"</span>: <span class="n">662.2</span>,  <span class="k">"xl"</span>: <span class="n">664.6</span>,  <span class="k">"2xl"</span>: <span class="n">667.7</span>,
-  <span class="k">"3xl"</span>: <span class="n">671.6</span>, <span class="k">"4xl"</span>: <span class="n">675.7</span>, <span class="k">"5xl"</span>–<span class="k">"6xl"</span>: <span class="n">680.7</span> } } }
-h1 { font-weight: <span class="n">680.7</span>; }  <span class="c">/* 5xl · Inter 600 @ opsz 32   */</span>
-h2 { font-weight: <span class="n">671.6</span>; }  <span class="c">/* 3xl · Inter 600 @ opsz 24.5 */</span>
-h3 { font-weight: <span class="n">667.7</span>; }  <span class="c">/* 2xl · Inter 600 @ opsz 21   */</span>
+  <span class="k">"xs"</span>–<span class="k">"md"</span>: <span class="n">552.7</span>,  <span class="k">"lg"</span>: <span class="n">553.9</span>,  <span class="k">"xl"</span>: <span class="n">554.9</span>,  <span class="k">"2xl"</span>: <span class="n">556.5</span>,
+  <span class="k">"3xl"</span>: <span class="n">558.5</span>, <span class="k">"4xl"</span>: <span class="n">560.5</span>, <span class="k">"5xl"</span>–<span class="k">"6xl"</span>: <span class="n">563.1</span> } } }
+h1 { font-weight: <span class="n">563.1</span>; }  <span class="c">/* 5xl · Inter 500 @ opsz 32   */</span>
+h2 { font-weight: <span class="n">558.5</span>; }  <span class="c">/* 3xl · Inter 500 @ opsz 24.5 */</span>
+h3 { font-weight: <span class="n">556.5</span>; }  <span class="c">/* 2xl · Inter 500 @ opsz 21   */</span>
 <span class="c">/* Normal tier, Inter 400: 458.5 at every step — the thinner stem
    and the smaller size cancel. Lighter, Inter 300: 376.2 → 377.5. */</span>`,
     cssClamped: `<span class="c">/* Stem width at the glyph midpoint, from the outlines. The
@@ -194,7 +194,7 @@ h3 { font-weight: <span class="n">667.7</span>; }  <span class="c">/* 2xl · Int
    warning: tier 700 falls outside the target's weight axis (null)
    Holding at the axis maximum is this demo's choice, not the
    skill's. Apply the scale: EDS headings take the bolder tier,
-   600, which Equinor can match. */</span>
+   500, which Equinor can match. */</span>
 h1, h2, h3 { font-weight: <span class="n">700</span>; } <span class="c">/* clamped — nothing changes */</span>`,
   },
   tracking: {
@@ -205,13 +205,13 @@ h1, h2, h3 { font-weight: <span class="n">700</span>; } <span class="c">/* clamp
    between 14px and 32px; Equinor has no axis, so at heading
    sizes it reads looser at the matched weight. In Equinor's em:
    sideSpace(Inter @ opsz) / correction − sideSpace(Equinor).
-   Bolder tier, Inter 600 → Equinor at its matched weight: */</span>
+   Bolder tier, Inter 500 → Equinor at its matched weight: */</span>
 <span class="k">"letter-spacing"</span>: { <span class="k">"Equinor"</span>: { <span class="k">"bolder"</span>: {
-  <span class="k">"xs"</span>–<span class="k">"md"</span>: <span class="n">+0.0013</span>, <span class="k">"lg"</span>: <span class="n">−0.0003</span>, <span class="k">"xl"</span>: <span class="n">−0.0024</span>, <span class="k">"2xl"</span>: <span class="n">−0.0046</span>,
-  <span class="k">"3xl"</span>: <span class="n">−0.0077</span>, <span class="k">"4xl"</span>: <span class="n">−0.0110</span>, <span class="k">"5xl"</span>–<span class="k">"6xl"</span>: <span class="n">−0.0142</span> } } }  <span class="c">/* em */</span>
-h1 { letter-spacing: <span class="n">-0.0142em</span>; }  <span class="c">/* 5xl · 0.0667 / 1.074219 − 0.0763 · −0.49px at 34.5px */</span>
-h2 { letter-spacing: <span class="n">-0.0077em</span>; }  <span class="c">/* 3xl · Inter 600 @ opsz 24.5 · −0.21px at 27px    */</span>
-h3 { letter-spacing: <span class="n">-0.0046em</span>; }  <span class="c">/* 2xl · Inter 600 @ opsz 21   · −0.11px at 23.5px  */</span>
+  <span class="k">"xs"</span>–<span class="k">"md"</span>: <span class="n">+0.0038</span>, <span class="k">"lg"</span>: <span class="n">+0.0019</span>, <span class="k">"xl"</span>: <span class="n">−0.0005</span>, <span class="k">"2xl"</span>: <span class="n">−0.0031</span>,
+  <span class="k">"3xl"</span>: <span class="n">−0.0065</span>, <span class="k">"4xl"</span>: <span class="n">−0.0099</span>, <span class="k">"5xl"</span>–<span class="k">"6xl"</span>: <span class="n">−0.0141</span> } } }  <span class="c">/* em */</span>
+h1 { letter-spacing: <span class="n">-0.0141em</span>; }  <span class="c">/* 5xl · 0.0718 / 1.074219 − 0.0808 · −0.48px at 34.5px */</span>
+h2 { letter-spacing: <span class="n">-0.0065em</span>; }  <span class="c">/* 3xl · Inter 500 @ opsz 24.5 · −0.18px at 27px    */</span>
+h3 { letter-spacing: <span class="n">-0.0031em</span>; }  <span class="c">/* 2xl · Inter 500 @ opsz 21   · −0.07px at 23.5px  */</span>
 <span class="c">/* The text steps need none: the two faces agree within a tenth of
    a pixel at 14px. Normal tier: +0.0061 at md, −0.0139 at 5xl. */</span>`,
     cssClamped: `<span class="c">/* Side space — advance minus ink, mean over a–z — at the same

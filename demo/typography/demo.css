@@ -135,7 +135,7 @@ body { margin: 0; font-family: Inter, system-ui, sans-serif; }
 .surface[data-scale="on"] h2 { --_h-size: var(--font-size-3xl); --_h-size-display: var(--font-size-display-3xl); line-height: var(--line-height-3xl); --_flow-space: var(--space-2xl); }
 .surface[data-scale="on"] h3 { --_h-size: var(--font-size-2xl); --_h-size-display: var(--font-size-display-2xl); line-height: var(--line-height-2xl); --_flow-space: var(--space-xl); }
 .surface[data-scale="on"] p  { --_flow-space: var(--space-lg); }
-.surface[data-scale="on"] :is(h1, h2, h3) { --_h-weight: 600; }      /* EDS headings take the bolder tier */
+.surface[data-scale="on"] :is(h1, h2, h3) { --_h-weight: 500; }      /* EDS headings take the bolder tier, Inter 500 */
 /* flow spacing as in EDS elements.css: each block carries the space before it */
 .surface[data-scale="on"] :is(h1, h2, h3, p) { margin: 0; }
 .surface[data-scale="on"] :is(h1, h2, h3, p) + :is(h1, h2, h3, p) { margin-top: var(--_flow-space, var(--space-lg)); }

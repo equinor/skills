@@ -83,14 +83,16 @@ not a hard-coded stand-in for it.
 September). Browser-default headings are bold, 700, and Inter 700 has a stem
 no weight on Equinor's 300–700 axis reaches, so with the scale off the weight
 toggle holds at 700 and the code panel shows the skill's warning rather than
-pretending. The scale sets headings at the bolder tier, Inter 600, and the
-match is taken per heading size with Inter's `opsz` following the size and
-the x-height correction taken at that same `opsz`: `h1` 5xl 680.7, `h2` 3xl
-671.6, `h3` 2xl 667.7 (the full 300 / 400 / 600 table across the ramp is in
-`demo.js`; measured 8 September with `xheight.py Inter.woff2 --location
-wght=400,opsz=<px>` for the step's correction and `stem.py Inter.woff2
-EquinorVariable-VF.woff2 --match 300,400,600 --opsz <px> --correction <that>`
-per step). Holding an unreachable tier at the axis maximum is the demo's
+pretending. The scale sets headings at the bolder tier, Inter 500 — the tier
+the EDS token rework uses (Victor, 9 September; the demo ran at 600 until
+then) — and the match is taken per heading size with Inter's `opsz` following
+the size and the x-height correction taken at that same `opsz`: `h1` 5xl
+563.1, `h2` 3xl 558.5, `h3` 2xl 556.5 (the full 300 / 400 / 500 table across
+the ramp is in `demo.js`; measured 8–9 September with `xheight.py Inter.woff2
+--location wght=400,opsz=<px>` for the step's correction and `stem.py
+Inter.woff2 EquinorVariable-VF.woff2 --match 300,400,500 --opsz <px>
+--correction <that>` per step, and reproduced by
+`demo/typography-tokens/build.py`). Holding an unreachable tier at the axis maximum is the demo's
 choice; the skill reports null. The bolder values rise with size: Inter's
 optical axis thins its stems, but it also lowers its x-height, so Equinor is
 set smaller at the large steps and needs more weight to keep up; at the normal
@@ -117,8 +119,8 @@ cuts its side space — advance minus ink, mean over a–z — by a quarter betw
 opsz 14 and 32, and Equinor has no axis, so at heading sizes Equinor reads
 about 20% looser at the matched weight. Control 6 gives each heading
 `sideSpace(Inter @ opsz) / correction − sideSpace(Equinor @ matched)` in
-Equinor's em: `h1` 5xl −0.0142em (−0.49px), `h2` 3xl −0.0077em, `h3` 2xl
-−0.0046em with the scale on; −0.0183 / −0.0117 / −0.0075em for the browser's
+Equinor's em: `h1` 5xl −0.0141em (−0.48px), `h2` 3xl −0.0065em, `h3` 2xl
+−0.0031em with the scale on; −0.0183 / −0.0117 / −0.0075em for the browser's
 700 against Equinor's clamped 700 without it. The text steps need none: the
 faces agree within a tenth of a pixel at 14px. Measured with
 `stem.py Inter.woff2 EquinorVariable-VF.woff2 --letter-spacing --at <tier>,<matched>
