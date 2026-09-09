@@ -1772,11 +1772,11 @@
         },
         "bolder": {
           "$type": "fontWeight",
-          "$value": 600,
+          "$value": 500,
           "$extensions": {
             "com.equinor.typography": {
               "note": "chosen tier on Inter's axis, the reference; Equinor's tiers are matched to it per step",
-              "css": "font-weight: 600;"
+              "css": "font-weight: 500;"
             },
             "com.equinor.figma": {
               "collection": "Typography",
@@ -2536,14 +2536,14 @@
         "bolder": {
           "xs": {
             "$type": "fontWeight",
-            "$value": 660.0,
+            "$value": 552.7,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
                   "inputs": {
-                    "tier": 600,
-                    "referenceStemEm": 0.126912,
+                    "tier": 500,
+                    "referenceStemEm": 0.107402,
                     "correction": "{typography.x-height-correction.display.xs}",
                     "correctionValue": 1.137288
                   }
@@ -2553,11 +2553,11 @@
                   "method": "outline:mid-height-stem",
                   "instance": {
                     "opsz": 14,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
-                "css": "font-weight: 660.0;",
+                "css": "font-weight: 552.7;",
                 "step": "xs",
                 "tier": "bolder",
                 "density": "compact"
@@ -2573,14 +2573,14 @@
           },
           "sm": {
             "$type": "fontWeight",
-            "$value": 660.0,
+            "$value": 552.7,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
                   "inputs": {
-                    "tier": 600,
-                    "referenceStemEm": 0.126912,
+                    "tier": 500,
+                    "referenceStemEm": 0.107402,
                     "correction": "{typography.x-height-correction.display.sm}",
                     "correctionValue": 1.137288
                   }
@@ -2590,11 +2590,11 @@
                   "method": "outline:mid-height-stem",
                   "instance": {
                     "opsz": 14,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
-                "css": "font-weight: 660.0;",
+                "css": "font-weight: 552.7;",
                 "step": "sm",
                 "tier": "bolder",
                 "density": "compact"
@@ -2610,14 +2610,14 @@
           },
           "md": {
             "$type": "fontWeight",
-            "$value": 660.0,
+            "$value": 552.7,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
                   "inputs": {
-                    "tier": 600,
-                    "referenceStemEm": 0.126912,
+                    "tier": 500,
+                    "referenceStemEm": 0.107402,
                     "correction": "{typography.x-height-correction.display.md}",
                     "correctionValue": 1.137288
                   }
@@ -2627,11 +2627,11 @@
                   "method": "outline:mid-height-stem",
                   "instance": {
                     "opsz": 14,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
-                "css": "font-weight: 660.0;",
+                "css": "font-weight: 552.7;",
                 "step": "md",
                 "tier": "bolder",
                 "density": "compact"
@@ -2647,14 +2647,14 @@
           },
           "lg": {
             "$type": "fontWeight",
-            "$value": 660.0,
+            "$value": 552.7,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
                   "inputs": {
-                    "tier": 600,
-                    "referenceStemEm": 0.126912,
+                    "tier": 500,
+                    "referenceStemEm": 0.107402,
                     "correction": "{typography.x-height-correction.display.lg}",
                     "correctionValue": 1.137288
                   }
@@ -2664,11 +2664,11 @@
                   "method": "outline:mid-height-stem",
                   "instance": {
                     "opsz": 14.0,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
-                "css": "font-weight: 660.0;",
+                "css": "font-weight: 552.7;",
                 "step": "lg",
                 "tier": "bolder",
                 "density": "compact"
@@ -2684,14 +2684,14 @@
           },
           "xl": {
             "$type": "fontWeight",
-            "$value": 662.2,
+            "$value": 553.9,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
                   "inputs": {
-                    "tier": 600,
-                    "referenceStemEm": 0.126526,
+                    "tier": 500,
+                    "referenceStemEm": 0.106937,
                     "correction": "{typography.x-height-correction.display.xl}",
                     "correctionValue": 1.130167
                   }
@@ -2701,11 +2701,11 @@
                   "method": "outline:mid-height-stem",
                   "instance": {
                     "opsz": 16,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
-                "css": "font-weight: 662.2;",
+                "css": "font-weight: 553.9;",
                 "step": "xl",
                 "tier": "bolder",
                 "density": "compact"
@@ -2721,14 +2721,14 @@
           },
           "2xl": {
             "$type": "fontWeight",
-            "$value": 664.6,
+            "$value": 554.9,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
                   "inputs": {
-                    "tier": 600,
-                    "referenceStemEm": 0.126043,
+                    "tier": 500,
+                    "referenceStemEm": 0.106357,
                     "correction": "{typography.x-height-correction.display.2xl}",
                     "correctionValue": 1.122029
                   }
@@ -2738,11 +2738,11 @@
                   "method": "outline:mid-height-stem",
                   "instance": {
                     "opsz": 18.5,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
-                "css": "font-weight: 664.6;",
+                "css": "font-weight: 554.9;",
                 "step": "2xl",
                 "tier": "bolder",
                 "density": "compact"
@@ -2758,14 +2758,14 @@
           },
           "3xl": {
             "$type": "fontWeight",
-            "$value": 667.7,
+            "$value": 556.5,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
                   "inputs": {
-                    "tier": 600,
-                    "referenceStemEm": 0.12556,
+                    "tier": 500,
+                    "referenceStemEm": 0.105776,
                     "correction": "{typography.x-height-correction.display.3xl}",
                     "correctionValue": 1.112875
                   }
@@ -2775,11 +2775,11 @@
                   "method": "outline:mid-height-stem",
                   "instance": {
                     "opsz": 21.0,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
-                "css": "font-weight: 667.7;",
+                "css": "font-weight: 556.5;",
                 "step": "3xl",
                 "tier": "bolder",
                 "density": "compact"
@@ -2795,14 +2795,14 @@
           },
           "4xl": {
             "$type": "fontWeight",
-            "$value": 671.6,
+            "$value": 558.5,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
                   "inputs": {
-                    "tier": 600,
-                    "referenceStemEm": 0.124885,
+                    "tier": 500,
+                    "referenceStemEm": 0.104963,
                     "correction": "{typography.x-height-correction.display.4xl}",
                     "correctionValue": 1.100667
                   }
@@ -2812,11 +2812,11 @@
                   "method": "outline:mid-height-stem",
                   "instance": {
                     "opsz": 24.5,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
-                "css": "font-weight: 671.6;",
+                "css": "font-weight: 558.5;",
                 "step": "4xl",
                 "tier": "bolder",
                 "density": "compact"
@@ -2832,14 +2832,14 @@
           },
           "5xl": {
             "$type": "fontWeight",
-            "$value": 675.7,
+            "$value": 560.5,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
                   "inputs": {
-                    "tier": 600,
-                    "referenceStemEm": 0.124208,
+                    "tier": 500,
+                    "referenceStemEm": 0.104151,
                     "correction": "{typography.x-height-correction.display.5xl}",
                     "correctionValue": 1.08846
                   }
@@ -2849,11 +2849,11 @@
                   "method": "outline:mid-height-stem",
                   "instance": {
                     "opsz": 28.0,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
-                "css": "font-weight: 675.7;",
+                "css": "font-weight: 560.5;",
                 "step": "5xl",
                 "tier": "bolder",
                 "density": "compact"
@@ -2869,14 +2869,14 @@
           },
           "6xl": {
             "$type": "fontWeight",
-            "$value": 680.7,
+            "$value": 563.1,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
                   "inputs": {
-                    "tier": 600,
-                    "referenceStemEm": 0.123436,
+                    "tier": 500,
+                    "referenceStemEm": 0.103222,
                     "correction": "{typography.x-height-correction.display.6xl}",
                     "correctionValue": 1.074219
                   }
@@ -2886,11 +2886,11 @@
                   "method": "outline:mid-height-stem",
                   "instance": {
                     "opsz": 32,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
-                "css": "font-weight: 680.7;",
+                "css": "font-weight: 563.1;",
                 "step": "6xl",
                 "tier": "bolder",
                 "density": "compact"
@@ -4016,20 +4016,20 @@
         "bolder": {
           "xs": {
             "$type": "number",
-            "$value": 0.001272,
+            "$value": 0.003783,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
                   "inputs": {
                     "reference": {
-                      "sideSpaceEm": 0.089143,
-                      "weight": 600,
+                      "sideSpaceEm": 0.096677,
+                      "weight": 500,
                       "opsz": 14
                     },
                     "target": {
-                      "sideSpaceEm": 0.07711,
-                      "weight": 660.0
+                      "sideSpaceEm": 0.081224,
+                      "weight": 552.7
                     },
                     "correction": "{typography.x-height-correction.display.xs}",
                     "correctionValue": 1.137288
@@ -4040,19 +4040,19 @@
                   "method": "outline:advance-minus-ink",
                   "instance": {
                     "opsz": 14,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
                 "units": {
-                  "em": 0.001272,
-                  "percent": 0.1272,
+                  "em": 0.003783,
+                  "percent": 0.3783,
                   "px": {
                     "at": 10.2356,
-                    "value": 0.013
+                    "value": 0.0387
                   }
                 },
-                "css": "letter-spacing: 0.001272em;",
+                "css": "letter-spacing: 0.003783em;",
                 "step": "xs",
                 "tier": "bolder",
                 "density": "compact",
@@ -4065,26 +4065,26 @@
                   "LETTER_SPACING"
                 ],
                 "unit": "PERCENT",
-                "value": 0.1272
+                "value": 0.3783
               }
             }
           },
           "sm": {
             "$type": "number",
-            "$value": 0.001272,
+            "$value": 0.003783,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
                   "inputs": {
                     "reference": {
-                      "sideSpaceEm": 0.089143,
-                      "weight": 600,
+                      "sideSpaceEm": 0.096677,
+                      "weight": 500,
                       "opsz": 14
                     },
                     "target": {
-                      "sideSpaceEm": 0.07711,
-                      "weight": 660.0
+                      "sideSpaceEm": 0.081224,
+                      "weight": 552.7
                     },
                     "correction": "{typography.x-height-correction.display.sm}",
                     "correctionValue": 1.137288
@@ -4095,19 +4095,19 @@
                   "method": "outline:advance-minus-ink",
                   "instance": {
                     "opsz": 14,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
                 "units": {
-                  "em": 0.001272,
-                  "percent": 0.1272,
+                  "em": 0.003783,
+                  "percent": 0.3783,
                   "px": {
                     "at": 11.9415,
-                    "value": 0.0152
+                    "value": 0.0452
                   }
                 },
-                "css": "letter-spacing: 0.001272em;",
+                "css": "letter-spacing: 0.003783em;",
                 "step": "sm",
                 "tier": "bolder",
                 "density": "compact",
@@ -4120,26 +4120,26 @@
                   "LETTER_SPACING"
                 ],
                 "unit": "PERCENT",
-                "value": 0.1272
+                "value": 0.3783
               }
             }
           },
           "md": {
             "$type": "number",
-            "$value": 0.001272,
+            "$value": 0.003783,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
                   "inputs": {
                     "reference": {
-                      "sideSpaceEm": 0.089143,
-                      "weight": 600,
+                      "sideSpaceEm": 0.096677,
+                      "weight": 500,
                       "opsz": 14
                     },
                     "target": {
-                      "sideSpaceEm": 0.07711,
-                      "weight": 660.0
+                      "sideSpaceEm": 0.081224,
+                      "weight": 552.7
                     },
                     "correction": "{typography.x-height-correction.display.md}",
                     "correctionValue": 1.137288
@@ -4150,19 +4150,19 @@
                   "method": "outline:advance-minus-ink",
                   "instance": {
                     "opsz": 14,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
                 "units": {
-                  "em": 0.001272,
-                  "percent": 0.1272,
+                  "em": 0.003783,
+                  "percent": 0.3783,
                   "px": {
                     "at": 13.6475,
-                    "value": 0.0174
+                    "value": 0.0516
                   }
                 },
-                "css": "letter-spacing: 0.001272em;",
+                "css": "letter-spacing: 0.003783em;",
                 "step": "md",
                 "tier": "bolder",
                 "density": "compact",
@@ -4175,26 +4175,26 @@
                   "LETTER_SPACING"
                 ],
                 "unit": "PERCENT",
-                "value": 0.1272
+                "value": 0.3783
               }
             }
           },
           "lg": {
             "$type": "number",
-            "$value": 0.001272,
+            "$value": 0.003783,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
                   "inputs": {
                     "reference": {
-                      "sideSpaceEm": 0.089143,
-                      "weight": 600,
+                      "sideSpaceEm": 0.096677,
+                      "weight": 500,
                       "opsz": 14.0
                     },
                     "target": {
-                      "sideSpaceEm": 0.07711,
-                      "weight": 660.0
+                      "sideSpaceEm": 0.081224,
+                      "weight": 552.7
                     },
                     "correction": "{typography.x-height-correction.display.lg}",
                     "correctionValue": 1.137288
@@ -4205,19 +4205,19 @@
                   "method": "outline:advance-minus-ink",
                   "instance": {
                     "opsz": 14.0,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
                 "units": {
-                  "em": 0.001272,
-                  "percent": 0.1272,
+                  "em": 0.003783,
+                  "percent": 0.3783,
                   "px": {
                     "at": 15.922,
-                    "value": 0.0203
+                    "value": 0.0602
                   }
                 },
-                "css": "letter-spacing: 0.001272em;",
+                "css": "letter-spacing: 0.003783em;",
                 "step": "lg",
                 "tier": "bolder",
                 "density": "compact",
@@ -4230,26 +4230,26 @@
                   "LETTER_SPACING"
                 ],
                 "unit": "PERCENT",
-                "value": 0.1272
+                "value": 0.3783
               }
             }
           },
           "xl": {
             "$type": "number",
-            "$value": -0.000318,
+            "$value": 0.001863,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
                   "inputs": {
                     "reference": {
-                      "sideSpaceEm": 0.086694,
-                      "weight": 600,
+                      "sideSpaceEm": 0.093907,
+                      "weight": 500,
                       "opsz": 16
                     },
                     "target": {
-                      "sideSpaceEm": 0.077027,
-                      "weight": 662.2
+                      "sideSpaceEm": 0.081228,
+                      "weight": 553.9
                     },
                     "correction": "{typography.x-height-correction.display.xl}",
                     "correctionValue": 1.130167
@@ -4260,19 +4260,19 @@
                   "method": "outline:advance-minus-ink",
                   "instance": {
                     "opsz": 16,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
                 "units": {
-                  "em": -0.000318,
-                  "percent": -0.0318,
+                  "em": 0.001863,
+                  "percent": 0.1863,
                   "px": {
                     "at": 18.0827,
-                    "value": -0.0058
+                    "value": 0.0337
                   }
                 },
-                "css": "letter-spacing: -0.000318em;",
+                "css": "letter-spacing: 0.001863em;",
                 "step": "xl",
                 "tier": "bolder",
                 "density": "compact",
@@ -4285,26 +4285,26 @@
                   "LETTER_SPACING"
                 ],
                 "unit": "PERCENT",
-                "value": -0.0318
+                "value": 0.1863
               }
             }
           },
           "2xl": {
             "$type": "number",
-            "$value": -0.002391,
+            "$value": -0.000494,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
                   "inputs": {
                     "reference": {
-                      "sideSpaceEm": 0.083535,
-                      "weight": 600,
+                      "sideSpaceEm": 0.090488,
+                      "weight": 500,
                       "opsz": 18.5
                     },
                     "target": {
-                      "sideSpaceEm": 0.076841,
-                      "weight": 664.6
+                      "sideSpaceEm": 0.081141,
+                      "weight": 554.9
                     },
                     "correction": "{typography.x-height-correction.display.2xl}",
                     "correctionValue": 1.122029
@@ -4315,19 +4315,19 @@
                   "method": "outline:advance-minus-ink",
                   "instance": {
                     "opsz": 18.5,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
                 "units": {
-                  "em": -0.002391,
-                  "percent": -0.2391,
+                  "em": -0.000494,
+                  "percent": -0.0494,
                   "px": {
                     "at": 20.7575,
-                    "value": -0.0496
+                    "value": -0.0103
                   }
                 },
-                "css": "letter-spacing: -0.002391em;",
+                "css": "letter-spacing: -0.000494em;",
                 "step": "2xl",
                 "tier": "bolder",
                 "density": "compact",
@@ -4340,26 +4340,26 @@
                   "LETTER_SPACING"
                 ],
                 "unit": "PERCENT",
-                "value": -0.2391
+                "value": -0.0494
               }
             }
           },
           "3xl": {
             "$type": "number",
-            "$value": -0.004568,
+            "$value": -0.003084,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
                   "inputs": {
                     "reference": {
-                      "sideSpaceEm": 0.08047,
-                      "weight": 600,
+                      "sideSpaceEm": 0.087031,
+                      "weight": 500,
                       "opsz": 21.0
                     },
                     "target": {
-                      "sideSpaceEm": 0.076876,
-                      "weight": 667.7
+                      "sideSpaceEm": 0.081288,
+                      "weight": 556.5
                     },
                     "correction": "{typography.x-height-correction.display.3xl}",
                     "correctionValue": 1.112875
@@ -4370,19 +4370,19 @@
                   "method": "outline:advance-minus-ink",
                   "instance": {
                     "opsz": 21.0,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
                 "units": {
-                  "em": -0.004568,
-                  "percent": -0.4568,
+                  "em": -0.003084,
+                  "percent": -0.3084,
                   "px": {
                     "at": 23.3704,
-                    "value": -0.1068
+                    "value": -0.0721
                   }
                 },
-                "css": "letter-spacing: -0.004568em;",
+                "css": "letter-spacing: -0.003084em;",
                 "step": "3xl",
                 "tier": "bolder",
                 "density": "compact",
@@ -4395,26 +4395,26 @@
                   "LETTER_SPACING"
                 ],
                 "unit": "PERCENT",
-                "value": -0.4568
+                "value": -0.3084
               }
             }
           },
           "4xl": {
             "$type": "number",
-            "$value": -0.007688,
+            "$value": -0.006486,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
                   "inputs": {
                     "reference": {
-                      "sideSpaceEm": 0.076038,
-                      "weight": 600,
+                      "sideSpaceEm": 0.082141,
+                      "weight": 500,
                       "opsz": 24.5
                     },
                     "target": {
-                      "sideSpaceEm": 0.076772,
-                      "weight": 671.6
+                      "sideSpaceEm": 0.081114,
+                      "weight": 558.5
                     },
                     "correction": "{typography.x-height-correction.display.4xl}",
                     "correctionValue": 1.100667
@@ -4425,19 +4425,19 @@
                   "method": "outline:advance-minus-ink",
                   "instance": {
                     "opsz": 24.5,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
                 "units": {
-                  "em": -0.007688,
-                  "percent": -0.7688,
+                  "em": -0.006486,
+                  "percent": -0.6486,
                   "px": {
                     "at": 26.9663,
-                    "value": -0.2073
+                    "value": -0.1749
                   }
                 },
-                "css": "letter-spacing: -0.007688em;",
+                "css": "letter-spacing: -0.006486em;",
                 "step": "4xl",
                 "tier": "bolder",
                 "density": "compact",
@@ -4450,26 +4450,26 @@
                   "LETTER_SPACING"
                 ],
                 "unit": "PERCENT",
-                "value": -0.7688
+                "value": -0.6486
               }
             }
           },
           "5xl": {
             "$type": "number",
-            "$value": -0.010979,
+            "$value": -0.009911,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
                   "inputs": {
                     "reference": {
-                      "sideSpaceEm": 0.071682,
-                      "weight": 600,
+                      "sideSpaceEm": 0.077271,
+                      "weight": 500,
                       "opsz": 28.0
                     },
                     "target": {
-                      "sideSpaceEm": 0.076835,
-                      "weight": 675.7
+                      "sideSpaceEm": 0.080902,
+                      "weight": 560.5
                     },
                     "correction": "{typography.x-height-correction.display.5xl}",
                     "correctionValue": 1.08846
@@ -4480,19 +4480,19 @@
                   "method": "outline:advance-minus-ink",
                   "instance": {
                     "opsz": 28.0,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
                 "units": {
-                  "em": -0.010979,
-                  "percent": -1.0979,
+                  "em": -0.009911,
+                  "percent": -0.9911,
                   "px": {
                     "at": 30.4769,
-                    "value": -0.3346
+                    "value": -0.3021
                   }
                 },
-                "css": "letter-spacing: -0.010979em;",
+                "css": "letter-spacing: -0.009911em;",
                 "step": "5xl",
                 "tier": "bolder",
                 "density": "compact",
@@ -4505,26 +4505,26 @@
                   "LETTER_SPACING"
                 ],
                 "unit": "PERCENT",
-                "value": -1.0979
+                "value": -0.9911
               }
             }
           },
           "6xl": {
             "$type": "number",
-            "$value": -0.014223,
+            "$value": -0.014052,
             "$extensions": {
               "com.equinor.typography": {
                 "derived": {
                   "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
                   "inputs": {
                     "reference": {
-                      "sideSpaceEm": 0.06671,
-                      "weight": 600,
+                      "sideSpaceEm": 0.071751,
+                      "weight": 500,
                       "opsz": 32
                     },
                     "target": {
-                      "sideSpaceEm": 0.076324,
-                      "weight": 680.7
+                      "sideSpaceEm": 0.080846,
+                      "weight": 563.1
                     },
                     "correction": "{typography.x-height-correction.display.6xl}",
                     "correctionValue": 1.074219
@@ -4535,19 +4535,19 @@
                   "method": "outline:advance-minus-ink",
                   "instance": {
                     "opsz": 32,
-                    "wght": 600
+                    "wght": 500
                   },
                   "extractedAt": "2026-09-09"
                 },
                 "units": {
-                  "em": -0.014223,
-                  "percent": -1.4223,
+                  "em": -0.014052,
+                  "percent": -1.4052,
                   "px": {
                     "at": 34.375,
-                    "value": -0.4889
+                    "value": -0.483
                   }
                 },
-                "css": "letter-spacing: -0.014223em;",
+                "css": "letter-spacing: -0.014052em;",
                 "step": "6xl",
                 "tier": "bolder",
                 "density": "compact",
@@ -4560,7 +4560,7 @@
                   "LETTER_SPACING"
                 ],
                 "unit": "PERCENT",
-                "value": -1.4223
+                "value": -1.4052
               }
             }
           }

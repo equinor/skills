@@ -5,15 +5,22 @@ Victor's request: the EDS type scale with both line-height curves, Inter and
 Equinor, Equinor's size, weight and letter-spacing matched to Inter, lighter
 and bolder variants of every step, three densities, baked so it imports into
 Figma, in DTCG format with the CSS `calc()` expressions carried in
-`$extensions`. Three files, one per density:
+`$extensions`, plus CSS. Three token files, one per density, and two
+stylesheets read back from them:
 
 ```
 typography.compact.tokens.json
 typography.comfortable.tokens.json
 typography.relaxed.tokens.json
+typography.css          expressions: comfortable in :root, the others under [data-density]
+typography.baked.css    the same custom properties as literals, for a matrix without CSS round()
 ```
 
-Same token paths in each, so density is a Figma mode and nothing else moves.
+Same token paths in each file, so density is a Figma mode and nothing else
+moves. The stylesheets are generated *from* the token files, not alongside
+them: `build.py` writes the JSON, reads it back, and emits each custom
+property from the token's `$value` or its `$extensions…css` expression, so the
+CSS cannot disagree with the tokens.
 
 ## What is in each file
 
@@ -23,7 +30,7 @@ Same token paths in each, so density is a Figma mode and nothing else moves.
 | `line-height.<step>.default` / `.compressed` | 10 × 2 | `typography-scale`: the two curves, snapped to 4px |
 | `x-height-correction.display.<step>` | 10 | `typography-x-height-alignment`: Inter's x-height at the step's `opsz` over Equinor's; `drift` on the group |
 | `font-size-display.<step>` | 10 | the text size × that step's correction, re-snapped: Equinor's baked size |
-| `font-weight.Inter.<tier>` | lighter 300 · normal 400 · bolder 600 | the chosen tiers on the reference |
+| `font-weight.Inter.<tier>` | lighter 300 · normal 400 · bolder 500 | the chosen tiers on the reference |
 | `font-weight.Equinor.<tier>.<step>` | 3 × 10 | `typography-weight-matching`: the weight whose stem matches Inter's at that tier, `opsz` and correction |
 | `letter-spacing.Equinor.<tier>.<step>` | 3 × 10 | `typography-weight-matching` §4: Inter's side space at the `opsz` over the correction, minus Equinor's at the matched weight, in Equinor's em |
 
@@ -52,13 +59,14 @@ both fonts' checksums, the build date and the builder.
   compact `lg` (14px) get identical Equinor values; comfortable `2xl` (21px)
   gets × 1.112875 where relaxed `2xl` (24.5px) gets × 1.100667.
 - **Tiers are Inter's, chosen; Equinor's are matched.** Lighter 300, normal
-  400, bolder 600 on Inter — 700 is not a tier because Inter 700 has a stem
-  no weight on Equinor's 300–700 axis reaches. Equinor's matched weights rise
-  with size at the bolder tier (660.0 at `xs` to 680.7 at 32px and above) and
-  hold near 458.5 at the normal tier, where the thinner stem and the smaller
-  size cancel.
+  400, bolder 500 on Inter — 500 because it is the bolder tier the EDS token
+  rework settled on (Victor, 9 September; the first build used 600), and 700
+  is not a tier because Inter 700 has a stem no weight on Equinor's 300–700
+  axis reaches. Equinor's matched weights rise with size at the bolder tier
+  (552.7 at `xs` to 563.1 at 32px and above) and hold near 458.5 at the
+  normal tier, where the thinner stem and the smaller size cancel.
 - **Letter-spacing is a compensation for the missing axis, in Equinor's em.**
-  Nothing at the text steps (+0.0013em at 14px, bolder), −0.0142em at 32px
+  Nothing at the text steps (+0.0038em at 14px, bolder), −0.0141em at 32px
   and above; the value is the axis's, not the weight's. Inter carries no
   letter-spacing token: it is the reference. A design system's own tracking
   ramp adds on top.
@@ -74,7 +82,14 @@ both fonts' checksums, the build date and the builder.
   is never committed; its licence permits use, not redistribution. Inter is
   the copy bundled with `typography-weight-matching` (checksum in the file).
   A full build instances the fonts a few hundred times and takes about three
-  minutes.
+  minutes, and writes the two stylesheets last.
+- **CSS ships the expressions by default.** `typography.css` carries
+  `round(calc(var(--_base) * pow(2, 1/5)), 0.03125rem)` and its kin, so a
+  change of `--_base` re-derives the ramp in the browser; the per-step display
+  factors, weights and letter-spacing are literals per density block because
+  they were measured, not computed. `typography.baked.css` is the same set as
+  literals, for a browser matrix without `round()` — a question for the
+  project's `browserslist`, as the scale skill says.
 
 ## Importing into Figma
 
