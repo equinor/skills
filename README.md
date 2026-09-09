@@ -42,6 +42,11 @@ three densities and the 4px snap.
 two faces on a shared baseline, with sliders that snap to the skills' x-height
 and weight numbers.
 
+[`demo/typography-tokens/`](demo/typography-tokens/) is the output of all three
+typography skills together: one DTCG file per density with the scale, both
+line-height curves, and Equinor's size, weight and letter-spacing matched to
+Inter per step, baked for Figma, with the CSS expressions in `$extensions`.
+
 ## Browser support
 
 The CSS in these skills targets modern, evergreen browsers. Features are

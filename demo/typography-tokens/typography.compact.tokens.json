@@ -1,0 +1,4592 @@
+{
+  "typography": {
+    "font-family": {
+      "text": {
+        "$type": "fontFamily",
+        "$value": "Inter"
+      },
+      "display": {
+        "$type": "fontFamily",
+        "$value": "Equinor"
+      }
+    },
+    "font-size": {
+      "xs": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.5625,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(base * pow(2, step / 5), 0.03125rem)",
+              "inputs": {
+                "base": {
+                  "value": 0.875,
+                  "unit": "rem"
+                },
+                "step": -3
+              }
+            },
+            "step": "xs",
+            "density": "compact",
+            "css": "round(calc(var(--_base) * pow(2, -3/5)), 0.03125rem)",
+            "px": 9.0
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.65625,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(base * pow(2, step / 5), 0.03125rem)",
+              "inputs": {
+                "base": {
+                  "value": 0.875,
+                  "unit": "rem"
+                },
+                "step": -2
+              }
+            },
+            "step": "sm",
+            "density": "compact",
+            "css": "round(calc(var(--_base) * pow(2, -2/5)), 0.03125rem)",
+            "px": 10.5
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.75,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(base * pow(2, step / 5), 0.03125rem)",
+              "inputs": {
+                "base": {
+                  "value": 0.875,
+                  "unit": "rem"
+                },
+                "step": -1
+              }
+            },
+            "step": "md",
+            "density": "compact",
+            "css": "round(calc(var(--_base) * pow(2, -1/5)), 0.03125rem)",
+            "px": 12.0
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.875,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(base * pow(2, step / 5), 0.03125rem)",
+              "inputs": {
+                "base": {
+                  "value": 0.875,
+                  "unit": "rem"
+                },
+                "step": 0
+              }
+            },
+            "step": "lg",
+            "density": "compact",
+            "css": "round(calc(var(--_base) * pow(2, 0/5)), 0.03125rem)",
+            "px": 14.0
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(base * pow(2, step / 5), 0.03125rem)",
+              "inputs": {
+                "base": {
+                  "value": 0.875,
+                  "unit": "rem"
+                },
+                "step": 1
+              }
+            },
+            "step": "xl",
+            "density": "compact",
+            "css": "round(calc(var(--_base) * pow(2, 1/5)), 0.03125rem)",
+            "px": 16
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "2xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.15625,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(base * pow(2, step / 5), 0.03125rem)",
+              "inputs": {
+                "base": {
+                  "value": 0.875,
+                  "unit": "rem"
+                },
+                "step": 2
+              }
+            },
+            "step": "2xl",
+            "density": "compact",
+            "css": "round(calc(var(--_base) * pow(2, 2/5)), 0.03125rem)",
+            "px": 18.5
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "3xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.3125,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(base * pow(2, step / 5), 0.03125rem)",
+              "inputs": {
+                "base": {
+                  "value": 0.875,
+                  "unit": "rem"
+                },
+                "step": 3
+              }
+            },
+            "step": "3xl",
+            "density": "compact",
+            "css": "round(calc(var(--_base) * pow(2, 3/5)), 0.03125rem)",
+            "px": 21.0
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "4xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.53125,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(base * pow(2, step / 5), 0.03125rem)",
+              "inputs": {
+                "base": {
+                  "value": 0.875,
+                  "unit": "rem"
+                },
+                "step": 4
+              }
+            },
+            "step": "4xl",
+            "density": "compact",
+            "css": "round(calc(var(--_base) * pow(2, 4/5)), 0.03125rem)",
+            "px": 24.5
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "5xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.75,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(base * pow(2, step / 5), 0.03125rem)",
+              "inputs": {
+                "base": {
+                  "value": 0.875,
+                  "unit": "rem"
+                },
+                "step": 5
+              }
+            },
+            "step": "5xl",
+            "density": "compact",
+            "css": "round(calc(var(--_base) * pow(2, 5/5)), 0.03125rem)",
+            "px": 28.0
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "6xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(base * pow(2, step / 5), 0.03125rem)",
+              "inputs": {
+                "base": {
+                  "value": 0.875,
+                  "unit": "rem"
+                },
+                "step": 6
+              }
+            },
+            "step": "6xl",
+            "density": "compact",
+            "css": "round(calc(var(--_base) * pow(2, 6/5)), 0.03125rem)",
+            "px": 32
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      }
+    },
+    "line-height": {
+      "xs": {
+        "default": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.xs}",
+                  "n": 0,
+                  "N": 10,
+                  "max": 1.39,
+                  "drop": 0.29
+                }
+              },
+              "step": "xs",
+              "curve": "default",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-xs) * (1.39 - pow(0/9, 3) * 0.29)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "compressed": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.xs}",
+                  "n": 0,
+                  "N": 10,
+                  "max": 1.13,
+                  "drop": 0.13
+                }
+              },
+              "step": "xs",
+              "curve": "compressed",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-xs) * (1.13 - pow(0/9, 3) * 0.13)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        }
+      },
+      "sm": {
+        "default": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.sm}",
+                  "n": 1,
+                  "N": 10,
+                  "max": 1.39,
+                  "drop": 0.29
+                }
+              },
+              "step": "sm",
+              "curve": "default",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-sm) * (1.39 - pow(1/9, 3) * 0.29)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "compressed": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.sm}",
+                  "n": 1,
+                  "N": 10,
+                  "max": 1.13,
+                  "drop": 0.13
+                }
+              },
+              "step": "sm",
+              "curve": "compressed",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-sm) * (1.13 - pow(1/9, 3) * 0.13)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        }
+      },
+      "md": {
+        "default": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.md}",
+                  "n": 2,
+                  "N": 10,
+                  "max": 1.39,
+                  "drop": 0.29
+                }
+              },
+              "step": "md",
+              "curve": "default",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-md) * (1.39 - pow(2/9, 3) * 0.29)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "compressed": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.md}",
+                  "n": 2,
+                  "N": 10,
+                  "max": 1.13,
+                  "drop": 0.13
+                }
+              },
+              "step": "md",
+              "curve": "compressed",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-md) * (1.13 - pow(2/9, 3) * 0.13)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        }
+      },
+      "lg": {
+        "default": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.lg}",
+                  "n": 3,
+                  "N": 10,
+                  "max": 1.39,
+                  "drop": 0.29
+                }
+              },
+              "step": "lg",
+              "curve": "default",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-lg) * (1.39 - pow(3/9, 3) * 0.29)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "compressed": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.lg}",
+                  "n": 3,
+                  "N": 10,
+                  "max": 1.13,
+                  "drop": 0.13
+                }
+              },
+              "step": "lg",
+              "curve": "compressed",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-lg) * (1.13 - pow(3/9, 3) * 0.13)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        }
+      },
+      "xl": {
+        "default": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.xl}",
+                  "n": 4,
+                  "N": 10,
+                  "max": 1.39,
+                  "drop": 0.29
+                }
+              },
+              "step": "xl",
+              "curve": "default",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-xl) * (1.39 - pow(4/9, 3) * 0.29)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "compressed": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.xl}",
+                  "n": 4,
+                  "N": 10,
+                  "max": 1.13,
+                  "drop": 0.13
+                }
+              },
+              "step": "xl",
+              "curve": "compressed",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-xl) * (1.13 - pow(4/9, 3) * 0.13)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        }
+      },
+      "2xl": {
+        "default": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.2xl}",
+                  "n": 5,
+                  "N": 10,
+                  "max": 1.39,
+                  "drop": 0.29
+                }
+              },
+              "step": "2xl",
+              "curve": "default",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-2xl) * (1.39 - pow(5/9, 3) * 0.29)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "compressed": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.2xl}",
+                  "n": 5,
+                  "N": 10,
+                  "max": 1.13,
+                  "drop": 0.13
+                }
+              },
+              "step": "2xl",
+              "curve": "compressed",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-2xl) * (1.13 - pow(5/9, 3) * 0.13)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        }
+      },
+      "3xl": {
+        "default": {
+          "$type": "dimension",
+          "$value": {
+            "value": 28,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.3xl}",
+                  "n": 6,
+                  "N": 10,
+                  "max": 1.39,
+                  "drop": 0.29
+                }
+              },
+              "step": "3xl",
+              "curve": "default",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-3xl) * (1.39 - pow(6/9, 3) * 0.29)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "compressed": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.3xl}",
+                  "n": 6,
+                  "N": 10,
+                  "max": 1.13,
+                  "drop": 0.13
+                }
+              },
+              "step": "3xl",
+              "curve": "compressed",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-3xl) * (1.13 - pow(6/9, 3) * 0.13)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        }
+      },
+      "4xl": {
+        "default": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.4xl}",
+                  "n": 7,
+                  "N": 10,
+                  "max": 1.39,
+                  "drop": 0.29
+                }
+              },
+              "step": "4xl",
+              "curve": "default",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-4xl) * (1.39 - pow(7/9, 3) * 0.29)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "compressed": {
+          "$type": "dimension",
+          "$value": {
+            "value": 28,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.4xl}",
+                  "n": 7,
+                  "N": 10,
+                  "max": 1.13,
+                  "drop": 0.13
+                }
+              },
+              "step": "4xl",
+              "curve": "compressed",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-4xl) * (1.13 - pow(7/9, 3) * 0.13)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        }
+      },
+      "5xl": {
+        "default": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.5xl}",
+                  "n": 8,
+                  "N": 10,
+                  "max": 1.39,
+                  "drop": 0.29
+                }
+              },
+              "step": "5xl",
+              "curve": "default",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-5xl) * (1.39 - pow(8/9, 3) * 0.29)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "compressed": {
+          "$type": "dimension",
+          "$value": {
+            "value": 28,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.5xl}",
+                  "n": 8,
+                  "N": 10,
+                  "max": 1.13,
+                  "drop": 0.13
+                }
+              },
+              "step": "5xl",
+              "curve": "compressed",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-5xl) * (1.13 - pow(8/9, 3) * 0.13)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        }
+      },
+      "6xl": {
+        "default": {
+          "$type": "dimension",
+          "$value": {
+            "value": 36,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.6xl}",
+                  "n": 9,
+                  "N": 10,
+                  "max": 1.39,
+                  "drop": 0.29
+                }
+              },
+              "step": "6xl",
+              "curve": "default",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-6xl) * (1.39 - pow(9/9, 3) * 0.29)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        },
+        "compressed": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          },
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "round(fontSize * (max - pow(n / (N - 1), 3) * drop), 4px)",
+                "inputs": {
+                  "fontSize": "{typography.font-size.6xl}",
+                  "n": 9,
+                  "N": 10,
+                  "max": 1.13,
+                  "drop": 0.13
+                }
+              },
+              "step": "6xl",
+              "curve": "compressed",
+              "density": "compact",
+              "css": "round(calc(var(--font-size-6xl) * (1.13 - pow(9/9, 3) * 0.13)), 4px)"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "LINE_HEIGHT"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "x-height-correction": {
+      "display": {
+        "xs": {
+          "$type": "number",
+          "$value": 1.137288,
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "referenceXRatio / selfXRatio",
+                "inputs": {
+                  "reference": "{typography.font-family.text}",
+                  "referenceXRatio": 0.545898,
+                  "selfXRatio": 0.48
+                }
+              },
+              "metrics": {
+                "family": "Equinor",
+                "unitsPerEm": 1000,
+                "xHeight": 480,
+                "reference": {
+                  "family": "Inter",
+                  "unitsPerEm": 2048,
+                  "xHeight": 1118,
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 400
+                  }
+                },
+                "instance": {
+                  "wght": 400
+                },
+                "method": "OS/2.sxHeight",
+                "extractedAt": "2026-09-09"
+              },
+              "step": "xs",
+              "density": "compact",
+              "note": "Inter's x-height moves with its opsz axis; this is the correction at this step's rendered size"
+            }
+          }
+        },
+        "sm": {
+          "$type": "number",
+          "$value": 1.137288,
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "referenceXRatio / selfXRatio",
+                "inputs": {
+                  "reference": "{typography.font-family.text}",
+                  "referenceXRatio": 0.545898,
+                  "selfXRatio": 0.48
+                }
+              },
+              "metrics": {
+                "family": "Equinor",
+                "unitsPerEm": 1000,
+                "xHeight": 480,
+                "reference": {
+                  "family": "Inter",
+                  "unitsPerEm": 2048,
+                  "xHeight": 1118,
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 400
+                  }
+                },
+                "instance": {
+                  "wght": 400
+                },
+                "method": "OS/2.sxHeight",
+                "extractedAt": "2026-09-09"
+              },
+              "step": "sm",
+              "density": "compact",
+              "note": "Inter's x-height moves with its opsz axis; this is the correction at this step's rendered size"
+            }
+          }
+        },
+        "md": {
+          "$type": "number",
+          "$value": 1.137288,
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "referenceXRatio / selfXRatio",
+                "inputs": {
+                  "reference": "{typography.font-family.text}",
+                  "referenceXRatio": 0.545898,
+                  "selfXRatio": 0.48
+                }
+              },
+              "metrics": {
+                "family": "Equinor",
+                "unitsPerEm": 1000,
+                "xHeight": 480,
+                "reference": {
+                  "family": "Inter",
+                  "unitsPerEm": 2048,
+                  "xHeight": 1118,
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 400
+                  }
+                },
+                "instance": {
+                  "wght": 400
+                },
+                "method": "OS/2.sxHeight",
+                "extractedAt": "2026-09-09"
+              },
+              "step": "md",
+              "density": "compact",
+              "note": "Inter's x-height moves with its opsz axis; this is the correction at this step's rendered size"
+            }
+          }
+        },
+        "lg": {
+          "$type": "number",
+          "$value": 1.137288,
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "referenceXRatio / selfXRatio",
+                "inputs": {
+                  "reference": "{typography.font-family.text}",
+                  "referenceXRatio": 0.545898,
+                  "selfXRatio": 0.48
+                }
+              },
+              "metrics": {
+                "family": "Equinor",
+                "unitsPerEm": 1000,
+                "xHeight": 480,
+                "reference": {
+                  "family": "Inter",
+                  "unitsPerEm": 2048,
+                  "xHeight": 1118,
+                  "instance": {
+                    "opsz": 14.0,
+                    "wght": 400
+                  }
+                },
+                "instance": {
+                  "wght": 400
+                },
+                "method": "OS/2.sxHeight",
+                "extractedAt": "2026-09-09"
+              },
+              "step": "lg",
+              "density": "compact",
+              "note": "Inter's x-height moves with its opsz axis; this is the correction at this step's rendered size"
+            }
+          }
+        },
+        "xl": {
+          "$type": "number",
+          "$value": 1.130167,
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "referenceXRatio / selfXRatio",
+                "inputs": {
+                  "reference": "{typography.font-family.text}",
+                  "referenceXRatio": 0.54248,
+                  "selfXRatio": 0.48
+                }
+              },
+              "metrics": {
+                "family": "Equinor",
+                "unitsPerEm": 1000,
+                "xHeight": 480,
+                "reference": {
+                  "family": "Inter",
+                  "unitsPerEm": 2048,
+                  "xHeight": 1111,
+                  "instance": {
+                    "opsz": 16,
+                    "wght": 400
+                  }
+                },
+                "instance": {
+                  "wght": 400
+                },
+                "method": "OS/2.sxHeight",
+                "extractedAt": "2026-09-09"
+              },
+              "step": "xl",
+              "density": "compact",
+              "note": "Inter's x-height moves with its opsz axis; this is the correction at this step's rendered size"
+            }
+          }
+        },
+        "2xl": {
+          "$type": "number",
+          "$value": 1.122029,
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "referenceXRatio / selfXRatio",
+                "inputs": {
+                  "reference": "{typography.font-family.text}",
+                  "referenceXRatio": 0.538574,
+                  "selfXRatio": 0.48
+                }
+              },
+              "metrics": {
+                "family": "Equinor",
+                "unitsPerEm": 1000,
+                "xHeight": 480,
+                "reference": {
+                  "family": "Inter",
+                  "unitsPerEm": 2048,
+                  "xHeight": 1103,
+                  "instance": {
+                    "opsz": 18.5,
+                    "wght": 400
+                  }
+                },
+                "instance": {
+                  "wght": 400
+                },
+                "method": "OS/2.sxHeight",
+                "extractedAt": "2026-09-09"
+              },
+              "step": "2xl",
+              "density": "compact",
+              "note": "Inter's x-height moves with its opsz axis; this is the correction at this step's rendered size"
+            }
+          }
+        },
+        "3xl": {
+          "$type": "number",
+          "$value": 1.112875,
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "referenceXRatio / selfXRatio",
+                "inputs": {
+                  "reference": "{typography.font-family.text}",
+                  "referenceXRatio": 0.53418,
+                  "selfXRatio": 0.48
+                }
+              },
+              "metrics": {
+                "family": "Equinor",
+                "unitsPerEm": 1000,
+                "xHeight": 480,
+                "reference": {
+                  "family": "Inter",
+                  "unitsPerEm": 2048,
+                  "xHeight": 1094,
+                  "instance": {
+                    "opsz": 21.0,
+                    "wght": 400
+                  }
+                },
+                "instance": {
+                  "wght": 400
+                },
+                "method": "OS/2.sxHeight",
+                "extractedAt": "2026-09-09"
+              },
+              "step": "3xl",
+              "density": "compact",
+              "note": "Inter's x-height moves with its opsz axis; this is the correction at this step's rendered size"
+            }
+          }
+        },
+        "4xl": {
+          "$type": "number",
+          "$value": 1.100667,
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "referenceXRatio / selfXRatio",
+                "inputs": {
+                  "reference": "{typography.font-family.text}",
+                  "referenceXRatio": 0.52832,
+                  "selfXRatio": 0.48
+                }
+              },
+              "metrics": {
+                "family": "Equinor",
+                "unitsPerEm": 1000,
+                "xHeight": 480,
+                "reference": {
+                  "family": "Inter",
+                  "unitsPerEm": 2048,
+                  "xHeight": 1082,
+                  "instance": {
+                    "opsz": 24.5,
+                    "wght": 400
+                  }
+                },
+                "instance": {
+                  "wght": 400
+                },
+                "method": "OS/2.sxHeight",
+                "extractedAt": "2026-09-09"
+              },
+              "step": "4xl",
+              "density": "compact",
+              "note": "Inter's x-height moves with its opsz axis; this is the correction at this step's rendered size"
+            }
+          }
+        },
+        "5xl": {
+          "$type": "number",
+          "$value": 1.08846,
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "referenceXRatio / selfXRatio",
+                "inputs": {
+                  "reference": "{typography.font-family.text}",
+                  "referenceXRatio": 0.522461,
+                  "selfXRatio": 0.48
+                }
+              },
+              "metrics": {
+                "family": "Equinor",
+                "unitsPerEm": 1000,
+                "xHeight": 480,
+                "reference": {
+                  "family": "Inter",
+                  "unitsPerEm": 2048,
+                  "xHeight": 1070,
+                  "instance": {
+                    "opsz": 28.0,
+                    "wght": 400
+                  }
+                },
+                "instance": {
+                  "wght": 400
+                },
+                "method": "OS/2.sxHeight",
+                "extractedAt": "2026-09-09"
+              },
+              "step": "5xl",
+              "density": "compact",
+              "note": "Inter's x-height moves with its opsz axis; this is the correction at this step's rendered size"
+            }
+          }
+        },
+        "6xl": {
+          "$type": "number",
+          "$value": 1.074219,
+          "$extensions": {
+            "com.equinor.typography": {
+              "derived": {
+                "expression": "referenceXRatio / selfXRatio",
+                "inputs": {
+                  "reference": "{typography.font-family.text}",
+                  "referenceXRatio": 0.515625,
+                  "selfXRatio": 0.48
+                }
+              },
+              "metrics": {
+                "family": "Equinor",
+                "unitsPerEm": 1000,
+                "xHeight": 480,
+                "reference": {
+                  "family": "Inter",
+                  "unitsPerEm": 2048,
+                  "xHeight": 1056,
+                  "instance": {
+                    "opsz": 32,
+                    "wght": 400
+                  }
+                },
+                "instance": {
+                  "wght": 400
+                },
+                "method": "OS/2.sxHeight",
+                "extractedAt": "2026-09-09"
+              },
+              "step": "6xl",
+              "density": "compact",
+              "note": "Inter's x-height moves with its opsz axis; this is the correction at this step's rendered size"
+            }
+          }
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "drift": {
+              "axis": "opsz",
+              "sampledAt": [
+                9.0,
+                10.5,
+                12.0,
+                14.0,
+                16,
+                18.5,
+                21.0,
+                24.5,
+                28.0,
+                32
+              ],
+              "range": [
+                1.074219,
+                1.137288
+              ],
+              "max": 0.0587
+            }
+          }
+        }
+      }
+    },
+    "font-size-display": {
+      "xs": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.625,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(fontSize * correction, 0.03125rem)",
+              "inputs": {
+                "fontSize": "{typography.font-size.xs}",
+                "correction": "{typography.x-height-correction.display.xs}",
+                "correctionValue": 1.137288
+              }
+            },
+            "css": "round(calc(var(--font-size-xs) * 1.137288), 0.03125rem)",
+            "px": 10.0,
+            "step": "xs",
+            "family": "Equinor",
+            "density": "compact",
+            "lineHeight": "{typography.line-height.xs}",
+            "note": "baked: Figma and React Native cannot evaluate the expression; the CSS may use either"
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.75,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(fontSize * correction, 0.03125rem)",
+              "inputs": {
+                "fontSize": "{typography.font-size.sm}",
+                "correction": "{typography.x-height-correction.display.sm}",
+                "correctionValue": 1.137288
+              }
+            },
+            "css": "round(calc(var(--font-size-sm) * 1.137288), 0.03125rem)",
+            "px": 12.0,
+            "step": "sm",
+            "family": "Equinor",
+            "density": "compact",
+            "lineHeight": "{typography.line-height.sm}",
+            "note": "baked: Figma and React Native cannot evaluate the expression; the CSS may use either"
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.84375,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(fontSize * correction, 0.03125rem)",
+              "inputs": {
+                "fontSize": "{typography.font-size.md}",
+                "correction": "{typography.x-height-correction.display.md}",
+                "correctionValue": 1.137288
+              }
+            },
+            "css": "round(calc(var(--font-size-md) * 1.137288), 0.03125rem)",
+            "px": 13.5,
+            "step": "md",
+            "family": "Equinor",
+            "density": "compact",
+            "lineHeight": "{typography.line-height.md}",
+            "note": "baked: Figma and React Native cannot evaluate the expression; the CSS may use either"
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(fontSize * correction, 0.03125rem)",
+              "inputs": {
+                "fontSize": "{typography.font-size.lg}",
+                "correction": "{typography.x-height-correction.display.lg}",
+                "correctionValue": 1.137288
+              }
+            },
+            "css": "round(calc(var(--font-size-lg) * 1.137288), 0.03125rem)",
+            "px": 16.0,
+            "step": "lg",
+            "family": "Equinor",
+            "density": "compact",
+            "lineHeight": "{typography.line-height.lg}",
+            "note": "baked: Figma and React Native cannot evaluate the expression; the CSS may use either"
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.125,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(fontSize * correction, 0.03125rem)",
+              "inputs": {
+                "fontSize": "{typography.font-size.xl}",
+                "correction": "{typography.x-height-correction.display.xl}",
+                "correctionValue": 1.130167
+              }
+            },
+            "css": "round(calc(var(--font-size-xl) * 1.130167), 0.03125rem)",
+            "px": 18.0,
+            "step": "xl",
+            "family": "Equinor",
+            "density": "compact",
+            "lineHeight": "{typography.line-height.xl}",
+            "note": "baked: Figma and React Native cannot evaluate the expression; the CSS may use either"
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "2xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.3125,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(fontSize * correction, 0.03125rem)",
+              "inputs": {
+                "fontSize": "{typography.font-size.2xl}",
+                "correction": "{typography.x-height-correction.display.2xl}",
+                "correctionValue": 1.122029
+              }
+            },
+            "css": "round(calc(var(--font-size-2xl) * 1.122029), 0.03125rem)",
+            "px": 21.0,
+            "step": "2xl",
+            "family": "Equinor",
+            "density": "compact",
+            "lineHeight": "{typography.line-height.2xl}",
+            "note": "baked: Figma and React Native cannot evaluate the expression; the CSS may use either"
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "3xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.46875,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(fontSize * correction, 0.03125rem)",
+              "inputs": {
+                "fontSize": "{typography.font-size.3xl}",
+                "correction": "{typography.x-height-correction.display.3xl}",
+                "correctionValue": 1.112875
+              }
+            },
+            "css": "round(calc(var(--font-size-3xl) * 1.112875), 0.03125rem)",
+            "px": 23.5,
+            "step": "3xl",
+            "family": "Equinor",
+            "density": "compact",
+            "lineHeight": "{typography.line-height.3xl}",
+            "note": "baked: Figma and React Native cannot evaluate the expression; the CSS may use either"
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "4xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.6875,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(fontSize * correction, 0.03125rem)",
+              "inputs": {
+                "fontSize": "{typography.font-size.4xl}",
+                "correction": "{typography.x-height-correction.display.4xl}",
+                "correctionValue": 1.100667
+              }
+            },
+            "css": "round(calc(var(--font-size-4xl) * 1.100667), 0.03125rem)",
+            "px": 27.0,
+            "step": "4xl",
+            "family": "Equinor",
+            "density": "compact",
+            "lineHeight": "{typography.line-height.4xl}",
+            "note": "baked: Figma and React Native cannot evaluate the expression; the CSS may use either"
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "5xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.90625,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(fontSize * correction, 0.03125rem)",
+              "inputs": {
+                "fontSize": "{typography.font-size.5xl}",
+                "correction": "{typography.x-height-correction.display.5xl}",
+                "correctionValue": 1.08846
+              }
+            },
+            "css": "round(calc(var(--font-size-5xl) * 1.08846), 0.03125rem)",
+            "px": 30.5,
+            "step": "5xl",
+            "family": "Equinor",
+            "density": "compact",
+            "lineHeight": "{typography.line-height.5xl}",
+            "note": "baked: Figma and React Native cannot evaluate the expression; the CSS may use either"
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      },
+      "6xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2.15625,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "com.equinor.typography": {
+            "derived": {
+              "expression": "round(fontSize * correction, 0.03125rem)",
+              "inputs": {
+                "fontSize": "{typography.font-size.6xl}",
+                "correction": "{typography.x-height-correction.display.6xl}",
+                "correctionValue": 1.074219
+              }
+            },
+            "css": "round(calc(var(--font-size-6xl) * 1.074219), 0.03125rem)",
+            "px": 34.5,
+            "step": "6xl",
+            "family": "Equinor",
+            "density": "compact",
+            "lineHeight": "{typography.line-height.6xl}",
+            "note": "baked: Figma and React Native cannot evaluate the expression; the CSS may use either"
+          },
+          "com.equinor.figma": {
+            "collection": "Typography",
+            "mode": "compact",
+            "scopes": [
+              "FONT_SIZE"
+            ]
+          }
+        }
+      }
+    },
+    "font-weight": {
+      "Inter": {
+        "lighter": {
+          "$type": "fontWeight",
+          "$value": 300,
+          "$extensions": {
+            "com.equinor.typography": {
+              "note": "chosen tier on Inter's axis, the reference; Equinor's tiers are matched to it per step",
+              "css": "font-weight: 300;"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "FONT_WEIGHT"
+              ]
+            }
+          }
+        },
+        "normal": {
+          "$type": "fontWeight",
+          "$value": 400,
+          "$extensions": {
+            "com.equinor.typography": {
+              "note": "chosen tier on Inter's axis, the reference; Equinor's tiers are matched to it per step",
+              "css": "font-weight: 400;"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "FONT_WEIGHT"
+              ]
+            }
+          }
+        },
+        "bolder": {
+          "$type": "fontWeight",
+          "$value": 600,
+          "$extensions": {
+            "com.equinor.typography": {
+              "note": "chosen tier on Inter's axis, the reference; Equinor's tiers are matched to it per step",
+              "css": "font-weight: 600;"
+            },
+            "com.equinor.figma": {
+              "collection": "Typography",
+              "mode": "compact",
+              "scopes": [
+                "FONT_WEIGHT"
+              ]
+            }
+          }
+        }
+      },
+      "Equinor": {
+        "lighter": {
+          "xs": {
+            "$type": "fontWeight",
+            "$value": 376.2,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 300,
+                    "referenceStemEm": 0.066082,
+                    "correction": "{typography.x-height-correction.display.xs}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 376.2;",
+                "step": "xs",
+                "tier": "lighter",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "sm": {
+            "$type": "fontWeight",
+            "$value": 376.2,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 300,
+                    "referenceStemEm": 0.066082,
+                    "correction": "{typography.x-height-correction.display.sm}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 376.2;",
+                "step": "sm",
+                "tier": "lighter",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "md": {
+            "$type": "fontWeight",
+            "$value": 376.2,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 300,
+                    "referenceStemEm": 0.066082,
+                    "correction": "{typography.x-height-correction.display.md}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 376.2;",
+                "step": "md",
+                "tier": "lighter",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "lg": {
+            "$type": "fontWeight",
+            "$value": 376.2,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 300,
+                    "referenceStemEm": 0.066082,
+                    "correction": "{typography.x-height-correction.display.lg}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14.0,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 376.2;",
+                "step": "lg",
+                "tier": "lighter",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "xl": {
+            "$type": "fontWeight",
+            "$value": 376.4,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 300,
+                    "referenceStemEm": 0.06572,
+                    "correction": "{typography.x-height-correction.display.xl}",
+                    "correctionValue": 1.130167
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 16,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 376.4;",
+                "step": "xl",
+                "tier": "lighter",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "2xl": {
+            "$type": "fontWeight",
+            "$value": 376.4,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 300,
+                    "referenceStemEm": 0.065268,
+                    "correction": "{typography.x-height-correction.display.2xl}",
+                    "correctionValue": 1.122029
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 18.5,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 376.4;",
+                "step": "2xl",
+                "tier": "lighter",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "3xl": {
+            "$type": "fontWeight",
+            "$value": 376.7,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 300,
+                    "referenceStemEm": 0.064816,
+                    "correction": "{typography.x-height-correction.display.3xl}",
+                    "correctionValue": 1.112875
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 21.0,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 376.7;",
+                "step": "3xl",
+                "tier": "lighter",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "4xl": {
+            "$type": "fontWeight",
+            "$value": 376.9,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 300,
+                    "referenceStemEm": 0.064183,
+                    "correction": "{typography.x-height-correction.display.4xl}",
+                    "correctionValue": 1.100667
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 24.5,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 376.9;",
+                "step": "4xl",
+                "tier": "lighter",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "5xl": {
+            "$type": "fontWeight",
+            "$value": 377.2,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 300,
+                    "referenceStemEm": 0.06355,
+                    "correction": "{typography.x-height-correction.display.5xl}",
+                    "correctionValue": 1.08846
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 28.0,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 377.2;",
+                "step": "5xl",
+                "tier": "lighter",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "6xl": {
+            "$type": "fontWeight",
+            "$value": 377.5,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 300,
+                    "referenceStemEm": 0.062827,
+                    "correction": "{typography.x-height-correction.display.6xl}",
+                    "correctionValue": 1.074219
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 32,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 377.5;",
+                "step": "6xl",
+                "tier": "lighter",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          }
+        },
+        "normal": {
+          "xs": {
+            "$type": "fontWeight",
+            "$value": 458.5,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 400,
+                    "referenceStemEm": 0.087891,
+                    "correction": "{typography.x-height-correction.display.xs}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 458.5;",
+                "step": "xs",
+                "tier": "normal",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "sm": {
+            "$type": "fontWeight",
+            "$value": 458.5,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 400,
+                    "referenceStemEm": 0.087891,
+                    "correction": "{typography.x-height-correction.display.sm}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 458.5;",
+                "step": "sm",
+                "tier": "normal",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "md": {
+            "$type": "fontWeight",
+            "$value": 458.5,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 400,
+                    "referenceStemEm": 0.087891,
+                    "correction": "{typography.x-height-correction.display.md}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 458.5;",
+                "step": "md",
+                "tier": "normal",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "lg": {
+            "$type": "fontWeight",
+            "$value": 458.5,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 400,
+                    "referenceStemEm": 0.087891,
+                    "correction": "{typography.x-height-correction.display.lg}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14.0,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 458.5;",
+                "step": "lg",
+                "tier": "normal",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "xl": {
+            "$type": "fontWeight",
+            "$value": 458.5,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 400,
+                    "referenceStemEm": 0.087348,
+                    "correction": "{typography.x-height-correction.display.xl}",
+                    "correctionValue": 1.130167
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 16,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 458.5;",
+                "step": "xl",
+                "tier": "normal",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "2xl": {
+            "$type": "fontWeight",
+            "$value": 458.3,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 400,
+                    "referenceStemEm": 0.08667,
+                    "correction": "{typography.x-height-correction.display.2xl}",
+                    "correctionValue": 1.122029
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 18.5,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 458.3;",
+                "step": "2xl",
+                "tier": "normal",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "3xl": {
+            "$type": "fontWeight",
+            "$value": 458.4,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 400,
+                    "referenceStemEm": 0.085992,
+                    "correction": "{typography.x-height-correction.display.3xl}",
+                    "correctionValue": 1.112875
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 21.0,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 458.4;",
+                "step": "3xl",
+                "tier": "normal",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "4xl": {
+            "$type": "fontWeight",
+            "$value": 458.4,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 400,
+                    "referenceStemEm": 0.085042,
+                    "correction": "{typography.x-height-correction.display.4xl}",
+                    "correctionValue": 1.100667
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 24.5,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 458.4;",
+                "step": "4xl",
+                "tier": "normal",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "5xl": {
+            "$type": "fontWeight",
+            "$value": 458.4,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 400,
+                    "referenceStemEm": 0.084093,
+                    "correction": "{typography.x-height-correction.display.5xl}",
+                    "correctionValue": 1.08846
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 28.0,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 458.4;",
+                "step": "5xl",
+                "tier": "normal",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "6xl": {
+            "$type": "fontWeight",
+            "$value": 458.4,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 400,
+                    "referenceStemEm": 0.083008,
+                    "correction": "{typography.x-height-correction.display.6xl}",
+                    "correctionValue": 1.074219
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 32,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 458.4;",
+                "step": "6xl",
+                "tier": "normal",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          }
+        },
+        "bolder": {
+          "xs": {
+            "$type": "fontWeight",
+            "$value": 660.0,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 600,
+                    "referenceStemEm": 0.126912,
+                    "correction": "{typography.x-height-correction.display.xs}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 660.0;",
+                "step": "xs",
+                "tier": "bolder",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "sm": {
+            "$type": "fontWeight",
+            "$value": 660.0,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 600,
+                    "referenceStemEm": 0.126912,
+                    "correction": "{typography.x-height-correction.display.sm}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 660.0;",
+                "step": "sm",
+                "tier": "bolder",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "md": {
+            "$type": "fontWeight",
+            "$value": 660.0,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 600,
+                    "referenceStemEm": 0.126912,
+                    "correction": "{typography.x-height-correction.display.md}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 660.0;",
+                "step": "md",
+                "tier": "bolder",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "lg": {
+            "$type": "fontWeight",
+            "$value": 660.0,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 600,
+                    "referenceStemEm": 0.126912,
+                    "correction": "{typography.x-height-correction.display.lg}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 14.0,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 660.0;",
+                "step": "lg",
+                "tier": "bolder",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "xl": {
+            "$type": "fontWeight",
+            "$value": 662.2,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 600,
+                    "referenceStemEm": 0.126526,
+                    "correction": "{typography.x-height-correction.display.xl}",
+                    "correctionValue": 1.130167
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 16,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 662.2;",
+                "step": "xl",
+                "tier": "bolder",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "2xl": {
+            "$type": "fontWeight",
+            "$value": 664.6,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 600,
+                    "referenceStemEm": 0.126043,
+                    "correction": "{typography.x-height-correction.display.2xl}",
+                    "correctionValue": 1.122029
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 18.5,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 664.6;",
+                "step": "2xl",
+                "tier": "bolder",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "3xl": {
+            "$type": "fontWeight",
+            "$value": 667.7,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 600,
+                    "referenceStemEm": 0.12556,
+                    "correction": "{typography.x-height-correction.display.3xl}",
+                    "correctionValue": 1.112875
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 21.0,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 667.7;",
+                "step": "3xl",
+                "tier": "bolder",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "4xl": {
+            "$type": "fontWeight",
+            "$value": 671.6,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 600,
+                    "referenceStemEm": 0.124885,
+                    "correction": "{typography.x-height-correction.display.4xl}",
+                    "correctionValue": 1.100667
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 24.5,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 671.6;",
+                "step": "4xl",
+                "tier": "bolder",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "5xl": {
+            "$type": "fontWeight",
+            "$value": 675.7,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 600,
+                    "referenceStemEm": 0.124208,
+                    "correction": "{typography.x-height-correction.display.5xl}",
+                    "correctionValue": 1.08846
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 28.0,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 675.7;",
+                "step": "5xl",
+                "tier": "bolder",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          },
+          "6xl": {
+            "$type": "fontWeight",
+            "$value": 680.7,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "weight where stem(Equinor) = stem(Inter @ tier, opsz) / correction",
+                  "inputs": {
+                    "tier": 600,
+                    "referenceStemEm": 0.123436,
+                    "correction": "{typography.x-height-correction.display.6xl}",
+                    "correctionValue": 1.074219
+                  }
+                },
+                "metrics": {
+                  "glyph": "l",
+                  "method": "outline:mid-height-stem",
+                  "instance": {
+                    "opsz": 32,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "css": "font-weight: 680.7;",
+                "step": "6xl",
+                "tier": "bolder",
+                "density": "compact"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "FONT_WEIGHT"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "letter-spacing": {
+      "Equinor": {
+        "lighter": {
+          "xs": {
+            "$type": "number",
+            "$value": 0.009737,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.113812,
+                      "weight": 300,
+                      "opsz": 14
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.090336,
+                      "weight": 376.2
+                    },
+                    "correction": "{typography.x-height-correction.display.xs}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.009737,
+                  "percent": 0.9737,
+                  "px": {
+                    "at": 10.2356,
+                    "value": 0.0997
+                  }
+                },
+                "css": "letter-spacing: 0.009737em;",
+                "step": "xs",
+                "tier": "lighter",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.9737
+              }
+            }
+          },
+          "sm": {
+            "$type": "number",
+            "$value": 0.009737,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.113812,
+                      "weight": 300,
+                      "opsz": 14
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.090336,
+                      "weight": 376.2
+                    },
+                    "correction": "{typography.x-height-correction.display.sm}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.009737,
+                  "percent": 0.9737,
+                  "px": {
+                    "at": 11.9415,
+                    "value": 0.1163
+                  }
+                },
+                "css": "letter-spacing: 0.009737em;",
+                "step": "sm",
+                "tier": "lighter",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.9737
+              }
+            }
+          },
+          "md": {
+            "$type": "number",
+            "$value": 0.009737,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.113812,
+                      "weight": 300,
+                      "opsz": 14
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.090336,
+                      "weight": 376.2
+                    },
+                    "correction": "{typography.x-height-correction.display.md}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.009737,
+                  "percent": 0.9737,
+                  "px": {
+                    "at": 13.6475,
+                    "value": 0.1329
+                  }
+                },
+                "css": "letter-spacing: 0.009737em;",
+                "step": "md",
+                "tier": "lighter",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.9737
+              }
+            }
+          },
+          "lg": {
+            "$type": "number",
+            "$value": 0.009737,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.113812,
+                      "weight": 300,
+                      "opsz": 14.0
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.090336,
+                      "weight": 376.2
+                    },
+                    "correction": "{typography.x-height-correction.display.lg}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14.0,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.009737,
+                  "percent": 0.9737,
+                  "px": {
+                    "at": 15.922,
+                    "value": 0.155
+                  }
+                },
+                "css": "letter-spacing: 0.009737em;",
+                "step": "lg",
+                "tier": "lighter",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.9737
+              }
+            }
+          },
+          "xl": {
+            "$type": "number",
+            "$value": 0.006649,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.109734,
+                      "weight": 300,
+                      "opsz": 16
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.090446,
+                      "weight": 376.4
+                    },
+                    "correction": "{typography.x-height-correction.display.xl}",
+                    "correctionValue": 1.130167
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 16,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.006649,
+                  "percent": 0.6649,
+                  "px": {
+                    "at": 18.0827,
+                    "value": 0.1202
+                  }
+                },
+                "css": "letter-spacing: 0.006649em;",
+                "step": "xl",
+                "tier": "lighter",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.6649
+              }
+            }
+          },
+          "2xl": {
+            "$type": "number",
+            "$value": 0.002769,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.10459,
+                      "weight": 300,
+                      "opsz": 18.5
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.090446,
+                      "weight": 376.4
+                    },
+                    "correction": "{typography.x-height-correction.display.2xl}",
+                    "correctionValue": 1.122029
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 18.5,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.002769,
+                  "percent": 0.2769,
+                  "px": {
+                    "at": 20.7575,
+                    "value": 0.0575
+                  }
+                },
+                "css": "letter-spacing: 0.002769em;",
+                "step": "2xl",
+                "tier": "lighter",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.2769
+              }
+            }
+          },
+          "3xl": {
+            "$type": "number",
+            "$value": -0.001091,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.099408,
+                      "weight": 300,
+                      "opsz": 21.0
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.090416,
+                      "weight": 376.7
+                    },
+                    "correction": "{typography.x-height-correction.display.3xl}",
+                    "correctionValue": 1.112875
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 21.0,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.001091,
+                  "percent": -0.1091,
+                  "px": {
+                    "at": 23.3704,
+                    "value": -0.0255
+                  }
+                },
+                "css": "letter-spacing: -0.001091em;",
+                "step": "3xl",
+                "tier": "lighter",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -0.1091
+              }
+            }
+          },
+          "4xl": {
+            "$type": "number",
+            "$value": -0.006604,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.092243,
+                      "weight": 300,
+                      "opsz": 24.5
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.09041,
+                      "weight": 376.9
+                    },
+                    "correction": "{typography.x-height-correction.display.4xl}",
+                    "correctionValue": 1.100667
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 24.5,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.006604,
+                  "percent": -0.6604,
+                  "px": {
+                    "at": 26.9663,
+                    "value": -0.1781
+                  }
+                },
+                "css": "letter-spacing: -0.006604em;",
+                "step": "4xl",
+                "tier": "lighter",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -0.6604
+              }
+            }
+          },
+          "5xl": {
+            "$type": "number",
+            "$value": -0.012215,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.085041,
+                      "weight": 300,
+                      "opsz": 28.0
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.090345,
+                      "weight": 377.2
+                    },
+                    "correction": "{typography.x-height-correction.display.5xl}",
+                    "correctionValue": 1.08846
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 28.0,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.012215,
+                  "percent": -1.2215,
+                  "px": {
+                    "at": 30.4769,
+                    "value": -0.3723
+                  }
+                },
+                "css": "letter-spacing: -0.012215em;",
+                "step": "5xl",
+                "tier": "lighter",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -1.2215
+              }
+            }
+          },
+          "6xl": {
+            "$type": "number",
+            "$value": -0.018686,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.076904,
+                      "weight": 300,
+                      "opsz": 32
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.090277,
+                      "weight": 377.5
+                    },
+                    "correction": "{typography.x-height-correction.display.6xl}",
+                    "correctionValue": 1.074219
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 32,
+                    "wght": 300
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.018686,
+                  "percent": -1.8686,
+                  "px": {
+                    "at": 34.375,
+                    "value": -0.6423
+                  }
+                },
+                "css": "letter-spacing: -0.018686em;",
+                "step": "6xl",
+                "tier": "lighter",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -1.8686
+              }
+            }
+          }
+        },
+        "normal": {
+          "xs": {
+            "$type": "number",
+            "$value": 0.006082,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.104154,
+                      "weight": 400,
+                      "opsz": 14
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.085499,
+                      "weight": 458.5
+                    },
+                    "correction": "{typography.x-height-correction.display.xs}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.006082,
+                  "percent": 0.6082,
+                  "px": {
+                    "at": 10.2356,
+                    "value": 0.0623
+                  }
+                },
+                "css": "letter-spacing: 0.006082em;",
+                "step": "xs",
+                "tier": "normal",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.6082
+              }
+            }
+          },
+          "sm": {
+            "$type": "number",
+            "$value": 0.006082,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.104154,
+                      "weight": 400,
+                      "opsz": 14
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.085499,
+                      "weight": 458.5
+                    },
+                    "correction": "{typography.x-height-correction.display.sm}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.006082,
+                  "percent": 0.6082,
+                  "px": {
+                    "at": 11.9415,
+                    "value": 0.0726
+                  }
+                },
+                "css": "letter-spacing: 0.006082em;",
+                "step": "sm",
+                "tier": "normal",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.6082
+              }
+            }
+          },
+          "md": {
+            "$type": "number",
+            "$value": 0.006082,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.104154,
+                      "weight": 400,
+                      "opsz": 14
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.085499,
+                      "weight": 458.5
+                    },
+                    "correction": "{typography.x-height-correction.display.md}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.006082,
+                  "percent": 0.6082,
+                  "px": {
+                    "at": 13.6475,
+                    "value": 0.083
+                  }
+                },
+                "css": "letter-spacing: 0.006082em;",
+                "step": "md",
+                "tier": "normal",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.6082
+              }
+            }
+          },
+          "lg": {
+            "$type": "number",
+            "$value": 0.006082,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.104154,
+                      "weight": 400,
+                      "opsz": 14.0
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.085499,
+                      "weight": 458.5
+                    },
+                    "correction": "{typography.x-height-correction.display.lg}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14.0,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.006082,
+                  "percent": 0.6082,
+                  "px": {
+                    "at": 15.922,
+                    "value": 0.0968
+                  }
+                },
+                "css": "letter-spacing: 0.006082em;",
+                "step": "lg",
+                "tier": "normal",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.6082
+              }
+            }
+          },
+          "xl": {
+            "$type": "number",
+            "$value": 0.003975,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.10112,
+                      "weight": 400,
+                      "opsz": 16
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.085499,
+                      "weight": 458.5
+                    },
+                    "correction": "{typography.x-height-correction.display.xl}",
+                    "correctionValue": 1.130167
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 16,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.003975,
+                  "percent": 0.3975,
+                  "px": {
+                    "at": 18.0827,
+                    "value": 0.0719
+                  }
+                },
+                "css": "letter-spacing: 0.003975em;",
+                "step": "xl",
+                "tier": "normal",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.3975
+              }
+            }
+          },
+          "2xl": {
+            "$type": "number",
+            "$value": 0.001285,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.097365,
+                      "weight": 400,
+                      "opsz": 18.5
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.085491,
+                      "weight": 458.3
+                    },
+                    "correction": "{typography.x-height-correction.display.2xl}",
+                    "correctionValue": 1.122029
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 18.5,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.001285,
+                  "percent": 0.1285,
+                  "px": {
+                    "at": 20.7575,
+                    "value": 0.0267
+                  }
+                },
+                "css": "letter-spacing: 0.001285em;",
+                "step": "2xl",
+                "tier": "normal",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.1285
+              }
+            }
+          },
+          "3xl": {
+            "$type": "number",
+            "$value": -0.001393,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.093573,
+                      "weight": 400,
+                      "opsz": 21.0
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.085475,
+                      "weight": 458.4
+                    },
+                    "correction": "{typography.x-height-correction.display.3xl}",
+                    "correctionValue": 1.112875
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 21.0,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.001393,
+                  "percent": -0.1393,
+                  "px": {
+                    "at": 23.3704,
+                    "value": -0.0326
+                  }
+                },
+                "css": "letter-spacing: -0.001393em;",
+                "step": "3xl",
+                "tier": "normal",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -0.1393
+              }
+            }
+          },
+          "4xl": {
+            "$type": "number",
+            "$value": -0.005285,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.088263,
+                      "weight": 400,
+                      "opsz": 24.5
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.085475,
+                      "weight": 458.4
+                    },
+                    "correction": "{typography.x-height-correction.display.4xl}",
+                    "correctionValue": 1.100667
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 24.5,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.005285,
+                  "percent": -0.5285,
+                  "px": {
+                    "at": 26.9663,
+                    "value": -0.1425
+                  }
+                },
+                "css": "letter-spacing: -0.005285em;",
+                "step": "4xl",
+                "tier": "normal",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -0.5285
+              }
+            }
+          },
+          "5xl": {
+            "$type": "number",
+            "$value": -0.009333,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.082878,
+                      "weight": 400,
+                      "opsz": 28.0
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.085475,
+                      "weight": 458.4
+                    },
+                    "correction": "{typography.x-height-correction.display.5xl}",
+                    "correctionValue": 1.08846
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 28.0,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.009333,
+                  "percent": -0.9333,
+                  "px": {
+                    "at": 30.4769,
+                    "value": -0.2844
+                  }
+                },
+                "css": "letter-spacing: -0.009333em;",
+                "step": "5xl",
+                "tier": "normal",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -0.9333
+              }
+            }
+          },
+          "6xl": {
+            "$type": "number",
+            "$value": -0.013919,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.076867,
+                      "weight": 400,
+                      "opsz": 32
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.085475,
+                      "weight": 458.4
+                    },
+                    "correction": "{typography.x-height-correction.display.6xl}",
+                    "correctionValue": 1.074219
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 32,
+                    "wght": 400
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.013919,
+                  "percent": -1.3919,
+                  "px": {
+                    "at": 34.375,
+                    "value": -0.4785
+                  }
+                },
+                "css": "letter-spacing: -0.013919em;",
+                "step": "6xl",
+                "tier": "normal",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -1.3919
+              }
+            }
+          }
+        },
+        "bolder": {
+          "xs": {
+            "$type": "number",
+            "$value": 0.001272,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.089143,
+                      "weight": 600,
+                      "opsz": 14
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.07711,
+                      "weight": 660.0
+                    },
+                    "correction": "{typography.x-height-correction.display.xs}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.001272,
+                  "percent": 0.1272,
+                  "px": {
+                    "at": 10.2356,
+                    "value": 0.013
+                  }
+                },
+                "css": "letter-spacing: 0.001272em;",
+                "step": "xs",
+                "tier": "bolder",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.1272
+              }
+            }
+          },
+          "sm": {
+            "$type": "number",
+            "$value": 0.001272,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.089143,
+                      "weight": 600,
+                      "opsz": 14
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.07711,
+                      "weight": 660.0
+                    },
+                    "correction": "{typography.x-height-correction.display.sm}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.001272,
+                  "percent": 0.1272,
+                  "px": {
+                    "at": 11.9415,
+                    "value": 0.0152
+                  }
+                },
+                "css": "letter-spacing: 0.001272em;",
+                "step": "sm",
+                "tier": "bolder",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.1272
+              }
+            }
+          },
+          "md": {
+            "$type": "number",
+            "$value": 0.001272,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.089143,
+                      "weight": 600,
+                      "opsz": 14
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.07711,
+                      "weight": 660.0
+                    },
+                    "correction": "{typography.x-height-correction.display.md}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.001272,
+                  "percent": 0.1272,
+                  "px": {
+                    "at": 13.6475,
+                    "value": 0.0174
+                  }
+                },
+                "css": "letter-spacing: 0.001272em;",
+                "step": "md",
+                "tier": "bolder",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.1272
+              }
+            }
+          },
+          "lg": {
+            "$type": "number",
+            "$value": 0.001272,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.089143,
+                      "weight": 600,
+                      "opsz": 14.0
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.07711,
+                      "weight": 660.0
+                    },
+                    "correction": "{typography.x-height-correction.display.lg}",
+                    "correctionValue": 1.137288
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 14.0,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": 0.001272,
+                  "percent": 0.1272,
+                  "px": {
+                    "at": 15.922,
+                    "value": 0.0203
+                  }
+                },
+                "css": "letter-spacing: 0.001272em;",
+                "step": "lg",
+                "tier": "bolder",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": 0.1272
+              }
+            }
+          },
+          "xl": {
+            "$type": "number",
+            "$value": -0.000318,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.086694,
+                      "weight": 600,
+                      "opsz": 16
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.077027,
+                      "weight": 662.2
+                    },
+                    "correction": "{typography.x-height-correction.display.xl}",
+                    "correctionValue": 1.130167
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 16,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.000318,
+                  "percent": -0.0318,
+                  "px": {
+                    "at": 18.0827,
+                    "value": -0.0058
+                  }
+                },
+                "css": "letter-spacing: -0.000318em;",
+                "step": "xl",
+                "tier": "bolder",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -0.0318
+              }
+            }
+          },
+          "2xl": {
+            "$type": "number",
+            "$value": -0.002391,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.083535,
+                      "weight": 600,
+                      "opsz": 18.5
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.076841,
+                      "weight": 664.6
+                    },
+                    "correction": "{typography.x-height-correction.display.2xl}",
+                    "correctionValue": 1.122029
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 18.5,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.002391,
+                  "percent": -0.2391,
+                  "px": {
+                    "at": 20.7575,
+                    "value": -0.0496
+                  }
+                },
+                "css": "letter-spacing: -0.002391em;",
+                "step": "2xl",
+                "tier": "bolder",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -0.2391
+              }
+            }
+          },
+          "3xl": {
+            "$type": "number",
+            "$value": -0.004568,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.08047,
+                      "weight": 600,
+                      "opsz": 21.0
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.076876,
+                      "weight": 667.7
+                    },
+                    "correction": "{typography.x-height-correction.display.3xl}",
+                    "correctionValue": 1.112875
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 21.0,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.004568,
+                  "percent": -0.4568,
+                  "px": {
+                    "at": 23.3704,
+                    "value": -0.1068
+                  }
+                },
+                "css": "letter-spacing: -0.004568em;",
+                "step": "3xl",
+                "tier": "bolder",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -0.4568
+              }
+            }
+          },
+          "4xl": {
+            "$type": "number",
+            "$value": -0.007688,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.076038,
+                      "weight": 600,
+                      "opsz": 24.5
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.076772,
+                      "weight": 671.6
+                    },
+                    "correction": "{typography.x-height-correction.display.4xl}",
+                    "correctionValue": 1.100667
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 24.5,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.007688,
+                  "percent": -0.7688,
+                  "px": {
+                    "at": 26.9663,
+                    "value": -0.2073
+                  }
+                },
+                "css": "letter-spacing: -0.007688em;",
+                "step": "4xl",
+                "tier": "bolder",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -0.7688
+              }
+            }
+          },
+          "5xl": {
+            "$type": "number",
+            "$value": -0.010979,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.071682,
+                      "weight": 600,
+                      "opsz": 28.0
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.076835,
+                      "weight": 675.7
+                    },
+                    "correction": "{typography.x-height-correction.display.5xl}",
+                    "correctionValue": 1.08846
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 28.0,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.010979,
+                  "percent": -1.0979,
+                  "px": {
+                    "at": 30.4769,
+                    "value": -0.3346
+                  }
+                },
+                "css": "letter-spacing: -0.010979em;",
+                "step": "5xl",
+                "tier": "bolder",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -1.0979
+              }
+            }
+          },
+          "6xl": {
+            "$type": "number",
+            "$value": -0.014223,
+            "$extensions": {
+              "com.equinor.typography": {
+                "derived": {
+                  "expression": "reference.sideSpaceEm / correction - target.sideSpaceEm",
+                  "inputs": {
+                    "reference": {
+                      "sideSpaceEm": 0.06671,
+                      "weight": 600,
+                      "opsz": 32
+                    },
+                    "target": {
+                      "sideSpaceEm": 0.076324,
+                      "weight": 680.7
+                    },
+                    "correction": "{typography.x-height-correction.display.6xl}",
+                    "correctionValue": 1.074219
+                  }
+                },
+                "metrics": {
+                  "glyphs": "a-z",
+                  "method": "outline:advance-minus-ink",
+                  "instance": {
+                    "opsz": 32,
+                    "wght": 600
+                  },
+                  "extractedAt": "2026-09-09"
+                },
+                "units": {
+                  "em": -0.014223,
+                  "percent": -1.4223,
+                  "px": {
+                    "at": 34.375,
+                    "value": -0.4889
+                  }
+                },
+                "css": "letter-spacing: -0.014223em;",
+                "step": "6xl",
+                "tier": "bolder",
+                "density": "compact",
+                "note": "em of Equinor's own size; Figma takes percent, React Native px"
+              },
+              "com.equinor.figma": {
+                "collection": "Typography",
+                "mode": "compact",
+                "scopes": [
+                  "LETTER_SPACING"
+                ],
+                "unit": "PERCENT",
+                "value": -1.4223
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$extensions": {
+    "com.equinor.typography": {
+      "fonts": {
+        "Inter": {
+          "path": "skills/typography-weight-matching/assets/fonts/Inter.woff2",
+          "sha256": "87a69aeae6290d8f4fc68e89eaca9a605defc155a3ea2bcb1f756fded1359722"
+        },
+        "Equinor": {
+          "path": "https://cdn.eds.equinor.com/font/EquinorVariable-VF.woff2",
+          "sha256": "e04fc3f7dcd6d4a808ead666624084e4cad275b7365fd9ccb36d00fb70603953"
+        }
+      },
+      "builtAt": "2026-09-09",
+      "builder": "demo/typography-tokens/build.py",
+      "skills": [
+        "typography-scale",
+        "typography-x-height-alignment",
+        "typography-weight-matching"
+      ]
+    }
+  }
+}

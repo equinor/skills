@@ -1,0 +1,99 @@
+# Typography tokens — intent
+
+Built 9 September 2026, the morning of the Into Design Systems talk, from
+Victor's request: the EDS type scale with both line-height curves, Inter and
+Equinor, Equinor's size, weight and letter-spacing matched to Inter, lighter
+and bolder variants of every step, three densities, baked so it imports into
+Figma, in DTCG format with the CSS `calc()` expressions carried in
+`$extensions`. Three files, one per density:
+
+```
+typography.compact.tokens.json
+typography.comfortable.tokens.json
+typography.relaxed.tokens.json
+```
+
+Same token paths in each, so density is a Figma mode and nothing else moves.
+
+## What is in each file
+
+| group | per | from |
+| --- | --- | --- |
+| `font-size.<step>` | 10 steps | `typography-scale`: `round(base × 2^(i/5), 0.03125rem)` |
+| `line-height.<step>.default` / `.compressed` | 10 × 2 | `typography-scale`: the two curves, snapped to 4px |
+| `x-height-correction.display.<step>` | 10 | `typography-x-height-alignment`: Inter's x-height at the step's `opsz` over Equinor's; `drift` on the group |
+| `font-size-display.<step>` | 10 | the text size × that step's correction, re-snapped: Equinor's baked size |
+| `font-weight.Inter.<tier>` | lighter 300 · normal 400 · bolder 600 | the chosen tiers on the reference |
+| `font-weight.Equinor.<tier>.<step>` | 3 × 10 | `typography-weight-matching`: the weight whose stem matches Inter's at that tier, `opsz` and correction |
+| `letter-spacing.Equinor.<tier>.<step>` | 3 × 10 | `typography-weight-matching` §4: Inter's side space at the `opsz` over the correction, minus Equinor's at the matched weight, in Equinor's em |
+
+Every token's `$extensions.com.equinor.typography` carries `derived`
+(expression and inputs, aliases where another token is the input), `metrics`
+with the axis location it was measured at, and `css`, the expression a
+stylesheet would use — `round(calc(var(--_base) * pow(2, 1/5)), 0.03125rem)`,
+`round(calc(var(--font-size-5xl) * 1.074219), 0.03125rem)`,
+`letter-spacing: -0.014223em;`. `$extensions.com.equinor.figma` names the
+collection, the mode and the variable scopes; letter-spacing carries its
+percent there, since Figma has no em. The file's own `$extensions` records
+both fonts' checksums, the build date and the builder.
+
+## Decisions
+
+- **Baked, and per step.** Figma and React Native cannot evaluate an
+  expression, so `font-size-display` carries the number. And the number is per
+  step, not one factor: Inter's x-height falls with its `opsz` axis (0.545898
+  at opsz 14, 0.515625 at opsz 32), so a 32px Equinor heading takes
+  × 1.074219 and a 14px label × 1.137288; the flat factor would set the
+  heading 5.9% too large. `x-height-correction.display` is the per-step group
+  from the x-height skill's outcome 2, with `drift` recorded (`max` 0.0587).
+- **Density changes the optical size, so it changes the corrections.** The
+  same step is a different px in each density, hence a different `opsz` and a
+  different correction, weight and letter-spacing. Comfortable `md` (14px) and
+  compact `lg` (14px) get identical Equinor values; comfortable `2xl` (21px)
+  gets × 1.112875 where relaxed `2xl` (24.5px) gets × 1.100667.
+- **Tiers are Inter's, chosen; Equinor's are matched.** Lighter 300, normal
+  400, bolder 600 on Inter — 700 is not a tier because Inter 700 has a stem
+  no weight on Equinor's 300–700 axis reaches. Equinor's matched weights rise
+  with size at the bolder tier (660.0 at `xs` to 680.7 at 32px and above) and
+  hold near 458.5 at the normal tier, where the thinner stem and the smaller
+  size cancel.
+- **Letter-spacing is a compensation for the missing axis, in Equinor's em.**
+  Nothing at the text steps (+0.0013em at 14px, bolder), −0.0142em at 32px
+  and above; the value is the axis's, not the weight's. Inter carries no
+  letter-spacing token: it is the reference. A design system's own tracking
+  ramp adds on top.
+- **Nothing here is typed.** `build.py` imports the three skills' scripts as
+  libraries and runs the per-step derivations the CLIs take one value at a
+  time; the token files are its output, committed with their inputs. Rebuild:
+
+  ```bash
+  <venv>/bin/python demo/typography-tokens/build.py --equinor <EquinorVariable-VF.woff2>
+  ```
+
+  Equinor comes from `cdn.eds.equinor.com/font/EquinorVariable-VF.woff2` and
+  is never committed; its licence permits use, not redistribution. Inter is
+  the copy bundled with `typography-weight-matching` (checksum in the file).
+  A full build instances the fonts a few hundred times and takes about three
+  minutes.
+
+## Importing into Figma
+
+The files are standard DTCG, so a token importer (Tokens Studio, or Figma's
+own variables import) reads them with one mode per file. `typography-scale`'s
+`--format figma` scripts create the `font-size` and `line-height` variables
+and the text styles through the Figma MCP; the weights and letter-spacing are
+not yet covered by a script and go in through the importer. Bind text styles
+to `font-size-display` for Equinor and `font-size` for Inter; both share the
+step's `line-height`.
+
+## Not done
+
+- A `--target-opsz` for `stem.py` and a per-step `--correction` for `scale.py`
+  would let the skills emit these files directly; `build.py` is the seam
+  until then (recorded in `demo/typography/INTENT.md` §8 and the meetup
+  repo's issue #48).
+- `xheight.py` ran its command-line code on import and could not be used as
+  a library; its entry point is guarded in the same change as this folder.
+- Inter's own `letter-spacing` ramp for headings, if EDS wants one, is a
+  design choice this build does not make; the port factor in
+  `typography-weight-matching` §5 is how it would travel to Equinor.
