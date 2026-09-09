@@ -156,21 +156,27 @@ def parse_args(argv):
     return a.fonts, location
 
 
-paths, location = parse_args(sys.argv[1:])
-if not paths:
-    paths = demo_pair()
-    print("No fonts given — measuring the bundled demo pair.", file=sys.stderr)
+def main(argv):
+    paths, location = parse_args(argv)
+    if not paths:
+        paths = demo_pair()
+        print("No fonts given — measuring the bundled demo pair.", file=sys.stderr)
 
-fonts = [metrics(p, location) for p in paths]
-ref = fonts[0]
-# Derive from the raw font units, not from the rounded xRatio above — rounding
-# an intermediate and then dividing moves the last digit.
-ref_ratio = ref["xHeight"] / ref["unitsPerEm"]
-for f in fonts[1:]:
-    f["correction"] = round(ref_ratio / (f["xHeight"] / f["unitsPerEm"]), 6)
+    fonts = [metrics(p, location) for p in paths]
+    ref = fonts[0]
+    # Derive from the raw font units, not from the rounded xRatio above — rounding
+    # an intermediate and then dividing moves the last digit.
+    ref_ratio = ref["xHeight"] / ref["unitsPerEm"]
+    for f in fonts[1:]:
+        f["correction"] = round(ref_ratio / (f["xHeight"] / f["unitsPerEm"]), 6)
 
-for f in fonts:
-    for w in f["warnings"]:
-        print(f"warning: {f['family']}: {w}", file=sys.stderr)
+    for f in fonts:
+        for w in f["warnings"]:
+            print(f"warning: {f['family']}: {w}", file=sys.stderr)
 
-print(json.dumps({"reference": ref["family"], "fonts": fonts}, indent=2))
+    print(json.dumps({"reference": ref["family"], "fonts": fonts}, indent=2))
+    return 0
+
+
+if __name__ == "__main__":       # importable as a library: metrics(path, location)
+    sys.exit(main(sys.argv[1:]))
