@@ -147,6 +147,16 @@ comes from run on centrally managed browsers that update within weeks of an
 upstream Chromium release, with iOS Safari as the mobile target and Firefox
 supported on a best-effort basis rather than as strategy.
 
+**Evergreen means two engines, not one.** iOS Safari is WebKit, and on iOS
+every browser is WebKit, so a feature has to work in **both Chromium and
+WebKit** before a skill or a demo may rely on it; Gecko (Firefox) should work
+too, and a Gecko gap is worth a note and a fallback, but it is not a
+showstopper. When verifying support (the skills' `features-json` and
+webstatus.dev checks), read the Safari and iOS Safari columns, not only the
+Baseline status: Baseline *newly* can be reached with WebKit as the last
+engine to land, and the date it landed there is the date that matters for
+this fleet.
+
 Two consequences when authoring:
 
 - **Baseline *newly* is not an automatic veto.** Treat it as a question for the
