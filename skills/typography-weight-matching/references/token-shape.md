@@ -150,7 +150,7 @@ that pair is not in the selftest; re-run the section 3 example to check it.
                   "wght": 400.0,
                   "opsz": 32.0
                 },
-                "extractedAt": "2026-09-08"
+                "extractedAt": "2026-09-09"
               },
               "family": "Inter",
               "tier": 400,
@@ -158,15 +158,16 @@ that pair is not in the selftest; re-run the section 3 example to check it.
                 "em": -0.027287,
                 "percent": -2.7287
               },
-              "note": "em of the target's own size: CSS letter-spacing: <value>em. Figma takes percent, React Native px"
+              "note": "em of the target's own size: CSS letter-spacing: <value>em. Figma and React Native take px, at the size the step renders at"
             },
             "com.equinor.figma": {
               "collection": "Typography",
               "scopes": [
                 "LETTER_SPACING"
               ],
-              "unit": "PERCENT",
-              "value": -2.7287
+              "unit": "PIXELS",
+              "value": null,
+              "note": "pass --px with the step's size; Figma binds letter-spacing in px only"
             }
           }
         }
@@ -227,9 +228,11 @@ step's. With no per-step token in the project, pass the bare factor and let
 **The `letter-spacing` token is the missing-axis compensation** (section 4),
 one per tier, keyed by the reference tier. It is a plain `number` in the
 *target's* em — DTCG's `dimension` allows only `px` and `rem`, and this value
-is relative to the element's own size — with `units.percent` for Figma (which
-the `com.equinor.figma` block binds) and `units.px` at the `--px` size for
-React Native beside it. `reference`
+is relative to the element's own size — with `units.px` at the `--px` size,
+which is what the `com.equinor.figma` block binds (a Figma variable bound to
+letter-spacing is applied in pixels whatever unit the layer shows; checked in
+the Plugin API 2026-09-09), and `units.percent` for humans beside it. Without
+`--px` the Figma block carries no value and says why. `reference`
 is the reference's side space at the pinned `opsz`, `target` the target's at
 its matched weight, `correction` the x-height correction at that same `opsz`
 (alias or bare factor, as for the weights). The self-pair example above pins

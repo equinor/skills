@@ -35,8 +35,8 @@ a table someone hand-edited after it was generated.
 
 **5. "The Equinor headings look loose next to Inter at 32px, even after the
 weight match."** → Section 4's spacing half: measure both faces' side space at
-that size — `stem.py Inter.woff2 Equinor.woff2 --letter-spacing --at 600,680.7
---opsz 32 --correction 1.074219 --px 32` → −0.0142em, about −0.49px on the
+that size — `stem.py Inter.woff2 Equinor.woff2 --letter-spacing --at 500,563.1
+--opsz 32 --correction 1.074219 --px 32` → −0.0141em, about −0.48px on the
 34.5px heading — and emit a `letter-spacing` token per step beside the
 weights. Say why it is zero at the text sizes: Inter's `opsz` axis tightens
 its spacing as it grows and Equinor has no axis, so the gap opens with size.

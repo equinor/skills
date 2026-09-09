@@ -82,11 +82,14 @@ weight holds 0.081em. At 32px, with Equinor set at × 1.074219, Inter's gap is
 2.30px and Equinor's 2.78px: Equinor reads 20% looser at the same weight and
 perceived size, which is what a viewer of the overlay demo saw before any
 number was taken. The compensation, `sideSpace(ref, opsz) / correction −
-sideSpace(target)`, is −0.0139 / −0.0141 / −0.0142em at tiers 400 / 500 / 600,
-so one value per step serves every tier, and it is within +0.006em of zero at
-14px, so the text steps need none. The alternative — one flat tracking value
-for headings — is what section 5's port factor scales, and it cannot produce
-a value that is zero at 14px and −0.014em at 32px from the same face.
+sideSpace(target)`, is −0.0187 / −0.0139 / −0.0141em at tiers 300 / 400 / 500
+(lighter / normal / bolder, re-measured 2026-09-09 for the tiers the EDS
+rework uses): the normal and bolder tiers agree to 0.0002em and the light one
+needs more, because Inter's axis tightens its light weight most. At 14px every
+tier is within +0.010em of zero, so the text steps need none. The
+alternative — one flat tracking value for headings — is what section 5's port
+factor scales, and it cannot produce a value that is zero at 14px and
+−0.014em at 32px from the same face.
 
 ## 5. Generate the table; commit the generated values
 
