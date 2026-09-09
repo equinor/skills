@@ -171,7 +171,11 @@ Rules of thumb:
 - Newly available — Baseline newly, or not yet Baseline: the project's matrix
   decides. On a managed, auto-updating fleet a Baseline-newly feature is
   usually fine; where there is a long tail of older browsers, ship a graceful
-  fallback and say so in the commit or PR.
+  fallback and say so in the commit or PR. Not Baseline at all usually means
+  one engine: an evergreen target is still two engines, Chromium and WebKit
+  (iOS is WebKit in practice), so read the Safari and iOS Safari columns
+  before relying on it, and treat Gecko as best-effort — a note and a
+  fallback, not a veto.
   Pick the fallback mechanism that matches the feature:
   `@supports selector(…)` for selectors (`:has()`, `:where()`,
   `:focus-visible`), `@supports (prop: val)` for properties and values, and a
