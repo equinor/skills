@@ -6,7 +6,7 @@ Usage:
   python stem.py FONT.ttf --weights 300,400,500      # one face, several weights
   python stem.py REFERENCE.ttf TARGET.ttf --match 300,400,500 --correction 1.137288
   python stem.py REFERENCE.ttf TARGET.ttf --tracking --at 400,460
-  python stem.py REF.woff2 TARGET.woff2 --letter-spacing --at 600,680.7 --opsz 32 --correction 1.074219 --px 32
+  python stem.py REF.woff2 TARGET.woff2 --letter-spacing --at 500,563.1 --opsz 32 --correction 1.074219 --px 32
   python stem.py REF.ttf TARGET.ttf --match 400 --format tokens --display Equinor
 
 `--format tokens` emits DTCG tokens with the derivation attached; `json` (the
