@@ -57,7 +57,11 @@ can be rebuilt when the fonts change.
 ## What a correct result looks like
 
 Acceptance criteria, in the shape the skills' own representative requests use.
-A run that misses one of these has not answered the prompt.
+A run that misses one of these has not answered the prompt — with one
+allowance from the skill contract's "degrade, never demand": a session with
+no Figma integration meets the Figma criterion by writing out what it would
+have pushed, with a note on applying it by hand, and is not asked to set one
+up.
 
 - **Three token files, same paths.** `typography.compact|comfortable|relaxed.tokens.json`;
   every path present in all three, so a Figma importer reads them as modes.
@@ -76,8 +80,11 @@ A run that misses one of these has not answered the prompt.
   because no Equinor weight reaches its stem, and the run says so if asked.
 - **Letter-spacing is a compensation, in Equinor's em.** Within a tenth of a
   pixel of zero at the text steps, about −0.014em at 32px, the same for the
-  normal and bolder tiers. Figma receives it in px at the step's display size,
-  because a bound letter-spacing variable is applied in pixels only.
+  normal and bolder tiers. Figma receives it in px at the step's display size:
+  a variable bound to letter-spacing is applied in pixels whatever unit the
+  layer shows, and switching the layer to % drops the binding — observed in
+  the Plugin API on 9 September 2026 and recorded in
+  `demo/typography-tokens/INTENT.md`; re-check it if Figma's typing changes.
 - **Every token explains itself.** `derived` with expression and inputs,
   `metrics` with the axis location it was measured at, `css` with the
   expression, both fonts' checksums in the file.
