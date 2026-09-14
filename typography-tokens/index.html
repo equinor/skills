@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>typography-tokens — equinor/skills</title>
+<style>
+  @font-face { font-family: Inter; src: url(https://cdn.eds.equinor.com/font/InterVariable.woff2) format("woff2-variations"); font-weight: 100 900; font-display: swap; }
+  html { background: oklch(0.97 0 0); color: oklch(0.23 0 0); }
+  body { margin: 0; font-family: Inter, system-ui, sans-serif; font-size: 1rem; line-height: 1.5; }
+  main { max-width: 44rem; margin: 0 auto; padding: 2.5rem 2rem; }
+  h1 { font-size: 1.75rem; line-height: 2.25rem; font-weight: 500; margin: 0 0 0.5rem; }
+  p, li { color: oklch(0.35 0 0); }
+  ul { padding: 0; list-style: none; display: grid; gap: 0.5rem; margin: 1.5rem 0; }
+  li { padding: 0.75rem 1rem; background: oklch(0.999 0 0); border-radius: 4px; box-shadow: inset 0 0 0 1px oklch(0.87 0 0); font-family: ui-monospace, monospace; font-size: 0.9375rem; }
+  a { color: oklch(0.5 0.075 204.6); }
+  small { color: oklch(0.46 0 0); font-family: Inter, system-ui, sans-serif; margin-left: 0.5rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>typography-tokens</h1>
+  <p>Built 9 September 2026, the morning of the Into Design Systems talk, from Victor&#x27;s request: the EDS type scale with both line-height curves, Inter and Equinor, Equinor&#x27;s size, weight and letter-spacing matched to Inter, lighter</p>
+  <p>Files in this folder. The <code>INTENT.md</code> records why it is built the way it is;
+     <a href="../">back to the demos</a>.</p>
+  <ul>
+      <li><a href="INTENT.md">INTENT.md</a> <small>10 KB</small></li>
+      <li><a href="build.py">build.py</a> <small>15 KB</small></li>
+      <li><a href="typography.baked.css">typography.baked.css</a> <small>15 KB</small></li>
+      <li><a href="typography.comfortable.tokens.json">typography.comfortable.tokens.json</a> <small>149 KB</small></li>
+      <li><a href="typography.compact.tokens.json">typography.compact.tokens.json</a> <small>148 KB</small></li>
+      <li><a href="typography.css">typography.css</a> <small>22 KB</small></li>
+      <li><a href="typography.relaxed.tokens.json">typography.relaxed.tokens.json</a> <small>149 KB</small></li>
+  </ul>
+</main>
+</body>
+</html>
