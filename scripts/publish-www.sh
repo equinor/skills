@@ -41,10 +41,52 @@ for idx in sorted(root.glob("*/index.html")):
     pages.append((idx.parent.name, html.unescape(title.group(1).strip()) if title else idx.parent.name,
                   re.sub(r"<[^>]+>", "", html.unescape(hint.group(1))).strip() if hint else ""))
 others = [d.name for d in sorted(root.iterdir()) if d.is_dir() and d.name != ".git" and not (d / "index.html").exists()]
+# Pages does not list directories, so a files-only folder gets a generated index of its files
+for n in others:
+    d = root / n
+    files = sorted(f for f in d.rglob("*") if f.is_file())
+    intent = (d / "INTENT.md")
+    lead = ""
+    if intent.exists():
+        body = [l for l in intent.read_text(errors="replace").splitlines() if l.strip() and not l.startswith("#")]
+        lead = " ".join(body[:3])
+    rows = "\n".join(f'      <li><a href="{f.relative_to(d).as_posix()}">{html.escape(f.relative_to(d).as_posix())}</a> <small>{f.stat().st_size // 1024 or 1} KB</small></li>' for f in files)
+    (d / "index.html").write_text(f'''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{html.escape(n)} — equinor/skills</title>
+<style>
+  @font-face {{ font-family: Inter; src: url(https://cdn.eds.equinor.com/font/InterVariable.woff2) format("woff2-variations"); font-weight: 100 900; font-display: swap; }}
+  html {{ background: oklch(0.97 0 0); color: oklch(0.23 0 0); }}
+  body {{ margin: 0; font-family: Inter, system-ui, sans-serif; font-size: 1rem; line-height: 1.5; }}
+  main {{ max-width: 44rem; margin: 0 auto; padding: 2.5rem 2rem; }}
+  h1 {{ font-size: 1.75rem; line-height: 2.25rem; font-weight: 500; margin: 0 0 0.5rem; }}
+  p, li {{ color: oklch(0.35 0 0); }}
+  ul {{ padding: 0; list-style: none; display: grid; gap: 0.5rem; margin: 1.5rem 0; }}
+  li {{ padding: 0.75rem 1rem; background: oklch(0.999 0 0); border-radius: 4px; box-shadow: inset 0 0 0 1px oklch(0.87 0 0); font-family: ui-monospace, monospace; font-size: 0.9375rem; }}
+  a {{ color: oklch(0.5 0.075 204.6); }}
+  small {{ color: oklch(0.46 0 0); font-family: Inter, system-ui, sans-serif; margin-left: 0.5rem; }}
+</style>
+</head>
+<body>
+<main>
+  <h1>{html.escape(n)}</h1>
+  <p>{html.escape(lead)}</p>
+  <p>Files in this folder. The <code>INTENT.md</code> records why it is built the way it is;
+     <a href="../">back to the demos</a>.</p>
+  <ul>
+{rows}
+  </ul>
+</main>
+</body>
+</html>
+''')
 items = "\n".join(
     f'      <li><a href="{n}/"><b>{html.escape(ti)}</b></a>' + (f'<br><small>{html.escape(h)}</small>' if h else "") + "</li>"
     for n, ti, h in pages)
-extra = "\n".join(f'      <li><a href="{n}/">{n}/</a> <small>files, no page</small></li>' for n in others)
+extra = "\n".join(f'      <li><a href="{n}/"><b>{html.escape(n)}</b></a><br><small>files: tokens, stylesheets and the build that made them</small></li>' for n in others)
 (root / "index.html").write_text(f'''<!doctype html>
 <html lang="en">
 <head>
