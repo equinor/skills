@@ -13,8 +13,11 @@
   p, li { color: oklch(0.35 0 0); }
   ul { padding: 0; list-style: none; display: grid; gap: 1rem; margin: 1.5rem 0; }
   li { padding: 1rem 1.25rem; background: oklch(0.999 0 0); border-radius: 4px; box-shadow: inset 0 0 0 1px oklch(0.87 0 0); }
+  ul.files { gap: 0.5rem; }
+  ul.files li { padding: 0.75rem 1rem; font-family: ui-monospace, monospace; font-size: 0.9375rem; }
   a { color: oklch(0.5 0.075 204.6); } a b { font-weight: 500; }
-  small { color: oklch(0.46 0 0); }
+  small { color: oklch(0.46 0 0); font-family: Inter, system-ui, sans-serif; }
+  ul.files small { margin-left: 0.5rem; }
   footer { margin-top: 2rem; font-size: 0.875rem; color: oklch(0.46 0 0); }
 </style>
 </head>
@@ -28,10 +31,10 @@
       <li><a href="typography/"><b>Typography that fits — a demo of three skills</b></a></li>
       <li><a href="typography-overlay/"><b>Two typefaces on one baseline</b></a><br><small>The same sentence twice, overlaid. The reference face stays put, in grey. The other face is the one you adjust, in red; where they overlap it goes dark. Drag its size until the x-heights meet, its weight until the stems do, then its letter-spacing until the gaps between letters do. The snap points are the skills&#x27; numbers.</small></li>
       <li><a href="typography-scale/"><b>The EDS type scale, step by step</b></a><br><small>One base, one ratio, one snap for the sizes. One curve, one grid for the line-heights. Move the step and watch the arithmetic.</small></li>
-      <li><a href="typography-tokens/"><b>typography-tokens</b></a><br><small>files: tokens, stylesheets and the build that made them</small></li>
+      <li><a href="typography-tokens/"><b>typography-tokens</b></a><br><small>Built 9 September 2026, the morning of the Into Design Systems talk, from Victor&#x27;s request: the EDS type scale with both line-height curves, Inter and Equinor, Equinor&#x27;s size, weight and letter-spacing matched to Inter, lighter and bolder variants of every step, three densities, baked so it imports into Figma, in DTCG format with the CSS calc() expressions carried in $extensions, plus CSS. Three token files, one per density, and two stylesheets read back from them.</small></li>
   </ul>
   <footer>Skills: <a href="https://github.com/equinor/skills">github.com/equinor/skills</a> ·
-    <code>npx skills add equinor/skills --skill &lt;name&gt;</code> · built from <code>eff6b49</code></footer>
+    <code>npx skills add equinor/skills --skill &lt;name&gt;</code> · built from <code>64885b3</code></footer>
 </main>
 </body>
 </html>
