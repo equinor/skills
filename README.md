@@ -27,6 +27,10 @@ Planned areas:
 
 ## Demo
 
+The demo pages are published at **<https://equinor.github.io/skills/>**, from
+the `www` branch that `scripts/publish-www.sh` rebuilds after every change
+under `demo/`. The state shown at the meetup is tagged `v0.1.0`.
+
 [`demo/typography/`](demo/typography/) is the page shown at the meetup: an
 article set in Inter and Equinor, seven controls labelled with the request you
 would type to an agent, and a panel showing the CSS each request produces.
