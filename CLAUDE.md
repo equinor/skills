@@ -17,6 +17,7 @@ Consequences for how you work here:
 ```
 skills/<domain>-<topic>/SKILL.md   one skill per directory, kebab-case
 demo/<topic>/                      talk artefacts; each has an INTENT.md that governs it
+scripts/                           check-skills.py (the authoring gates), publish-www.sh (the site)
 .github/workflows/claude.yml       @claude bot, gated to write-access collaborators
 ```
 
@@ -184,11 +185,21 @@ reader how to find or declare their own; they do not enumerate a fleet.
 
 ## Installation surfaces to keep working
 
-One path is advertised, and changes to repository layout can break it:
+Two paths are advertised, and changes to repository layout can break them:
 
 ```bash
 npx skills add equinor/skills --skill <skill-name>   # agentskills.io standard
 ```
+
+```
+https://equinor.github.io/skills/<demo-folder>/        # GitHub Pages, from the www branch
+```
+
+The site is the `www` branch, which `scripts/publish-www.sh` rebuilds by
+hoisting the tracked contents of `demo/` to the branch root. Renaming a demo
+folder changes a live URL, and nothing in CI republishes: run the script after
+every merge that touches `demo/`. The state shown at the meetup is tagged
+`v0.1.0` on `main`.
 
 The Claude Code plugin marketplace path (`/plugin marketplace add equinor/skills`)
 was removed from the README because it needs a `.claude-plugin/marketplace.json`
